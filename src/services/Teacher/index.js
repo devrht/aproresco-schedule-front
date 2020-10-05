@@ -34,8 +34,9 @@ export const findTeacherListByFirstNameAndLastName = (firstName,lastName,sortNam
 export const googleSignIn = (google_id) => {
     const body = new FormData();
     body.append('idToken', google_id);
-    return axios.post(`${routes.SERVER_ADDRESS}/auth/login/google`, body,  { headers, withCredentials: true }).then(res => {
-        console.log(res)
+    return axios.post(`${routes.SERVER_ADDRESS}/auth/login/google`, body).then(res => {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('expireAt', res.data.expireAt);
         return res;
     })
 }

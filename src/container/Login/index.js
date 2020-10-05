@@ -2,21 +2,19 @@ import React from 'react';
 import logo from './logo.svg';
 import './style.css';
 import GoogleLogin from 'react-google-login';
-import { googleSignUp } from '../../services/Teacher'
+import { googleSignIn } from '../../services/Teacher'
 
 function Login() {
 
 
-    const _onGoogleSignUp = (data) => {
-        console.log(data);
-        googleSignUp(data.profileObj)
-        .then(user => console.log('OVER...', user))
+    const _onGoogleSignIn = (data) => {
+        googleSignIn(data.tokenObj.id_token)
+        .then(user => {
+            console.log('USER ==> ', user)
+            user.data.token ? window.location.reload(true) : alert('your account is not registered in the system');
+        })
         .catch(apiError => {
-            console.log('Erreur dans te APP.tsx ', apiError);
-            if (apiError && apiError.status == 400) {
-            } else {
-            console.log('Erreur de connexion');
-            }
+            alert('your account is not registered in the system');
         });
     }
 
@@ -30,7 +28,7 @@ function Login() {
         <GoogleLogin
             clientId="631785752296-26dcjnpcnjma16s630fcvhivhi8qsdg6.apps.googleusercontent.com"
             buttonText="Sign in with Google"
-            onSuccess={(data) => _onGoogleSignUp(data)}
+            onSuccess={(data) => _onGoogleSignIn(data)}
             onFailure={(error) => console.log('ERROR ==> ', error)} >
         </GoogleLogin>
       </header>

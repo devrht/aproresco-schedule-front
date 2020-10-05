@@ -20,7 +20,7 @@ function App() {
             <Route exact path="/teacherlist" name="Teacher Page" render={props => <TeacherList {...props} />} />
             <Route exact path="/studentlist" name="Student Page" render={props => <StudentList {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />
-            <Redirect from="/" to="/login" />
+            {/* <Redirect from="/" to="/login" /> */}
           </React.Suspense>
         </LayoutOfApp>
       </Switch>

@@ -6,22 +6,47 @@ import { Layout, Menu } from 'antd';
 import {
   UserOutlined,
   VideoCameraOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
+import { GoogleLogout } from 'react-google-login';
 const { Sider, Content } = Layout;
 
 function LayoutOfApp({ children }, props) {
   //const { path, params } = props.match;
   const history = useHistory();
   const [pathName,setPathName]=useState(window.location.pathname);
+  const [logged, setLogged] = useState(false);
   useEffect(()=>{
-      console.log("pathname",window.location.pathname)
+      let today = new Date();
+      let expireAt = new Date(localStorage.getItem("expireAt"));
+      if(localStorage.getItem("expireAt").length > 0)
+        if(today.getTime() <= expireAt.getTime()) {
+          setLogged(true);
+          if(window.location.pathname == '/login')
+            history.push('/teacherlist');
+        } else {
+          setLogged(false);
+          history.push('/login');
+        }
+      else {
+        setLogged(false);
+        history.push('/login');
+      }
+
     setPathName(window.location.pathname);
     console.log(pathName);
   },[window.location.pathname])
+
+  const logout = () => {
+    setLogged(false);
+    localStorage.setItem("token", null); 
+    localStorage.setItem("expireAt", null);
+    history.push('/login')
+  }
   return (
     <Layout>
       {
-        false ? 
+        logged ? 
         <Sider className="sider">
           <h1>Student-Schedular</h1>
           {console.log("inner pathename:", pathName)}
@@ -31,7 +56,10 @@ function LayoutOfApp({ children }, props) {
               </Menu.Item>
             <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
               Student List
-              </Menu.Item>
+            </Menu.Item>
+            <Menu.Item key="/login" icon={<LogoutOutlined />} onClick={() => { logout(); }}>
+              Log out
+            </Menu.Item>
           </Menu>
         </Sider> : null
       }
