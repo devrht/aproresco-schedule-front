@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Popconfirm, message } from 'antd';
+import { Table, PageHeader, Button, Spin, Popconfirm } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName } from '../../services/Teacher'
 import { assignStudentlistToTeacher } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
@@ -46,9 +46,15 @@ function TeacherList() {
     useEffect(() => {
         getListView();
     }, [sortingType,sortingName]);
+
     const getListView = () => {
+        console.log('FIRST_NAME1:'+search.firstName.trim() );
+        console.log('LAST_NAME1:'+search.lastName.trim() );
         if (search.firstName === "" && search.lastName === "") {
+            console.log('FIRST_NAME2:'+search.firstName.trim() );
+            console.log('LAST_NAME2:'+search.lastName.trim() );
             getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                console.log('DATA ==> ', data)
                 setTeacherList(data._embedded.teachers)
                 setTableProps({
                     ...tableProps,
@@ -58,8 +64,9 @@ function TeacherList() {
             })
         }
         else {
-
-            findTeacherListByFirstNameAndLastName(search.firstName,search.lastName,sortingName,sortingType).then(data => {
+            console.log('FIRST_NAME:'+search.firstName.trim() );
+            console.log('LAST_NAME:'+search.lastName.trim() );
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), search.lastName.trim(), sortingName, sortingType).then(data => {
                 setTeacherList(data._embedded.teachers)
                 setTableProps({
                     totalCount: 1,
@@ -185,17 +192,26 @@ function TeacherList() {
         setLoading(true);
         setTeacherList([]);
     };
+
+    const computeLastName = (name) => {
+        let lastName = '';
+        for (let index = 1; index < name.length; index++) {
+            lastName = lastName.trim() +' '+name[index].trim();
+        }
+        return lastName
+    }
+
     const changeSearch = (e) => {
         const { name, value } = e.target;
-        setSearch({ ...search, [name]: value });
-        console.log("Enter:",value)
+        setSearch({ ...search, [name]: value.trim() });
+        console.log("Enter:",e.target)
         if(e.target.name==="name"){
-            var nameData = value.split(" ");
+            var nameData = value.trim().split(" ");
             if(nameData.length>1){
-                setSearch({ ...search, firstName: nameData[0],lastName: nameData[1] });
+                setSearch({ ...search, firstName: nameData[0].trim(), lastName: computeLastName(nameData) });
             }
             else{
-                setSearch({ ...search, firstName: nameData[0],lastName: nameData[0] });
+                setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
     };

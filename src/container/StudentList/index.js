@@ -112,14 +112,15 @@ function StudentList() {
             },
             render: (record) => {
                 const indexGrade = () => {
-                    var min = record.teacher.grades[0];
+                    var min = record.teacher ? record.teacher.grades[0] : 0;
+                    record.teacher ?
                     record.teacher.grades.map(iteam => {
                         const gradeindex = Math.sqrt(Math.pow(iteam - record.grade, 2))
                         if (gradeindex < min) {
                             min = gradeindex;
                         }
                         return null;
-                    })
+                    }) : min = 0;
                     return min;
                 }
                 return (
@@ -147,16 +148,19 @@ function StudentList() {
                 };
             },
             render: (record) => {
-                var isSubjectContains = record.teacher.subjects.includes(record.subject)
+                var isSubjectContains = record.teacher ? record.teacher.subjects.includes(record.subject) : false;
                 const text = <div className="grade-coloumn-tooltip">
                     <h4>Details :</h4>
-                    <Row>Subjects : {record.teacher.subjects.join(', ')}</Row>
-                    <Row>Grades : {record.teacher.grades.join(', ')}</Row>
+                    <Row>Subjects : {record.teacher ? record.teacher.subjects.join(', ') : "Nothing"}</Row>
+                    <Row>Grades : {record.teacher ? record.teacher.grades.join(', ') : "Nothing"}</Row>
                 </div>
                 return (
                     <Tooltip placement="topLeft" title={text} color={"white"}>
-                        <div style={{ color: !isSubjectContains ? 'orange' : '' }}>
-                            {record.teacher.firstName + " " + record.teacher.lastName + " (" + record.teacher.studentCount + ")"}
+                        <div style={{ color: !isSubjectContains ? 'orange' : '' }} onClick={(e) => {
+                            e.stopPropagation();
+                            history.push(`/studentlist/teacher/${record.teacher.id}`)
+                        }} style={{ cursor: 'pointer', color: 'orange' }}>
+                            {record.teacher ? record.teacher.firstName + " " + record.teacher.lastName + " (" + record.teacher.studentCount + ")" : "No teacher found"}
                         </div>
                     </Tooltip>
                 )
@@ -166,15 +170,26 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            fixed: 'right',
-            render: (record) => <Tooltip title={record.teacher.conferenceUrl ? record.teacher.conferenceUrl : "Link Not Found"}>
+            render: (record) => <Tooltip title={record.teacher ? record.teacher.conferenceUrl ? record.teacher.conferenceUrl : "Link Not Found": "Teacher Not Found"}>
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
                         e.stopPropagation();
                         window.open(record.teacher.conferenceUrl)
                     }}
-                    disabled={!record.teacher.conferenceUrl}><u>Google Meet</u></Button>
+                    disabled={record.teacher ? !record.teacher.conferenceUrl : false}><u>Google Meet</u></Button>
+            </Tooltip>,
+        },
+        {
+            title: 'Details',
+            key: 'details',
+            render: (record) => <Tooltip title={"Consulter les details de l'étudiant"}>
+                <Button
+                    style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/studentlist/studentDetail/${record.id}`)
+                    }}><u>Voir les details</u></Button>
             </Tooltip>,
         },
     ];
@@ -185,9 +200,19 @@ function StudentList() {
     useEffect(() => {
         getListView();
     }, [sortingType, sortingName]);
+
+    const computeLastName = (name) => {
+        let lastName = '';
+        for (let index = 1; index < name.length; index++) {
+            lastName = lastName.trim() +' '+name[index].trim();
+        }
+        return lastName
+    }
+
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                console.log('DATA ==> ', data)
                 setStudentList(data._embedded.students)
                 setTableProps({
                     ...tableProps,
@@ -197,7 +222,7 @@ function StudentList() {
             })
         }
         else {
-            findStudentListByFirstNameAndLastName(search.firstName, search.lastName, sortingName, sortingType).then(data => {
+            findStudentListByFirstNameAndLastName(search.firstName.trim(), search.lastName.trim(), sortingName, sortingType).then(data => {
                 setStudentList(data._embedded.students)
                 setTableProps({
                     totalCount: 1,
@@ -214,10 +239,10 @@ function StudentList() {
         if (e.target.name === "name") {
             var nameData = value.split(" ");
             if (nameData.length > 1) {
-                setSearch({ ...search, firstName: nameData[0], lastName: nameData[1] });
+                setSearch({ ...search, firstName: nameData[0].trim(), lastName: computeLastName(nameData) });
             }
             else {
-                setSearch({ ...search, firstName: nameData[0], lastName: nameData[0] });
+                setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
     };
@@ -272,9 +297,9 @@ function StudentList() {
                     }}
                     rowSelection={rowSelection}
                     rowKey="id"
-                    onRow={(record) => ({
-                        onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
-                    })}
+                    // onRow={(record) => ({
+                    //     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
+                    // })}
                 />}
 
         </PageHeader>
