@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Row, Col } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip, Row, Col, Result } from 'antd';
 import { useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
@@ -111,20 +111,21 @@ function StudentList() {
                 };
             },
             render: (record) => {
-                const indexGrade = () => {
-                    var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
-                    record.teacherAvailability.teacherProfile ?
-                    record.teacherAvailability.teacherProfile.grades.map(iteam => {
-                        const gradeindex = Math.sqrt(Math.pow(iteam - record.grade, 2))
-                        if (gradeindex < min) {
-                            min = gradeindex;
-                        }
-                        return null;
-                    }) : min = 0;
-                    return min;
-                }
+                var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
+                // const indexGrade = () => {
+                //     var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
+                //     record.teacherAvailability.teacherProfile ?
+                //     record.teacherAvailability.teacherProfile.grades.map(iteam => {
+                //         const gradeindex = parseInt(iteam) - parseInt(record.grade);
+                //         if (gradeindex > 0 && gradeindex < min) {
+                //             min = gradeindex;
+                //         }
+                //         return null;
+                //     }) : min = 0;
+                //     return min;
+                // }
                 return (
-                    <span>{indexGrade() > 0 ? `${record.studentProfile.grade} (${indexGrade()})` : record.studentProfile.grade}</span>
+                    <span>{computeMinGrade(min, record.teacherAvailability.teacherProfile, record.studentProfile.grade) > 0 ? `${record.studentProfile.grade} (${computeMinGrade(min, record.teacherAvailability.teacherProfile, record.studentProfile.grade)})` : record.studentProfile.grade}</span>
                 )
             },
             key: 'grade',
@@ -158,7 +159,7 @@ function StudentList() {
                     <Tooltip placement="topLeft" title={text} color={"white"}>
                         <div style={{ color: !isSubjectContains ? 'orange' : '' }} onClick={(e) => {
                             e.stopPropagation();
-                            history.push(`/studentlist/teacher/${record.teacherAvailability.teacherProfile.id}`)
+                            history.push(`/studentlist/teacher/${record.teacherAvailability.teacherProfile.id}/${record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName}`)
                         }} style={{ cursor: 'pointer', color: 'orange' }}>
                             {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found"}
                         </div>
@@ -207,6 +208,19 @@ function StudentList() {
             lastName = lastName.trim() +' '+name[index].trim();
         }
         return lastName
+    }
+
+    const computeMinGrade = (min, profile, grade) => {
+        let i = 0;
+        let result = min;
+        for (i = 0; i < profile.grades.length; i++) {
+            let gradeindex = Number(profile.grades[i]) - Number(grade.toString());
+            gradeindex = Math.abs(gradeindex);
+            if (gradeindex >= 0 && gradeindex < result) {
+                result = gradeindex;
+            }
+        }
+        return result < min ? result : min;
     }
 
     const getListView = () => {

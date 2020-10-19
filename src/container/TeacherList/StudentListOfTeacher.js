@@ -51,6 +51,7 @@ function StudentListOfTeacher(props) {
         getListView();
     },[]);
     const getListView = () =>{
+        console.log(params.name)
         getStudentListById(params.id).then(data => {
             setStudentList(data._embedded.studentBookings);
             data._embedded.studentBookings.forEach(student => {
@@ -71,10 +72,8 @@ function StudentListOfTeacher(props) {
             students history.... {params.id} */}
             <PageHeader
                 ghost={false}
-                title={studentList && studentList.length > 0 && `Student List of ${studentList[0].teacherAvailability.teacherProfile.firstName} ${studentList[0].teacherAvailability.teacherProfile.lastName}`}
+                title={`Student List of ${params.name}`}
                 extra={[
-                    <Button key="1" type="primary">Genrate Calender</Button>,
-                    <Button key="2" type="primary">Launch Schedule</Button>
                 ]}
             >
                
