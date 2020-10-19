@@ -51,6 +51,7 @@ export const findStudentListByFirstNameAndLastName = (firstName,lastName,sortNam
 }
 
 export const assignStudentlistToTeacher = (teacherId,studentIds) =>{
+    console.log(`${routes.SERVER_ADDRESS}/schedule/${teacherId}/${studentIds}`);
     return axios.get(`${routes.SERVER_ADDRESS}/schedule/${teacherId}/${studentIds}`)
         .then(res =>{
             return res.data;

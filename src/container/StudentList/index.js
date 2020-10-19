@@ -266,8 +266,6 @@ function StudentList() {
             ghost={false}
             title="Student List View"
             extra={[
-                <Button key="1" type="primary">Genrate Calender</Button>,
-                <Button key="2" type="primary">Launch Schedule</Button>,
                 <Button key='3' type="primary"
                     disabled={selectedRow.length > 0 ? false : true}
                     onClick={() => {

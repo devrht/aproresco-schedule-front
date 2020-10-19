@@ -15,24 +15,8 @@ function LayoutOfApp({ children }, props) {
   //const { path, params } = props.match;
   const history = useHistory();
   const [pathName,setPathName]=useState(window.location.pathname);
-  const [logged, setLogged] = useState(false);
+  const [logged, setLogged] = useState(true);
   useEffect(()=>{
-      let today = new Date();
-      let expireAt = new Date(localStorage.getItem("expireAt"));
-      if(localStorage.getItem("expireAt").length > 0)
-        if(today.getTime() <= expireAt.getTime()) {
-          setLogged(true);
-          if(window.location.pathname == '/login')
-            history.push('/teacherlist');
-        } else {
-          setLogged(false);
-          history.push('/login');
-        }
-      else {
-        setLogged(false);
-        history.push('/login');
-      }
-
     setPathName(window.location.pathname);
     console.log(pathName);
   },[window.location.pathname])

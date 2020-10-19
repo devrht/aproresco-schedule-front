@@ -217,8 +217,6 @@ function TeacherList() {
             ghost={false}
             title="Teacher List View"
             extra={[
-                <Button key="1" type="primary">Genrate Calender</Button>,
-                <Button key="2" type="primary">Launch Schedule</Button>,
             ]}
         >
             <SearchFilter
