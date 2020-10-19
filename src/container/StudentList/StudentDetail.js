@@ -9,6 +9,7 @@ function StudentDetail(props) {
     }, []);
     const getDetailView = () => {
         getStudentDetail(params.id).then(data => {
+            console.log('DATA ==> ', data)
             setStudentDetail(data)
         })
     }
@@ -23,7 +24,7 @@ function StudentDetail(props) {
                 ]}
             >
                 <Row gutter={24}>
-                    <Card hoverable={true} title={studentDetail && `Student Name : ${studentDetail.firstName} ${studentDetail.lastName}`} bordered={false} style={{ width: "50%" }}>
+                    <Card hoverable={true} title={studentDetail && `Student Name : ${studentDetail.studentProfile.firstName} ${studentDetail.studentProfile.lastName}`} bordered={false} style={{ width: "50%" }}>
                         <Row gutter={16}>
                             <Col className="gutter-row" span={4}>
                                 <h4>Period</h4>
@@ -45,7 +46,7 @@ function StudentDetail(props) {
                                 <h4>Grade</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.grade}</h4>
+                                <h4 >{studentDetail && studentDetail.studentProfile.grade}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -53,7 +54,7 @@ function StudentDetail(props) {
                                 <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.email}</h4>
+                                <h4 >{studentDetail && studentDetail.studentProfile.studentEmail}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -61,7 +62,7 @@ function StudentDetail(props) {
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.phone}</h4>
+                                <h4 >{studentDetail && studentDetail.studentProfile.phoneNumber}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -83,13 +84,13 @@ function StudentDetail(props) {
                     </Card>
 
 
-                    <Card hoverable={true} title={studentDetail && `Teacher Name : ${studentDetail.teacher.firstName} ${studentDetail.teacher.lastName}`} bordered={false} style={{ width: "50%" }}>
+                    <Card hoverable={true} title={studentDetail && `Teacher Name : ${studentDetail.teacherAvailability.teacherProfile.firstName} ${studentDetail.teacherAvailability.teacherProfile.lastName}`} bordered={false} style={{ width: "50%" }}>
                         <Row gutter={16}>
                             <Col className="gutter-row" span={4}>
                                 <h4>Subjects</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.teacher.subjects.join(', ')}</h4>
+                                <h4 >{studentDetail && studentDetail.teacherAvailability.teacherProfile.subjects.join(', ')}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -97,7 +98,7 @@ function StudentDetail(props) {
                                 <h4 >Grades</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.teacher.grades.join(', ')}</h4>
+                                <h4 >{studentDetail && studentDetail.teacherAvailability.teacherProfile.grades.join(', ')}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -105,7 +106,7 @@ function StudentDetail(props) {
                                 <h4>ConferenceUrl</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.teacher.conferenceUrl}</h4>
+                                <h4 >{studentDetail && studentDetail.teacherAvailability.teacherProfile.conferenceUrl}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -113,7 +114,7 @@ function StudentDetail(props) {
                                 <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.teacher.email}</h4>
+                                <h4 >{studentDetail && studentDetail.teacherAvailability.teacherProfile.internalEmail}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -121,7 +122,7 @@ function StudentDetail(props) {
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.teacher.phone}</h4>
+                                <h4 >{studentDetail && studentDetail.teacherAvailability.teacherProfile.phoneNumber}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -129,7 +130,7 @@ function StudentDetail(props) {
                                 <h4 >Comment</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{studentDetail && studentDetail.teacher.studentCount}</h4>
+                                <h4 >{studentDetail && studentDetail.teacherAvailability.studentCount}</h4>
                             </Col>
                         </Row>
                     </Card>

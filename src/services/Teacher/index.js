@@ -8,7 +8,7 @@ const headers = {
 }
 
 export const getTeacherList = (page,size,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/teachers?page=${page}&size=${size}&sort=${sortName},${sortType}`
+    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`
     )
         .then(res =>{
             return res.data;
@@ -24,8 +24,7 @@ export const getTeacherList = (page,size,sortName,sortType) =>{
 // }
 
 export const findTeacherListByFirstNameAndLastName = (firstName,lastName,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/teachers/search/findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`
-    ,  { headers, withCredentials: true })
+    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByTeacherProfileFirstNameIgnoreCaseContainingOrTeacherProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })

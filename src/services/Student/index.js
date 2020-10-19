@@ -9,7 +9,7 @@ const headers = {
 }
 
 export const getStudentListById = (TeacherId) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/students/search/findByTeacherId?id=${TeacherId}`
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByTeacherAvailabilityIdIn?ids=${TeacherId}`
     )
         .then(res =>{
             console.log(res.data);
@@ -21,7 +21,7 @@ export const getStudentListById = (TeacherId) =>{
 }
 
 export const getStudentList = (page,size,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/students?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })
@@ -31,8 +31,7 @@ export const getStudentList = (page,size,sortName,sortType) =>{
 }
 
 export const getStudentDetail = (studentId) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/students/${studentId}`
-    ,  { headers, withCredentials: true })
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/${studentId}`)
         .then(res =>{
             return res.data;
         })
@@ -42,8 +41,7 @@ export const getStudentDetail = (studentId) =>{
 }
 
 export const findStudentListByFirstNameAndLastName = (firstName,lastName,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/students/search/findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`
-    ,  { headers, withCredentials: true })
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })
@@ -53,8 +51,7 @@ export const findStudentListByFirstNameAndLastName = (firstName,lastName,sortNam
 }
 
 export const assignStudentlistToTeacher = (teacherId,studentIds) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/plan/${teacherId}/${studentIds}`
-    ,  { headers, withCredentials: true })
+    return axios.get(`${routes.SERVER_ADDRESS}/schedule/${teacherId}/${studentIds}`)
         .then(res =>{
             return res.data;
         })

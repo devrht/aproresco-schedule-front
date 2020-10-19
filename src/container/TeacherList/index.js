@@ -48,14 +48,10 @@ function TeacherList() {
     }, [sortingType,sortingName]);
 
     const getListView = () => {
-        console.log('FIRST_NAME1:'+search.firstName.trim() );
-        console.log('LAST_NAME1:'+search.lastName.trim() );
         if (search.firstName === "" && search.lastName === "") {
-            console.log('FIRST_NAME2:'+search.firstName.trim() );
-            console.log('LAST_NAME2:'+search.lastName.trim() );
             getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setTeacherList(data._embedded.teachers)
+                setTeacherList(data._embedded.teacherAvailabilities)
                 setTableProps({
                     ...tableProps,
                     totalCount: data.page.totalElements,
@@ -64,10 +60,8 @@ function TeacherList() {
             })
         }
         else {
-            console.log('FIRST_NAME:'+search.firstName.trim() );
-            console.log('LAST_NAME:'+search.lastName.trim() );
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), search.lastName.trim(), sortingName, sortingType).then(data => {
-                setTeacherList(data._embedded.teachers)
+                setTeacherList(data._embedded.teacherAvailabilities)
                 setTableProps({
                     totalCount: 1,
                     pageIndex: 0,
@@ -96,7 +90,7 @@ function TeacherList() {
             },
             render: (record) => (
                 <div>
-                    {record.firstName + " " + record.lastName}
+                    {record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
                 </div>
             ),
             key: 'name',
@@ -123,7 +117,7 @@ function TeacherList() {
             render: (record) => (
                 <div>
                     {
-                        record.subjects.join(', ')
+                        record.teacherProfile.subjects.join(', ')
                     }
                 </div>
             )
@@ -134,7 +128,7 @@ function TeacherList() {
             key: 'grades',
             render: (record) => (
                 <div>
-                    {record.grades.join(', ')}
+                    {record.teacherProfile.grades.join(', ')}
                 </div>
             )
         }

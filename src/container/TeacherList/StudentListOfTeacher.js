@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom'
 import 'antd/dist/antd.css';
 import { Table, PageHeader, Button,Spin} from 'antd';
 import {getStudentListById} from '../../services/Student'
+import StudentList from '../StudentList';
 
 const columns = [
     {
@@ -43,13 +44,25 @@ const columns = [
 function StudentListOfTeacher(props) {
     const {params} = props.match;
     const [studentList,setStudentList] = useState();
+    const [students, setStudents] = useState();
+    const [studentsTmp, setStudentsTmp] = useState([]);
     const history = useHistory();
     useEffect(() => {
         getListView();
     },[]);
     const getListView = () =>{
         getStudentListById(params.id).then(data => {
-            setStudentList(data._embedded.students)
+            setStudentList(data._embedded.studentBookings);
+            data._embedded.studentBookings.forEach(student => {
+                let datas = studentsTmp;
+                let elt = new Object();
+                elt.studentProfile = student.studentProfile;
+                elt.studentProfile.subject = student.subject;
+                elt.studentProfile.id = student.id;
+                datas.push(elt.studentProfile);
+                setStudentsTmp(datas);
+            });
+            setStudents(studentsTmp);
         })
     }
     return (
@@ -58,17 +71,17 @@ function StudentListOfTeacher(props) {
             students history.... {params.id} */}
             <PageHeader
                 ghost={false}
-                title={studentList && `Student List of ${studentList[0].teacher.firstName} ${studentList[0].teacher.lastName}`}
+                title={studentList && studentList.length > 0 && `Student List of ${studentList[0].teacherAvailability.teacherProfile.firstName} ${studentList[0].teacherAvailability.teacherProfile.lastName}`}
                 extra={[
                     <Button key="1" type="primary">Genrate Calender</Button>,
                     <Button key="2" type="primary">Launch Schedule</Button>
                 ]}
             >
                
-                {!studentList?<Spin/>:
+                {!studentList || !students ?<Spin/>:
                     <Table 
                 columns={columns} 
-                dataSource={studentList}
+                dataSource={students}
                 onRow={(record) => ({
                     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
                 })} 

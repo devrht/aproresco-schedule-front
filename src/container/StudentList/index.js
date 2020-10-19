@@ -63,7 +63,7 @@ function StudentList() {
             },
             render: (record) => (
                 <div>
-                    {record.firstName + " " + record.lastName}
+                    {record.studentProfile.firstName + " " + record.studentProfile.lastName}
                 </div>
             ),
             key: 'name',
@@ -112,9 +112,9 @@ function StudentList() {
             },
             render: (record) => {
                 const indexGrade = () => {
-                    var min = record.teacher ? record.teacher.grades[0] : 0;
-                    record.teacher ?
-                    record.teacher.grades.map(iteam => {
+                    var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
+                    record.teacherAvailability.teacherProfile ?
+                    record.teacherAvailability.teacherProfile.grades.map(iteam => {
                         const gradeindex = Math.sqrt(Math.pow(iteam - record.grade, 2))
                         if (gradeindex < min) {
                             min = gradeindex;
@@ -124,7 +124,7 @@ function StudentList() {
                     return min;
                 }
                 return (
-                    <span>{indexGrade() > 0 ? `${record.grade} (${indexGrade()})` : record.grade}</span>
+                    <span>{indexGrade() > 0 ? `${record.studentProfile.grade} (${indexGrade()})` : record.studentProfile.grade}</span>
                 )
             },
             key: 'grade',
@@ -148,19 +148,19 @@ function StudentList() {
                 };
             },
             render: (record) => {
-                var isSubjectContains = record.teacher ? record.teacher.subjects.includes(record.subject) : false;
+                var isSubjectContains = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.includes(record.subject) : false : false;
                 const text = <div className="grade-coloumn-tooltip">
                     <h4>Details :</h4>
-                    <Row>Subjects : {record.teacher ? record.teacher.subjects.join(', ') : "Nothing"}</Row>
-                    <Row>Grades : {record.teacher ? record.teacher.grades.join(', ') : "Nothing"}</Row>
+                    <Row>Subjects : {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.join(', ') : "Nothing"}</Row>
+                    <Row>Grades : {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades.join(', ') : "Nothing"}</Row>
                 </div>
                 return (
                     <Tooltip placement="topLeft" title={text} color={"white"}>
                         <div style={{ color: !isSubjectContains ? 'orange' : '' }} onClick={(e) => {
                             e.stopPropagation();
-                            history.push(`/studentlist/teacher/${record.teacher.id}`)
+                            history.push(`/studentlist/teacher/${record.teacherAvailability.teacherProfile.id}`)
                         }} style={{ cursor: 'pointer', color: 'orange' }}>
-                            {record.teacher ? record.teacher.firstName + " " + record.teacher.lastName + " (" + record.teacher.studentCount + ")" : "No teacher found"}
+                            {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found"}
                         </div>
                     </Tooltip>
                 )
@@ -170,14 +170,14 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            render: (record) => <Tooltip title={record.teacher ? record.teacher.conferenceUrl ? record.teacher.conferenceUrl : "Link Not Found": "Teacher Not Found"}>
+            render: (record) => <Tooltip title={record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.conferenceUrl ? record.teacherAvailability.teacherProfile.conferenceUrl : "Link Not Found": "Teacher Not Found"}>
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
                         e.stopPropagation();
-                        window.open(record.teacher.conferenceUrl)
+                        window.open(record.teacherAvailability.teacherProfile.conferenceUrl)
                     }}
-                    disabled={record.teacher ? !record.teacher.conferenceUrl : false}><u>Google Meet</u></Button>
+                    disabled={record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false}><u>Google Meet</u></Button>
             </Tooltip>,
         },
         {
@@ -213,7 +213,7 @@ function StudentList() {
         if (search.firstName === "" && search.lastName === "") {
             getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setStudentList(data._embedded.students)
+                setStudentList(data._embedded.studentBookings)
                 setTableProps({
                     ...tableProps,
                     totalCount: data.page.totalElements,
@@ -223,7 +223,7 @@ function StudentList() {
         }
         else {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), search.lastName.trim(), sortingName, sortingType).then(data => {
-                setStudentList(data._embedded.students)
+                setStudentList(data._embedded.studentBookings)
                 setTableProps({
                     totalCount: 1,
                     pageIndex: 0,
