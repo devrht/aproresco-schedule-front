@@ -21,12 +21,6 @@ function LayoutOfApp({ children }, props) {
     console.log(pathName);
   },[window.location.pathname])
 
-  const logout = () => {
-    setLogged(false);
-    localStorage.setItem("token", null); 
-    localStorage.setItem("expireAt", null);
-    history.push('/login')
-  }
   return (
     <Layout>
       {
@@ -40,9 +34,6 @@ function LayoutOfApp({ children }, props) {
               </Menu.Item>
             <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
               Student List
-            </Menu.Item>
-            <Menu.Item key="/login" icon={<LogoutOutlined />} onClick={() => { logout(); }}>
-              Log out
             </Menu.Item>
           </Menu>
         </Sider> : null
