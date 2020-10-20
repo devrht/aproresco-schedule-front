@@ -51,6 +51,7 @@ function StudentListOfTeacher(props) {
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
     const history = useHistory();
+    const [active, setActive] = useState(true);
     const [selectedRow, setSelectedRow] = useState([]);
     const assignStudentList = useSelector((state) => {
         return state.Student.assignStudent;
@@ -60,6 +61,7 @@ function StudentListOfTeacher(props) {
         onChange: (selectedrow, records) => {
             console.log('selectedRowKeys changed: ', records);
             var recordIdArray = [];
+            setActive(false);
             records.map(record => {
                 recordIdArray.push({ id: record.id, firstName: record.firstName, lastName: record.lastName })
             })
@@ -90,6 +92,27 @@ function StudentListOfTeacher(props) {
             setStudents(studentsTmp);
         })
     }
+
+    const assignStudent = () => {
+        if(active) {
+            let studentIdArray = [];
+            assignStudentList.map((student) => {
+                studentIdArray.push(student.id)
+            })
+            let studentIds = studentIdArray.join(',');
+            assignStudentlistToTeacher(params.id, studentIds)
+            .then(res => {
+                setStudentList(null);
+                dispatch(assignStudents([])); 
+                getListView(); 
+                window.location.reload();
+            })
+        } else {
+            dispatch(assignStudents(selectedRow))
+            history.push('/teacherlist');
+        }
+    };
+
     return (
         <div>
             {/* {console.log(params)}
@@ -99,33 +122,13 @@ function StudentListOfTeacher(props) {
                 title={`Student List of ${params.name}`}
                 extra={[
                     <Button key='3' type="primary"
-                        disabled={assignStudentList.length > 0 ? false : true}
+                        disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
                         onClick={() => {
-                            let studentIdArray = [];
-                            assignStudentList.map((student) => {
-                                studentIdArray.push(student.id)
-                            })
-                            let studentIds = studentIdArray.join(',');
-                            assignStudentlistToTeacher(params.id, studentIds)
-                            .then(res => {
-                                setStudentList(null);
-                                dispatch(assignStudents([])); 
-                                getListView(); 
-                                window.location.reload();
-                            })
+                            assignStudent()
                         }}
                     >
-                        ASSIGN STUDENT TO THIS TEACHER
-                    </Button>,
-                    <Button key='4' type="primary"
-                        disabled={selectedRow.length > 0 ? false : true}
-                        onClick={() => {
-                            dispatch(assignStudents(selectedRow))
-                            history.push('/teacherlist');
-                        }}
-                    >
-                    ASSIGN STUDENT TO ANOTHER TEACHER
-                </Button>
+                        ASSIGN STUDENT
+                    </Button>
                 ]}
             >
                
