@@ -111,7 +111,7 @@ function StudentListOfTeacher(props) {
                                 setStudentList(null);
                                 dispatch(assignStudents([])); 
                                 getListView(); 
-                                history.push('/teacherlist');
+                                window.location.reload();
                             })
                         }}
                     >
