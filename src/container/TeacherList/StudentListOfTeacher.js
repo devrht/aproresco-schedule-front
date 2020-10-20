@@ -115,8 +115,17 @@ function StudentListOfTeacher(props) {
                             })
                         }}
                     >
-                        ASSIGN STUDENT
-                    </Button>
+                        ASSIGN STUDENT TO THIS TEACHER
+                    </Button>,
+                    <Button key='4' type="primary"
+                        disabled={selectedRow.length > 0 ? false : true}
+                        onClick={() => {
+                            dispatch(assignStudents(selectedRow))
+                            history.push('/teacherlist');
+                        }}
+                    >
+                    ASSIGN STUDENT TO ANOTHER TEACHER
+                </Button>
                 ]}
             >
                
@@ -124,6 +133,8 @@ function StudentListOfTeacher(props) {
                 <Table 
                     columns={columns} 
                     dataSource={students}
+                    rowSelection={rowSelection}
+                    rowKey="id"
                     onRow={(record) => ({
                         onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
                     })} 
