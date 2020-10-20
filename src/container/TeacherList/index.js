@@ -97,9 +97,23 @@ function TeacherList() {
             fixed: 'left',
         },
         {
-            title: 'Period',
-            dataIndex: 'period',
-            key: 'period',
+            title: <div><span>Start Date </span>
+                {sortingName === "startDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "startDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "startDate" && sortingType === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("startDate");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                    }
+                };
+            },
+            dataIndex: 'startDate',
+            key: 'startDate',
         },
         {
             title: 'Subjects',
@@ -137,6 +151,18 @@ function TeacherList() {
             title: 'Student Count',
             dataIndex: 'studentCount',
             key: 'studentCount',
+        },
+        {
+            title: 'Google meet',
+            key: 'meet',
+            render: (record) => 
+                <Button
+                    style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(record.teacherProfile.conferenceUrl)
+                    }}
+                    disabled={!record.teacherProfile.conferenceUrl}><u>Google Meet</u></Button>
         },
         {
             title: 'Action',

@@ -3,8 +3,9 @@ import {useHistory} from 'react-router-dom'
 import 'antd/dist/antd.css';
 import { Table, PageHeader, Button,Spin} from 'antd';
 import {getStudentListById} from '../../services/Student'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { assignStudents } from '../../Action-Reducer/Student/action'
+import { assignStudentlistToTeacher } from '../../services/Student'
 
 const columns = [
     {
@@ -20,9 +21,9 @@ const columns = [
         fixed: 'left',
     },
     {
-        title: 'Period',
-        dataIndex: 'period',
-        key: 'period',
+        title: 'Start Date',
+        dataIndex: 'startDate',
+        key: 'startDate',
         fixed: 'left',
     },
     {
@@ -51,6 +52,9 @@ function StudentListOfTeacher(props) {
     const [studentsTmp, setStudentsTmp] = useState([]);
     const history = useHistory();
     const [selectedRow, setSelectedRow] = useState([]);
+    const assignStudentList = useSelector((state) => {
+        return state.Student.assignStudent;
+    })
     const rowSelection = {
         selectedRow,
         onChange: (selectedrow, records) => {
@@ -68,7 +72,9 @@ function StudentListOfTeacher(props) {
         getListView();
     },[]);
     const getListView = () =>{
-        console.log(params.name)
+        setStudents(null);
+        setStudentList(null);
+        setStudentsTmp([])
         getStudentListById(params.id).then(data => {
             setStudentList(data._embedded.studentBookings);
             data._embedded.studentBookings.forEach(student => {
@@ -77,6 +83,7 @@ function StudentListOfTeacher(props) {
                 elt.studentProfile = student.studentProfile;
                 elt.studentProfile.subject = student.subject;
                 elt.studentProfile.id = student.id;
+                elt.studentProfile.startDate = student.startDate
                 datas.push(elt.studentProfile);
                 setStudentsTmp(datas);
             });
@@ -92,10 +99,20 @@ function StudentListOfTeacher(props) {
                 title={`Student List of ${params.name}`}
                 extra={[
                     <Button key='3' type="primary"
-                        disabled={selectedRow.length > 0 ? false : true}
+                        disabled={assignStudentList.length > 0 ? false : true}
                         onClick={() => {
-                            dispatch(assignStudents(selectedRow))
-                            history.push('/teacherlist');
+                            let studentIdArray = [];
+                            assignStudentList.map((student) => {
+                                studentIdArray.push(student.id)
+                            })
+                            let studentIds = studentIdArray.join(',');
+                            assignStudentlistToTeacher(params.id, studentIds)
+                            .then(res => {
+                                setStudentList(null);
+                                dispatch(assignStudents([])); 
+                                getListView(); 
+                                history.push('/teacherlist');
+                            })
                         }}
                     >
                         ASSIGN STUDENT
@@ -104,14 +121,12 @@ function StudentListOfTeacher(props) {
             >
                
                 {!studentList || !students ?<Spin/>:
-                    <Table 
-                columns={columns} 
-                dataSource={students}
-                rowSelection={rowSelection}
-                rowKey="id"
-                onRow={(record) => ({
-                    onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
-                })} 
+                <Table 
+                    columns={columns} 
+                    dataSource={students}
+                    onRow={(record) => ({
+                        onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
+                    })} 
                 />
                 }
             </PageHeader>

@@ -27,14 +27,13 @@ function LayoutOfApp({ children }, props) {
         logged ? 
         <Sider className="sider">
           <h1>Student-Schedular</h1>
-          {console.log("inner pathename:", pathName)}
           <Menu theme="dark" mode="inline" selectedKeys={[pathName]}>
-            <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
-              Teacher List
-              </Menu.Item>
             <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
               Student List
             </Menu.Item>
+            <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
+              Teacher List
+              </Menu.Item>
           </Menu>
         </Sider> : null
       }

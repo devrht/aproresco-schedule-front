@@ -40,7 +40,7 @@ function StudentList() {
                 recordIdArray.push({ id: record.id, firstName: record.firstName, lastName: record.lastName })
             })
             setSelectedRow(recordIdArray);
-            console.log(selectedRow);
+            dispatch(assignStudents(recordIdArray))
         }
     };
 
@@ -63,7 +63,7 @@ function StudentList() {
             },
             render: (record) => <Tooltip title={"Consulter les details de l'étudiant"}>
                 <Button
-                    style={{backgroundColor:"transparent",border:"0px",color:"orange"}}
+                    style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
                     onClick={(e) => {
                         e.stopPropagation();
                         history.push(`/studentlist/studentDetail/${record.id}`)
@@ -73,9 +73,23 @@ function StudentList() {
             fixed: 'left',
         },
         {
-            title: 'Period',
-            dataIndex: 'period',
-            key: 'period',
+            title: <div><span>Start Date </span>
+                {sortingName === "startDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "startDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "startDate" && sortingType === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("startDate");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                    }
+                };
+            },
+            dataIndex: 'startDate',
+            key: 'startDate',
         },
         {
             title: <div><span>Subject </span>
@@ -143,16 +157,16 @@ function StudentList() {
                 var isSubjectContains = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.includes(record.subject) : false : false;
                 const text = <div className="grade-coloumn-tooltip">
                     <h4>Details :</h4>
-                    <Row>Subjects : {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.join(', ') : "Nothing"}</Row>
-                    <Row>Grades : {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades.join(', ') : "Nothing"}</Row>
+                    <Row>Subjects : {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.join(', ') : "Nothing" : "Nothing"}</Row>
+                    <Row>Grades : {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades.join(', ') : "Nothing" : "Nothing"}</Row>
                 </div>
                 return (
                     <Tooltip placement="topLeft" title={text} color={"white"}>
-                        <div style={{ color: !isSubjectContains ? 'orange' : '' }} onClick={(e) => {
+                        <div onClick={(e) => {
                             e.stopPropagation();
                             history.push(`/studentlist/teacher/${record.teacherAvailability.id}/${record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName}`)
-                        }} style={{ cursor: 'pointer', color: 'orange' }}>
-                            {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found"}
+                        }} style={{ cursor: 'pointer', color: isSubjectContains ? 'black': 'orange' }}>
+                            {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
                         </div>
                     </Tooltip>
                 )
@@ -162,14 +176,14 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            render: (record) => <Tooltip title={record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.conferenceUrl ? record.teacherAvailability.teacherProfile.conferenceUrl : "Link Not Found": "Teacher Not Found"}>
+            render: (record) => <Tooltip title={record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.conferenceUrl ? record.teacherAvailability.teacherProfile.conferenceUrl : "Link Not Found": "Teacher Not Found" : "Teacher Not Found"}>
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
                         e.stopPropagation();
                         window.open(record.teacherAvailability.teacherProfile.conferenceUrl)
                     }}
-                    disabled={record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false}><u>Google Meet</u></Button>
+                    disabled={record.teacherAvailability ? record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false : false}><u>Google Meet</u></Button>
             </Tooltip>,
         },
     ];
