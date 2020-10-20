@@ -19,8 +19,6 @@ function StudentDetail(props) {
                 ghost={false}
                 title={studentDetail && `STUDENT DETAIL :`}
                 extra={[
-                    <Button key="1" type="primary">Genrate Calender</Button>,
-                    <Button key="2" type="primary">Launch Schedule</Button>
                 ]}
             >
                 <Row gutter={24}>

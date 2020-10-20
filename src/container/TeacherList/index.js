@@ -236,7 +236,7 @@ function TeacherList() {
                         showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                     }}
                     onRow={(record) => ({
-                        onClick: () => (history.push(`/studentlist/teacher/${record.id}`))
+                        onClick: () => (history.push(`/studentlist/teacher/${record.id}/${record.teacherProfile.firstName + " " + record.teacherProfile.lastName}`))
                     })}
                 />}
 

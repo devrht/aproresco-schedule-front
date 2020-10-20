@@ -61,11 +61,14 @@ function StudentList() {
                     }
                 };
             },
-            render: (record) => (
-                <div>
-                    {record.studentProfile.firstName + " " + record.studentProfile.lastName}
-                </div>
-            ),
+            render: (record) => <Tooltip title={"Consulter les details de l'étudiant"}>
+                <Button
+                    style={{backgroundColor:"transparent",border:"0px",color:"orange"}}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/studentlist/studentDetail/${record.id}`)
+                    }}>{record.studentProfile.firstName + " " + record.studentProfile.lastName}</Button>
+            </Tooltip>,
             key: 'name',
             fixed: 'left',
         },
@@ -112,20 +115,8 @@ function StudentList() {
             },
             render: (record) => {
                 var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
-                // const indexGrade = () => {
-                //     var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
-                //     record.teacherAvailability.teacherProfile ?
-                //     record.teacherAvailability.teacherProfile.grades.map(iteam => {
-                //         const gradeindex = parseInt(iteam) - parseInt(record.grade);
-                //         if (gradeindex > 0 && gradeindex < min) {
-                //             min = gradeindex;
-                //         }
-                //         return null;
-                //     }) : min = 0;
-                //     return min;
-                // }
                 return (
-                    <span>{computeMinGrade(min, record.teacherAvailability.teacherProfile, record.studentProfile.grade) > 0 ? `${record.studentProfile.grade} (${computeMinGrade(min, record.teacherAvailability.teacherProfile, record.studentProfile.grade)})` : record.studentProfile.grade}</span>
+                    <span>{computeMinGrade(min, record.teacherAvailability ? record.teacherAvailability.teacherProfile : null, record.studentProfile.grade) > 0 ? `${record.studentProfile.grade} (${computeMinGrade(min, record.teacherAvailability ? record.teacherAvailability.teacherProfile : null, record.studentProfile.grade)})` : record.studentProfile.grade}</span>
                 )
             },
             key: 'grade',
@@ -159,7 +150,7 @@ function StudentList() {
                     <Tooltip placement="topLeft" title={text} color={"white"}>
                         <div style={{ color: !isSubjectContains ? 'orange' : '' }} onClick={(e) => {
                             e.stopPropagation();
-                            history.push(`/studentlist/teacher/${record.teacherAvailability.teacherProfile.id}/${record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName}`)
+                            history.push(`/studentlist/teacher/${record.teacherAvailability.id}/${record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName}`)
                         }} style={{ cursor: 'pointer', color: 'orange' }}>
                             {record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found"}
                         </div>
@@ -179,18 +170,6 @@ function StudentList() {
                         window.open(record.teacherAvailability.teacherProfile.conferenceUrl)
                     }}
                     disabled={record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false}><u>Google Meet</u></Button>
-            </Tooltip>,
-        },
-        {
-            title: 'Details',
-            key: 'details',
-            render: (record) => <Tooltip title={"Consulter les details de l'étudiant"}>
-                <Button
-                    style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        history.push(`/studentlist/studentDetail/${record.id}`)
-                    }}><u>Voir les details</u></Button>
             </Tooltip>,
         },
     ];
@@ -213,6 +192,10 @@ function StudentList() {
     const computeMinGrade = (min, profile, grade) => {
         let i = 0;
         let result = min;
+        if( profile == null ) {
+            return 0;
+        }
+
         for (i = 0; i < profile.grades.length; i++) {
             let gradeindex = Number(profile.grades[i]) - Number(grade.toString());
             gradeindex = Math.abs(gradeindex);

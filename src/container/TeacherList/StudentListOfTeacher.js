@@ -3,7 +3,8 @@ import {useHistory} from 'react-router-dom'
 import 'antd/dist/antd.css';
 import { Table, PageHeader, Button,Spin} from 'antd';
 import {getStudentListById} from '../../services/Student'
-import StudentList from '../StudentList';
+import { useDispatch } from 'react-redux'
+import { assignStudents } from '../../Action-Reducer/Student/action'
 
 const columns = [
     {
@@ -42,11 +43,27 @@ const columns = [
     },
 ];
 function StudentListOfTeacher(props) {
+
+    const dispatch = useDispatch();
     const {params} = props.match;
     const [studentList,setStudentList] = useState();
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
     const history = useHistory();
+    const [selectedRow, setSelectedRow] = useState([]);
+    const rowSelection = {
+        selectedRow,
+        onChange: (selectedrow, records) => {
+            console.log('selectedRowKeys changed: ', records);
+            var recordIdArray = [];
+            records.map(record => {
+                recordIdArray.push({ id: record.id, firstName: record.firstName, lastName: record.lastName })
+            })
+            setSelectedRow(recordIdArray);
+            console.log(selectedRow);
+        }
+    };
+    
     useEffect(() => {
         getListView();
     },[]);
@@ -74,6 +91,15 @@ function StudentListOfTeacher(props) {
                 ghost={false}
                 title={`Student List of ${params.name}`}
                 extra={[
+                    <Button key='3' type="primary"
+                        disabled={selectedRow.length > 0 ? false : true}
+                        onClick={() => {
+                            dispatch(assignStudents(selectedRow))
+                            history.push('/teacherlist');
+                        }}
+                    >
+                        ASSIGN STUDENT
+                    </Button>
                 ]}
             >
                
@@ -81,6 +107,8 @@ function StudentListOfTeacher(props) {
                     <Table 
                 columns={columns} 
                 dataSource={students}
+                rowSelection={rowSelection}
+                rowKey="id"
                 onRow={(record) => ({
                     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
                 })} 
