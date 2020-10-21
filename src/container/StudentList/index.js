@@ -11,6 +11,7 @@ import LayoutOfApp from '../../components/Layout'
 //icon
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+import DateFilter from '../../components/StudentList/DateFilter';
 
 
 function StudentList() {
@@ -93,14 +94,14 @@ function StudentList() {
         },
         {
             title: <div><span>Subject </span>
-                {sortingName === "subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "subject" && sortingType === "" && ""}
+                {sortingName === "studentProfile.subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "studentProfile.subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "studentProfile.subject" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("subject");
+                        setSortingName("studentProfile.subject");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -113,14 +114,14 @@ function StudentList() {
         ,
         {
             title: <div><span>Grade </span>
-                {sortingName === "grade" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "grade" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "grade" && sortingType === "" && ""}
+                {sortingName === "studentProfile.grade" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "studentProfile.grade" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "studentProfile.grade" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("grade");
+                        setSortingName("studentProfile.grade");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -139,14 +140,14 @@ function StudentList() {
         {
             title: 'Teacher Name',
             title: <div><span>Teacher Name </span>
-                {sortingName === "teacher.firstName" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "teacher.firstName" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "teacher.firstName" && sortingType === "" && ""}
+                {sortingName === "teacherAvailability.teacherProfile.firstName" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "teacherAvailability.teacherProfile.firstName" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "teacherAvailability.teacherProfile.firstName" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("teacher.firstName");
+                        setSortingName("teacherAvailability.teacherProfile.firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -275,7 +276,7 @@ function StudentList() {
         {/* <LayoutOfApp> */}
         <PageHeader
             ghost={false}
-            title="Student List View"
+            title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Students</p>}
             extra={[
                 // <Button key='3' type="primary"
                 //     disabled={selectedRow.length > 0 ? false : true}
@@ -288,10 +289,23 @@ function StudentList() {
                 // </Button>
             ]}
         >
-            <SearchFilter
-                changeInput={changeSearch}
-                searchList={searchList}
-            />
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flex: 1 }}>
+                    <SearchFilter
+                        changeInput={changeSearch}
+                        searchList={searchList}
+                    />
+                </div>
+                <div style={{ display: 'flex', flex: 1 }}>
+                    <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
+                        <DateFilter
+                            changeInput={changeSearch}
+                            searchList={searchList}
+                        />
+                    </div>
+                </div>
+            </div>
+            
             {!studentList ? <Spin className="loading-table" /> :
                 <Table
                     className="table-padding"

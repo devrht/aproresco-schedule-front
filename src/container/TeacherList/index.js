@@ -11,6 +11,7 @@ import SearchFilter from '../../components/TeacherList/SearchFilter'
 //icon
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+import DateFilter from '../../components/StudentList/DateFilter';
 function TeacherList() {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -74,14 +75,14 @@ function TeacherList() {
     const columns = [
         {
             title: <div><span>Name </span>
-                {sortingName === "firstName" && sortingType==="asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "firstName" && sortingType==="desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "firstName" && sortingType==="" && ""}
+                {sortingName === "teacherProfile.firstName" && sortingType==="asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "teacherProfile.firstName" && sortingType==="desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "teacherProfile.firstName" && sortingType==="" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("firstName");
+                        setSortingName("teacherProfile.firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType("");setSortingName(""); }
@@ -148,7 +149,26 @@ function TeacherList() {
         }
         ,
         {
-            title: 'Student Count',
+            title: <div><span>Student Count </span>
+                {sortingName === "studentCount" && sortingType==="asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "studentCount" && sortingType==="desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "studentCount" && sortingType==="" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("studentCount");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType("");setSortingName(""); }
+                    }
+                };
+            },
+            render: (studentCount) => (
+                <div>
+                    {studentCount}
+                </div>
+            ),
             dataIndex: 'studentCount',
             key: 'studentCount',
         },
@@ -239,34 +259,58 @@ function TeacherList() {
         getListView();
     }
     return (
-        <PageHeader
-            ghost={false}
-            title="Teacher List View"
-            extra={[
-            ]}
-        >
-            <SearchFilter
-                changeInput={changeSearch}
-                searchList={searchList}
-            />
-            {!teacherList ? <Spin className="loading-table" /> :
-                <Table
-                    className="table-padding"
-                    columns={columns}
-                    loading={loading}
-                    dataSource={teacherList}
-                    onChange={handleTableChange}
-                    pagination={{
-                        total: tableProps.totalCount,
-                        pageSize: tableProps.pageSize,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
-                    }}
-                    onRow={(record) => ({
-                        onClick: () => (history.push(`/studentlist/teacher/${record.id}/${record.teacherProfile.firstName + " " + record.teacherProfile.lastName}`))
-                    })}
-                />}
+        <React.Fragment>
+            <PageHeader
+                ghost={false}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>Teachers</p>}
+                extra={[
+                    // <Button key='3' type="primary"
+                    //     disabled={selectedRow.length > 0 ? false : true}
+                    //     onClick={() => {
+                    //         dispatch(assignStudents(selectedRow))
+                    //         history.push('/teacherlist');
+                    //     }}
+                    // >
+                    //     ASSIGN STUDENT
+                    // </Button>
+                ]}
+            >
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ display: 'flex', flex: 1 }}>
+                        <SearchFilter
+                            changeInput={changeSearch}
+                            searchList={searchList}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', flex: 1 }}>
+                        <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
+                            <DateFilter
+                                changeInput={changeSearch}
+                                searchList={searchList}
+                            />
+                        </div>
+                    </div>
+                </div>
+                {!teacherList ? <Spin className="loading-table" /> :
+                    <Table
+                        className="table-padding"
+                        columns={columns}
+                        loading={loading}
+                        dataSource={teacherList}
+                        onChange={handleTableChange}
+                        pagination={{
+                            total: tableProps.totalCount,
+                            pageSize: tableProps.pageSize,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
+                        }}
+                        onRow={(record) => ({
+                            onClick: () => (history.push(`/studentlist/teacher/${record.id}/${record.teacherProfile.firstName + " " + record.teacherProfile.lastName}`))
+                        })}
+                    />}
 
-        </PageHeader>
+            </PageHeader>
+
+    </React.Fragment>
     )
 }
 export default TeacherList

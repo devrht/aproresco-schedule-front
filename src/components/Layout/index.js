@@ -26,7 +26,7 @@ function LayoutOfApp({ children }, props) {
       {
         logged ? 
         <Sider className="sider">
-          <h1>Student-Schedular</h1>
+          <h1>Appui Scolaire</h1>
           <Menu theme="dark" mode="inline" selectedKeys={[pathName]}>
             <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
               Student List

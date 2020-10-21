@@ -119,7 +119,7 @@ function StudentListOfTeacher(props) {
             students history.... {params.id} */}
             <PageHeader
                 ghost={false}
-                title={`Student List of ${params.name}`}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{` ${params.name}`}</p>}
                 extra={[
                     <Button key='3' type="primary"
                         disabled={assignStudentList.length > 0 && active ? false : true}

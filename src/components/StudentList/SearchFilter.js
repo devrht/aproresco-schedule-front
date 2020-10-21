@@ -10,7 +10,7 @@ const SearchFilter = ({changeInput,searchList}) => {
         }
     }
     return (
-        <Form layout="inline">
+        <Form layout="inline" style={{ marginRight: '20px' }}>
             <Form.Item>
                 <Input
                     type="text"
