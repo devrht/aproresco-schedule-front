@@ -22,18 +22,17 @@ export const getStudentListById = (TeacherId) =>{
 
 export const getStudentList = (page,size,sortName,sortType) =>{
 
-    let startDate = '01/01/1900 00:00:00';
-    let endDate = '01/01/2100 00:00:00';
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res =>{
+            return res.data;
+        })
+        .catch(err =>{
+            alert(err.message);
+        })
+}
 
-    if(localStorage.getItem('startDateString').length > 0) {
-        startDate = localStorage.getItem('startDateString');
-    };
-    if(localStorage.getItem('endDateString').length > 0) {
-        endDate = localStorage.getItem('endDateString');
-    };
-
-    //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/findByStartDateBetween?startDate=${startDate}&endDate=${endDate}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+export const getStudentListByDate = (start, end) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStartDateBetween?startDate=${start}&endDate=${end}`)
         .then(res =>{
             return res.data;
         })

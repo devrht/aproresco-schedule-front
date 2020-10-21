@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Popconfirm } from 'antd';
-import { getTeacherList, findTeacherListByFirstNameAndLastName } from '../../services/Teacher'
+import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate } from '../../services/Teacher'
 import { assignStudentlistToTeacher } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/TeacherList/SearchFilter'
 //import AssignStudent from '../../components/TeacherList/AssignStudent'
 //icon
+import { Form, Select, Input } from 'antd'
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
 import DateFilter from '../../components/StudentList/DateFilter';
@@ -26,7 +27,35 @@ function TeacherList() {
         pageIndex: 0,
         pageSize: 30,
     });
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(false);
+    const [start, setStart] = useState();
+    const [end, setEnd] = useState();
+    const [endDate, setEndDate] = useState();
+    const [startDate, setStartDate] = useState();
+
+    const convertDate = (date, status) => {
+        let result = new Date(date.target.value);
+        console.log(result)
+        let day = result.getDate() < 10 ? '0'+(result.getDate()) : (result.getDate())
+        let month = result.getMonth()+1 < 10 ? '0'+(result.getMonth()+1) : (result.getMonth()+1);
+        let year = result.getFullYear();
+        let d = month+'/'+day+'/'+year+'%2000:00:00'
+         if(status) {
+        //         localStorage.setItem('startDate', date.target.value);
+        //         localStorage.setItem('startDateString', d);
+                 setStart(d);
+                 setStartDate(date.target.value);
+        //         setStartType('text');
+         } else  {
+        //         localStorage.setItem('endDate', date.target.value);
+        //         localStorage.setItem('endDateString', d);setStart(result)
+        //         setEndType('text');
+
+            setEndDate(date.target.value);
+            setEnd(d)
+         }
+        return d;
+    }
     const [search, setSearch] = useState({
         name:"",
         firstName:"",
@@ -258,6 +287,34 @@ function TeacherList() {
     const searchList = () => {
         getListView();
     }
+
+    const searchTeacherListByDate = (start, end) => {
+
+        if(start == null)
+            start = '01/01/1900%2000:00:00';
+        if(end == null)
+            end = '01/01/2100%2000:00:00';
+
+        // if(localStorage.getItem('startDateString') != null)
+        //     if(localStorage.getItem('startDateString').length > 0) {
+        //         start = localStorage.getItem('startDateString');
+        //     };
+        // if(localStorage.getItem('endDateString') != null)
+        //     if(localStorage.getItem('endDateString').length > 0) {
+        //         end = localStorage.getItem('endDateString');
+        //     };
+        //if
+        getTeacherListByDate(start, end).then(data => {
+            console.log('DATA ==> ', data)
+            setTeacherList(data._embedded.teacherAvailabilities)
+            setTableProps({
+                ...tableProps,
+                totalCount: data ? data.page ? data.page.totalElements ? 0 : 0 : 0 : 0,
+            });
+            setLoading(false);
+        })
+    }
+
     return (
         <React.Fragment>
             <PageHeader
@@ -284,10 +341,32 @@ function TeacherList() {
                     </div>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
-                            <DateFilter
-                                changeInput={changeSearch}
-                                searchList={searchList}
-                            />
+                        <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
+                        <Form layout="inline">
+                            <Form.Item>
+                                <Input
+                                    type='date'
+                                    placeholder="Min search date"
+                                    name="start"
+                                    value={startDate}
+                                    onChange={(value) => convertDate(value, true)}
+                                />
+                            </Form.Item>
+                            <Button onClick={() => {setStart(null); setStartDate(null); localStorage.setItem('startDate', null); localStorage.setItem('startDateString', '');} }> Clear  </Button>
+                            <Form.Item>
+                                <Input
+                                    style={{ marginLeft: '10px' }}
+                                    type='date'
+                                    placeholder="Max search date"
+                                    name="end"
+                                    value={endDate}
+                                    onChange={(value) => convertDate(value, false)}
+                                />
+                            </Form.Item>
+                            <Button onClick={() => { setEnd(null); setEndDate(null); localStorage.setItem('endDate', null); localStorage.setItem('endDateString', '');} }> Clear </Button>
+                            <Button style={{ marginLeft: '20px' }} onClick={() => searchTeacherListByDate(start, end)}> Search </Button>
+                        </Form>
+                    </div>
                         </div>
                     </div>
                 </div>

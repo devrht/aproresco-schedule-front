@@ -15,6 +15,16 @@ export const getTeacherList = (page,size,sortName,sortType) =>{
         })
 }
 
+export const getTeacherListByDate = (start, end) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByStartDateBetween?startDate=${start}&endDate=${end}`)
+        .then(res =>{
+            return res.data;
+        })
+        .catch(err =>{
+            alert(err.message);
+        })
+}
+
 // export const getTeacherListByFirstName = (name) =>{
 //     return axios.get(`${routes.SERVER_ADDRESS}/teachers/search/findByFirstName?name=${name}`)
 //         .then(res =>{
