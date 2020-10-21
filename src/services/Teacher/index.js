@@ -33,8 +33,9 @@ export const getTeacherListByDate = (start, end) =>{
 //         })
 // }
 
-export const findTeacherListByFirstNameAndLastName = (firstName,lastName,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByTeacherProfileFirstNameIgnoreCaseContainingOrTeacherProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
+export const findTeacherListByFirstNameAndLastName = (firstName,startDate,sortType) =>{
+    //return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByTeacherProfileFirstNameIgnoreCaseContainingOrTeacherProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?firstName=${firstName}&startDate=${startDate},${sortType}`)
         .then(res =>{
             return res.data;
         })

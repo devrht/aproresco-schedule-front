@@ -51,9 +51,12 @@ export const getStudentDetail = (studentId) =>{
         })
 }
 
-export const findStudentListByFirstNameAndLastName = (firstName,lastName,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
+export const findStudentListByFirstNameAndLastName = (firstName,startDate,sortType) =>{
+    console.log(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${startDate},${sortType}`)
+    //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${startDate},${sortType}`)
         .then(res =>{
+            console.log('RESPONSE ===> ', res)
             return res.data;
         })
         .catch(err =>{

@@ -30,8 +30,8 @@ function TeacherList() {
     const [loading,setLoading] = useState(false);
     const [start, setStart] = useState();
     const [end, setEnd] = useState();
-    const [endDate, setEndDate] = useState();
-    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState('2030-01-01');
+    const [startDate, setStartDate] = useState('1900-01-01');
 
     const convertDate = (date, status) => {
         let result = new Date(date.target.value);
@@ -90,8 +90,8 @@ function TeacherList() {
             })
         }
         else {
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), search.lastName.trim(), sortingName, sortingType).then(data => {
-                setTeacherList(data._embedded.teacherAvailabilities)
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), start ? start : '01/01/1900%2000:00:00', sortingType).then(data => {
+                setTeacherList(data)
                 setTableProps({
                     totalCount: 1,
                     pageIndex: 0,
@@ -352,7 +352,6 @@ function TeacherList() {
                                     onChange={(value) => convertDate(value, true)}
                                 />
                             </Form.Item>
-                            <Button onClick={() => {setStart(null); setStartDate(null); localStorage.setItem('startDate', null); localStorage.setItem('startDateString', '');} }> Clear  </Button>
                             <Form.Item>
                                 <Input
                                     style={{ marginLeft: '10px' }}
@@ -363,7 +362,6 @@ function TeacherList() {
                                     onChange={(value) => convertDate(value, false)}
                                 />
                             </Form.Item>
-                            <Button onClick={() => { setEnd(null); setEndDate(null); localStorage.setItem('endDate', null); localStorage.setItem('endDateString', '');} }> Clear </Button>
                             <Button style={{ marginLeft: '20px' }} onClick={() => searchTeacherListByDate(start, end)}> Search </Button>
                         </Form>
                     </div>

@@ -35,12 +35,12 @@ function StudentList() {
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState();
     const [end, setEnd] = useState();
-    const [endDate, setEndDate] = useState();
-    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState('2030-01-01');
+    const [startDate, setStartDate] = useState('1900-01-01');
 
     const convertDate = (date, status) => {
         let result = new Date(date.target.value);
-        console.log(result)
+        console.log(date.target.value)
         let day = result.getDate() < 10 ? '0'+(result.getDate()) : (result.getDate())
         let month = result.getMonth()+1 < 10 ? '0'+(result.getMonth()+1) : (result.getMonth()+1);
         let year = result.getFullYear();
@@ -264,8 +264,9 @@ function StudentList() {
             })
         }
         else {
-            findStudentListByFirstNameAndLastName(search.firstName.trim(), search.lastName.trim(), sortingName, sortingType).then(data => {
-                setStudentList(data._embedded.studentBookings)
+            findStudentListByFirstNameAndLastName(search.firstName.trim(), start ? start : '01/01/1900%2000:00:00', sortingType).then(data => {
+                console.log('DATA ==> ', data)
+                setStudentList(data)
                 setTableProps({
                     totalCount: 1,
                     pageIndex: 0,
@@ -366,7 +367,6 @@ function StudentList() {
                                     onChange={(value) => convertDate(value, true)}
                                 />
                             </Form.Item>
-                            <Button onClick={() => {setStart(null); setStartDate(null); localStorage.setItem('startDate', null); localStorage.setItem('startDateString', '');} }> Clear  </Button>
                             <Form.Item>
                                 <Input
                                     style={{ marginLeft: '10px' }}
@@ -377,7 +377,6 @@ function StudentList() {
                                     onChange={(value) => convertDate(value, false)}
                                 />
                             </Form.Item>
-                            <Button onClick={() => { setEnd(null); setEndDate(null); localStorage.setItem('endDate', null); localStorage.setItem('endDateString', '');} }> Clear </Button>
                             <Button style={{ marginLeft: '20px' }} onClick={() => searchStudentListByDate(start, end)}> Search </Button>
                         </Form>
                     </div>
