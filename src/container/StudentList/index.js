@@ -277,15 +277,15 @@ function StudentList() {
             ghost={false}
             title="Student List View"
             extra={[
-                <Button key='3' type="primary"
-                    disabled={selectedRow.length > 0 ? false : true}
-                    onClick={() => {
-                        dispatch(assignStudents(selectedRow))
-                        history.push('/teacherlist');
-                    }}
-                >
-                    ASSIGN STUDENT
-                </Button>
+                // <Button key='3' type="primary"
+                //     disabled={selectedRow.length > 0 ? false : true}
+                //     onClick={() => {
+                //         dispatch(assignStudents(selectedRow))
+                //         history.push('/teacherlist');
+                //     }}
+                // >
+                //     ASSIGN STUDENT
+                // </Button>
             ]}
         >
             <SearchFilter

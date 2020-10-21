@@ -66,7 +66,7 @@ function StudentListOfTeacher(props) {
                 recordIdArray.push({ id: record.id, firstName: record.firstName, lastName: record.lastName })
             })
             setSelectedRow(recordIdArray);
-            console.log(selectedRow);
+            dispatch(assignStudents(recordIdArray))
         }
     };
     
@@ -122,7 +122,7 @@ function StudentListOfTeacher(props) {
                 title={`Student List of ${params.name}`}
                 extra={[
                     <Button key='3' type="primary"
-                        disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
+                        disabled={assignStudentList.length > 0 && active ? false : true}
                         onClick={() => {
                             assignStudent()
                         }}
