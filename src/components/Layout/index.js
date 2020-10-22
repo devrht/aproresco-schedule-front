@@ -17,12 +17,12 @@ function LayoutOfApp({ children }, props) {
   const [pathName,setPathName]=useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
   useEffect(()=>{
-    if(localStorage.getItem('startDate') == null) {
+    if(localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
       localStorage.setItem('startDate', '1900-01-01')
       localStorage.setItem('toStart', '01/01/1900%2000:00:00')
     }
 
-    if(localStorage.getItem('endDate') == null) {
+    if(localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
       localStorage.setItem('endDate', '2030-01-01')
       localStorage.setItem('toEnd', '01/01/2030%2000:00:00')
 
