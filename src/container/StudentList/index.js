@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Tooltip, Row, Col, Result } from 'antd';
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { getStudentList, findStudentListByFirstNameAndLastName, getStudentListByDate } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
-import LayoutOfApp from '../../components/Layout'
-import { Form, Select, Input } from 'antd'
 //icon
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
@@ -33,34 +31,12 @@ function StudentList() {
     })
     const [selectedRow, setSelectedRow] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [start, setStart] = useState();
-    const [end, setEnd] = useState();
-    const [endDate, setEndDate] = useState('2030-01-01');
-    const [startDate, setStartDate] = useState('1900-01-01');
-
-    const convertDate = (date, status) => {
-        let result = new Date(date.target.value);
-        console.log(date.target.value)
-        let day = result.getDate() < 10 ? '0'+(result.getDate()) : (result.getDate())
-        let month = result.getMonth()+1 < 10 ? '0'+(result.getMonth()+1) : (result.getMonth()+1);
-        let year = result.getFullYear();
-        let d = month+'/'+day+'/'+year+'%2000:00:00'
-         if(status) {
-        //         localStorage.setItem('startDate', date.target.value);
-        //         localStorage.setItem('startDateString', d);
-                 setStart(d);
-                 setStartDate(date.target.value);
-        //         setStartType('text');
-         } else  {
-        //         localStorage.setItem('endDate', date.target.value);
-        //         localStorage.setItem('endDateString', d);setStart(result)
-        //         setEndType('text');
-
-            setEndDate(date.target.value);
-            setEnd(d)
-         }
-        return d;
-    }
+    const startDate = useSelector((state) => {
+        return state.StarDate.startDate;
+    })
+    const endDate = useSelector((state) => {
+        return state.EndDate.endDate;
+    })
 
     const rowSelection = {
         selectedRow,
@@ -253,18 +229,19 @@ function StudentList() {
 
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
-            getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd')).then(data => {
                 console.log('DATA ==> ', data)
                 setStudentList(data._embedded.studentBookings)
                 setTableProps({
                     ...tableProps,
-                    totalCount: data.page.totalElements,
+                    totalCount: data._embedded.studentBookings.length,
                 });
                 setLoading(false);
             })
         }
         else {
-            findStudentListByFirstNameAndLastName(search.firstName.trim(), start ? start : '01/01/1900%2000:00:00', sortingType).then(data => {
+            findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 setStudentList(data)
                 setTableProps({
@@ -337,15 +314,6 @@ function StudentList() {
             ghost={false}
             title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Students</p>}
             extra={[
-                // <Button key='3' type="primary"
-                //     disabled={selectedRow.length > 0 ? false : true}
-                //     onClick={() => {
-                //         dispatch(assignStudents(selectedRow))
-                //         history.push('/teacherlist');
-                //     }}
-                // >
-                //     ASSIGN STUDENT
-                // </Button>
             ]}
         >
             <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -354,32 +322,6 @@ function StudentList() {
                         changeInput={changeSearch}
                         searchList={searchList}
                     />
-                </div>
-                <div style={{ display: 'flex', flex: 1 }}>
-                    <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
-                        <Form layout="inline">
-                            <Form.Item>
-                                <Input
-                                    type='date'
-                                    placeholder="Min search date"
-                                    name="start"
-                                    value={startDate}
-                                    onChange={(value) => convertDate(value, true)}
-                                />
-                            </Form.Item>
-                            <Form.Item>
-                                <Input
-                                    style={{ marginLeft: '10px' }}
-                                    type='date'
-                                    placeholder="Max search date"
-                                    name="end"
-                                    value={endDate}
-                                    onChange={(value) => convertDate(value, false)}
-                                />
-                            </Form.Item>
-                            <Button style={{ marginLeft: '20px' }} onClick={() => searchStudentListByDate(start, end)}> Search </Button>
-                        </Form>
-                    </div>
                 </div>
             </div>
             

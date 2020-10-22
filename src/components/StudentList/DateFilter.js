@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Form, Select, Input, Button } from 'antd'
 
 const { Option } = Select;
@@ -6,8 +6,6 @@ const DateFilter = ({searchStudentListByDate}) => {
 
     const [start, setStart] = useState();
     const [end, setEnd] = useState();
-    const [startType, setStartType] = useState('date');
-    const [endType, setEndType] = useState('date');
 
     const convertDate = (date, status) => {
         let result = new Date(date.target.value);
@@ -17,15 +15,9 @@ const DateFilter = ({searchStudentListByDate}) => {
         let year = result.getFullYear();
         let d = month+'/'+day+'/'+year+'%2000:00:00'
          if(status) {
-        //         localStorage.setItem('startDate', date.target.value);
-        //         localStorage.setItem('startDateString', d);
-                 setStart(d)
-        //         setStartType('text');
+            setStart(d)
          } else  {
-        //         localStorage.setItem('endDate', date.target.value);
-        //         localStorage.setItem('endDateString', d);setStart(result)
-        //         setEndType('text');
-                setEnd(d)
+            setEnd(d)
          }
         return d;
     }
@@ -51,11 +43,10 @@ const DateFilter = ({searchStudentListByDate}) => {
                     placeholder="Min search date"
                     name="start"
                     //value={start}
-                    disabled={startType == 'text' ? true : false}
                     onChange={(value) => convertDate(value, true)}
                 />
             </Form.Item>
-            <Button onClick={() => {setStart(null); setStartType('date'); localStorage.setItem('startDate', null); localStorage.setItem('startDateString', '');} }> Clear  </Button>
+            <Button onClick={() => {setStart(null); localStorage.setItem('startDate', null); localStorage.setItem('startDateString', '');} }> Clear  </Button>
             <Form.Item>
                 <Input
                     style={{ marginLeft: '10px' }}
@@ -66,7 +57,7 @@ const DateFilter = ({searchStudentListByDate}) => {
                     onChange={(value) => convertDate(value, false)}
                 />
             </Form.Item>
-            <Button onClick={() => { setEnd(null); setEndType('date'); localStorage.setItem('endDate', null); localStorage.setItem('endDateString', '');} }> Clear </Button>
+            <Button onClick={() => { setEnd(null); localStorage.setItem('endDate', null); localStorage.setItem('endDateString', '');} }> Clear </Button>
             <Button style={{ marginLeft: '20px' }} onClick={() => searchStudentListByDate(start, end)}> Search </Button>
         </Form>
     )

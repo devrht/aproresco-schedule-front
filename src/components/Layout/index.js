@@ -17,6 +17,17 @@ function LayoutOfApp({ children }, props) {
   const [pathName,setPathName]=useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
   useEffect(()=>{
+    if(localStorage.getItem('startDate') == null) {
+      localStorage.setItem('startDate', '1900-01-01')
+      localStorage.setItem('toStart', '01/01/1900%2000:00:00')
+    }
+
+    if(localStorage.getItem('endDate') == null) {
+      localStorage.setItem('endDate', '2030-01-01')
+      localStorage.setItem('toEnd', '01/01/2030%2000:00:00')
+
+    }
+
     setPathName(window.location.pathname);
     console.log(pathName);
   },[window.location.pathname])

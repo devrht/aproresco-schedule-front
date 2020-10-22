@@ -6,13 +6,10 @@ import { Table, PageHeader, Button, Spin, Popconfirm } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate } from '../../services/Teacher'
 import { assignStudentlistToTeacher } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
-import SearchFilter from '../../components/TeacherList/SearchFilter'
-//import AssignStudent from '../../components/TeacherList/AssignStudent'
-//icon
-import { Form, Select, Input } from 'antd'
+import SearchFilter from '../../components/StudentList/SearchFilter'
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
-import DateFilter from '../../components/StudentList/DateFilter';
+
 function TeacherList() {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -27,35 +24,10 @@ function TeacherList() {
         pageIndex: 0,
         pageSize: 30,
     });
-    const [loading,setLoading] = useState(false);
     const [start, setStart] = useState();
     const [end, setEnd] = useState();
-    const [endDate, setEndDate] = useState('2030-01-01');
-    const [startDate, setStartDate] = useState('1900-01-01');
+    const [loading,setLoading] = useState(false);
 
-    const convertDate = (date, status) => {
-        let result = new Date(date.target.value);
-        console.log(result)
-        let day = result.getDate() < 10 ? '0'+(result.getDate()) : (result.getDate())
-        let month = result.getMonth()+1 < 10 ? '0'+(result.getMonth()+1) : (result.getMonth()+1);
-        let year = result.getFullYear();
-        let d = month+'/'+day+'/'+year+'%2000:00:00'
-         if(status) {
-        //         localStorage.setItem('startDate', date.target.value);
-        //         localStorage.setItem('startDateString', d);
-                 setStart(d);
-                 setStartDate(date.target.value);
-        //         setStartType('text');
-         } else  {
-        //         localStorage.setItem('endDate', date.target.value);
-        //         localStorage.setItem('endDateString', d);setStart(result)
-        //         setEndType('text');
-
-            setEndDate(date.target.value);
-            setEnd(d)
-         }
-        return d;
-    }
     const [search, setSearch] = useState({
         name:"",
         firstName:"",
@@ -79,18 +51,19 @@ function TeacherList() {
 
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
-            getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            //getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd')).then(data => {
                 console.log('DATA ==> ', data)
                 setTeacherList(data._embedded.teacherAvailabilities)
                 setTableProps({
                     ...tableProps,
-                    totalCount: data.page.totalElements,
+                    totalCount: data._embedded.teacherAvailabilities.length,
                 });
                 setLoading(false);
             })
         }
         else {
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), start ? start : '01/01/1900%2000:00:00', sortingType).then(data => {
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), sortingType).then(data => {
                 setTeacherList(data)
                 setTableProps({
                     totalCount: 1,
@@ -321,15 +294,6 @@ function TeacherList() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>Teachers</p>}
                 extra={[
-                    // <Button key='3' type="primary"
-                    //     disabled={selectedRow.length > 0 ? false : true}
-                    //     onClick={() => {
-                    //         dispatch(assignStudents(selectedRow))
-                    //         history.push('/teacherlist');
-                    //     }}
-                    // >
-                    //     ASSIGN STUDENT
-                    // </Button>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -338,34 +302,6 @@ function TeacherList() {
                             changeInput={changeSearch}
                             searchList={searchList}
                         />
-                    </div>
-                    <div style={{ display: 'flex', flex: 1 }}>
-                        <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
-                        <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
-                        <Form layout="inline">
-                            <Form.Item>
-                                <Input
-                                    type='date'
-                                    placeholder="Min search date"
-                                    name="start"
-                                    value={startDate}
-                                    onChange={(value) => convertDate(value, true)}
-                                />
-                            </Form.Item>
-                            <Form.Item>
-                                <Input
-                                    style={{ marginLeft: '10px' }}
-                                    type='date'
-                                    placeholder="Max search date"
-                                    name="end"
-                                    value={endDate}
-                                    onChange={(value) => convertDate(value, false)}
-                                />
-                            </Form.Item>
-                            <Button style={{ marginLeft: '20px' }} onClick={() => searchTeacherListByDate(start, end)}> Search </Button>
-                        </Form>
-                    </div>
-                        </div>
                     </div>
                 </div>
                 {!teacherList ? <Spin className="loading-table" /> :
