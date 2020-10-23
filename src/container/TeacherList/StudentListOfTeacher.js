@@ -148,42 +148,42 @@ function StudentListOfTeacher(props) {
                 <Row gutter={24} style={{ marginBottom: '3%' }}>
                     <Card title="Profile" hoverable={true} bordered={true} style={{ width: "48%", marginLeft: '2%' }}>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4>Name</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{ `${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}` }</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4 >External Email</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{ `${teacher.teacherProfile.externalEmail}` }</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4 >Internal Email</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{ `${teacher.teacherProfile.internalEmail}` }</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4>Conference URL</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{ `${teacher.teacherProfile.conferenceUrl}` }</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4>Subjects</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{ teacher.teacherProfile.subjects.join(', ') }</h4>
                             </Col>
                         </Row>
@@ -191,19 +191,19 @@ function StudentListOfTeacher(props) {
 
                     <Card title="Availability" hoverable={true} bordered={true} style={{ width: "47%", marginLeft: '2%' }}>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4>Start Date</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{teacher.startDate}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4>Conference URL</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
-                                <Form layout="inline" style={{ marginRight: '20px' }}>
+                            <Col className="gutter-row" span={15}>
+                                <Form layout="inline">
                                     <Form.Item>
                                         <Input
                                             type="text"
@@ -217,10 +217,10 @@ function StudentListOfTeacher(props) {
                             </Col>
                         </Row>
                         <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
+                            <Col className="gutter-row" span={7}>
                                 <h4>Students</h4>
                             </Col>
-                            <Col className="gutter-row" span={20}>
+                            <Col className="gutter-row" span={15}>
                                 <h4>{ teacher.studentCount }</h4>
                             </Col>
                         </Row>

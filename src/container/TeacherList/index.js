@@ -57,7 +57,7 @@ function TeacherList() {
                 setTeacherList(data._embedded.teacherAvailabilities)
                 setTableProps({
                     ...tableProps,
-                    totalCount: data._embedded.teacherAvailabilities.length,
+                    totalCount: data.page.totalElements,
                 });
                 setLoading(false);
             })

@@ -235,7 +235,7 @@ function StudentList() {
                 setStudentList(data._embedded.studentBookings)
                 setTableProps({
                     ...tableProps,
-                    totalCount: data._embedded.studentBookings.length,
+                    totalCount: data.page.totalElements,
                     pageSize: 30,
                 });
                 setLoading(false);
