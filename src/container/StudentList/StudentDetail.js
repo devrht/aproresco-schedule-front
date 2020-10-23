@@ -94,7 +94,7 @@ function StudentDetail(props) {
                                 <h4>Name</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.teacherProfile.firstName} {student.teacherAvailability.teacherProfile.lastName}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.firstName : '' : ''} {student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.lastName : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -102,7 +102,7 @@ function StudentDetail(props) {
                                 <h4>Subjects</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.teacherProfile.subjects.join(', ')}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.subjects.join(', ') : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -110,7 +110,7 @@ function StudentDetail(props) {
                                 <h4 >Grades</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.teacherProfile.grades.join(', ')}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.grades.join(', ') : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -118,7 +118,7 @@ function StudentDetail(props) {
                                 <h4>ConferenceUrl</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.teacherProfile.conferenceUrl}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.conferenceUrl : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -126,7 +126,7 @@ function StudentDetail(props) {
                                 <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.teacherProfile.internalEmail}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.internalEmail : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -134,7 +134,7 @@ function StudentDetail(props) {
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.teacherProfile.phoneNumber}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.phoneNumber : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -142,7 +142,7 @@ function StudentDetail(props) {
                                 <h4 >Comment</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability.studentCount}</h4>
+                                <h4 >{student.teacherAvailability ? student.teacherAvailability.studentCount : ''}</h4>
                             </Col>
                         </Row>
                     </Card>
