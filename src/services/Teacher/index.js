@@ -15,8 +15,9 @@ export const getTeacherList = (page,size,sortName,sortType) =>{
         })
 }
 
-export const getTeacherListByDate = (start, end) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByStartDateBetween?startDate=${start}&endDate=${end}`)
+export const getTeacherListByDate = (start, end, page, size, sortName, sortType) =>{
+    //console.log(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByStartDateBetween?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })
@@ -33,9 +34,9 @@ export const getTeacherListByDate = (start, end) =>{
 //         })
 // }
 
-export const findTeacherListByFirstNameAndLastName = (firstName,startDate,sortType) =>{
+export const findTeacherListByFirstNameAndLastName = (firstName,start, end, page, size, sortName, sortType) =>{
     //return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/search/findByTeacherProfileFirstNameIgnoreCaseContainingOrTeacherProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?firstName=${firstName}&startDate=${startDate},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })

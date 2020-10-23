@@ -31,8 +31,9 @@ export const getStudentList = (page,size,sortName,sortType) =>{
         })
 }
 
-export const getStudentListByDate = (start, end) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStartDateBetween?startDate=${start}&endDate=${end}`)
+export const getStudentListByDate = (start, end, page, size, sortName, sortType) =>{
+    console.log(`${routes.SERVER_ADDRESS}/students_bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })
@@ -51,10 +52,10 @@ export const getStudentDetail = (studentId) =>{
         })
 }
 
-export const findStudentListByFirstNameAndLastName = (firstName,startDate,sortType) =>{
-    console.log(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${startDate},${sortType}`)
+export const findStudentListByFirstNameAndLastName = (firstName,start, end, page, size, sortName, sortType) =>{
+    console.log(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${startDate},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             console.log('RESPONSE ===> ', res)
             return res.data;
@@ -73,4 +74,26 @@ export const assignStudentlistToTeacher = (teacherId,studentIds) =>{
         .catch(err =>{
             alert(err.message);
         })
+}
+
+export const assignStudentToAnotherTeacher = (teacherId,studentIds) =>{
+    console.log(`${routes.SERVER_ADDRESS}/reschedule/student/${studentIds}/${teacherId}`);
+    return axios.get(`${routes.SERVER_ADDRESS}/reschedule/student/${studentIds}/${teacherId}`)
+    .then(res =>{
+        return res.data;
+    })
+    .catch(err =>{
+        alert(err.message);
+    })
+}
+
+export const assignMeetingToAnotherTeacher = (teacherId,url) =>{
+    console.log(`${routes.SERVER_ADDRESS}/reschedule/teacher/${teacherId}?url=${url}`);
+    return axios.get(`${routes.SERVER_ADDRESS}/reschedule/teacher/${teacherId}?url=${url}`)
+    .then(res =>{
+        return res.data;
+    })
+    .catch(err =>{
+        alert(err.message);
+    })
 }

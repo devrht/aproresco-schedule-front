@@ -17,14 +17,26 @@ function LayoutOfApp({ children }, props) {
   const [pathName,setPathName]=useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
   useEffect(()=>{
+    let today =  new Date();
+    today.setDate(today.getDate() - 1 )
+    let day = today.getDate() < 10 ? '0'+(today.getDate()) : (today.getDate())
+    let month = today.getMonth()+1 < 10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1);
+    let year = today.getFullYear();
+    console.log('Date: '+year+'-'+month+'-'+day)
     if(localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
-      localStorage.setItem('startDate', '1900-01-01')
-      localStorage.setItem('toStart', '01/01/1900%2000:00:00')
+      localStorage.setItem('startDate', year+'-'+month+'-'+day)
+      localStorage.setItem('toStart', month+'/'+day+'/'+year+'%2000:00:00')
     }
 
+    today =  new Date();
+    today.setDate(today.getDate() + 1);
+    day = today.getDate() < 10 ? '0'+(today.getDate()) : (today.getDate())
+    month = today.getMonth()+1 < 10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1);
+    year = today.getFullYear();
+
     if(localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
-      localStorage.setItem('endDate', '2030-01-01')
-      localStorage.setItem('toEnd', '01/01/2030%2000:00:00')
+      localStorage.setItem('endDate', year+'-'+month+'-'+day)
+      localStorage.setItem('toEnd', month+'/'+day+'/'+year+'%2000:00:00')
 
     }
 

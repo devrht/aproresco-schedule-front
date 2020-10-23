@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Popconfirm } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate } from '../../services/Teacher'
-import { assignStudentlistToTeacher } from '../../services/Student'
+import { assignStudentToAnotherTeacher } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 
@@ -52,7 +52,7 @@ function TeacherList() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd')).then(data => {
+                getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 setTeacherList(data._embedded.teacherAvailabilities)
                 setTableProps({
@@ -63,7 +63,7 @@ function TeacherList() {
             })
         }
         else {
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), sortingType).then(data => {
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 setTeacherList(data)
                 setTableProps({
                     totalCount: 1,
@@ -181,10 +181,11 @@ function TeacherList() {
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(record.teacherProfile.conferenceUrl)
+                        window.open(record.conferenceUrl ? record.conferenceUrl.length > 0 ? record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl : '' : '')
                     }}
-                    disabled={!record.teacherProfile.conferenceUrl}><u>Google Meet</u></Button>
+                    disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
+                        <u>Google Meet</u>
+                </Button>
         },
         {
             title: 'Action',
@@ -198,7 +199,7 @@ function TeacherList() {
                         studentIdArray.push(student.id)
                     })
                     let studentIds = studentIdArray.join(',');
-                    assignStudentlistToTeacher(record.id, studentIds)
+                    assignStudentToAnotherTeacher(record.id, studentIds)
                         .then(res => {
                             setLoading(true);
                             dispatch(assignStudents([])); 
@@ -277,7 +278,7 @@ function TeacherList() {
         //         end = localStorage.getItem('endDateString');
         //     };
         //if
-        getTeacherListByDate(start, end).then(data => {
+        getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             console.log('DATA ==> ', data)
             setTeacherList(data._embedded.teacherAvailabilities)
             setTableProps({
@@ -317,7 +318,8 @@ function TeacherList() {
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
                         onRow={(record) => ({
-                            onClick: () => (history.push(`/studentlist/teacher/${record.id}/${record.teacherProfile.firstName + " " + record.teacherProfile.lastName}`))
+                            onClick: () => history.push(`/studentlist/teacher/${record.id}`,
+                            { teacher: record })
                         })}
                     />}
 

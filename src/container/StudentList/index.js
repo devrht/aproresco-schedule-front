@@ -170,8 +170,8 @@ function StudentList() {
                 return (
                     <Tooltip placement="topLeft" title={text} color={"white"}>
                         <div onClick={(e) => {
-                            e.stopPropagation();
-                            history.push(`/studentlist/teacher/${record.teacherAvailability.id}/${record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName}`)
+                            //e.stopPropagation();
+                            history.push(`/studentlist/teacher/${record.teacherAvailability.id}`, { teacher: record.teacherAvailability })
                         }} style={{ cursor: 'pointer', color: isSubjectContains ? 'black': 'orange' }}>
                             {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
                         </div>
@@ -230,18 +230,19 @@ function StudentList() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-            getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd')).then(data => {
+                getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 setStudentList(data._embedded.studentBookings)
                 setTableProps({
                     ...tableProps,
                     totalCount: data._embedded.studentBookings.length,
+                    pageSize: 30,
                 });
                 setLoading(false);
             })
         }
         else {
-            findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), sortingType).then(data => {
+            findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 setStudentList(data)
                 setTableProps({
