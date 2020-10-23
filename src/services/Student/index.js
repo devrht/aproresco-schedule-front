@@ -22,7 +22,7 @@ export const getStudentListById = (TeacherId) =>{
 
 export const getStudentList = (page,size,sortName,sortType) =>{
 
-    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/students_bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })
@@ -32,8 +32,7 @@ export const getStudentList = (page,size,sortName,sortType) =>{
 }
 
 export const getStudentListByDate = (start, end, page, size, sortName, sortType) =>{
-    console.log(`${routes.SERVER_ADDRESS}/students_bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/students_bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
             return res.data;
         })
@@ -53,11 +52,9 @@ export const getStudentDetail = (studentId) =>{
 }
 
 export const findStudentListByFirstNameAndLastName = (firstName,start, end, page, size, sortName, sortType) =>{
-    console.log(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
     return axios.get(`${routes.SERVER_ADDRESS}/search/students_bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{
-            console.log('RESPONSE ===> ', res)
             return res.data;
         })
         .catch(err =>{

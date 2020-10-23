@@ -54,10 +54,10 @@ function TeacherList() {
             //getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setTeacherList(data._embedded.teacherAvailabilities)
+                setTeacherList(data.content)
                 setTableProps({
                     ...tableProps,
-                    totalCount: data.page.totalElements,
+                    totalCount: data.totalElements,
                 });
                 setLoading(false);
             })

@@ -171,7 +171,9 @@ function StudentList() {
                     <Tooltip placement="topLeft" title={text} color={"white"}>
                         <div onClick={(e) => {
                             //e.stopPropagation();
-                            history.push(`/studentlist/teacher/${record.teacherAvailability.id}`, { teacher: record.teacherAvailability })
+                            if (record.teacherAvailability) 
+                                if(record.teacherAvailability.teacherProfile)
+                                    history.push(`/studentlist/teacher/${record.teacherAvailability.id}`, { teacher: record.teacherAvailability })
                         }} style={{ cursor: 'pointer', color: isSubjectContains ? 'black': 'orange' }}>
                             {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
                         </div>
@@ -232,10 +234,10 @@ function StudentList() {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setStudentList(data._embedded.studentBookings)
+                setStudentList(data.content)
                 setTableProps({
                     ...tableProps,
-                    totalCount: data.page.totalElements,
+                    totalCount: data.totalElements,
                     pageSize: 30,
                 });
                 setLoading(false);
