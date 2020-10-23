@@ -73,7 +73,7 @@ function StudentList() {
                     style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
                     onClick={(e) => {
                         e.stopPropagation();
-                        history.push(`/studentlist/studentDetail/${record.id}`)
+                        history.push(`/studentlist/studentDetail/${record.id}`, {student: record})
                     }}>{record.studentProfile.firstName + " " + record.studentProfile.lastName}</Button>
             </Tooltip>,
             key: 'name',
@@ -244,10 +244,10 @@ function StudentList() {
         else {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setStudentList(data)
+                setStudentList(data.content)
                 setTableProps({
-                    totalCount: 1,
-                    pageIndex: 0,
+                    ...tableProps,
+                    totalCount: data.totalElements,
                     pageSize: 30,
                 });
                 setLoading(false);

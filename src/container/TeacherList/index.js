@@ -64,10 +64,10 @@ function TeacherList() {
         }
         else {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                setTeacherList(data)
+                setTeacherList(data.content)
                 setTableProps({
-                    totalCount: 1,
-                    pageIndex: 0,
+                    ...tableProps,
+                    totalCount: data.totalElements,
                     pageSize: 30,
                 });
                 setLoading(false);
