@@ -189,8 +189,10 @@ function StudentList() {
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(record.teacherAvailability.teacherProfile.conferenceUrl)
+                        //e.stopPropagation();
+                        if (record.teacherAvailability) 
+                                if(record.teacherAvailability.teacherProfile)
+                                    window.open(record.teacherAvailability.teacherProfile.conferenceUrl.includes('http') ? record.teacherAvailability.teacherProfile.conferenceUrl : 'http'+record.teacherAvailability.teacherProfile.conferenceUrl)
                     }}
                     disabled={record.teacherAvailability ? record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false : false}><u>Google Meet</u></Button>
             </Tooltip>,

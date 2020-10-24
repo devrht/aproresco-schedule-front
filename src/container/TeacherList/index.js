@@ -181,7 +181,7 @@ function TeacherList() {
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
-                        window.open(record.conferenceUrl ? record.conferenceUrl.length > 0 ? record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl : '' : '')
+                        window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: '')
                     }}
                     disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
                         <u>Google Meet</u>
