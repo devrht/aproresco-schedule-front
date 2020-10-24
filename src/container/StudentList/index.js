@@ -73,7 +73,7 @@ function StudentList() {
                     style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
                     onClick={(e) => {
                         e.stopPropagation();
-                        history.push(`/studentlist/studentDetail/${record.id}`, {student: record})
+                        history.push(`/studentlist/studentDetail/${record.id}`)
                     }}>{record.studentProfile.firstName + " " + record.studentProfile.lastName}</Button>
             </Tooltip>,
             key: 'name',
@@ -192,7 +192,7 @@ function StudentList() {
                         //e.stopPropagation();
                         if (record.teacherAvailability) 
                                 if(record.teacherAvailability.teacherProfile)
-                                    window.open(record.teacherAvailability.teacherProfile.conferenceUrl.includes('http') ? record.teacherAvailability.teacherProfile.conferenceUrl : 'http'+record.teacherAvailability.teacherProfile.conferenceUrl)
+                                    window.open(record.teacherAvailability.teacherProfile.conferenceUrl.includes('http') ? record.teacherAvailability.teacherProfile.conferenceUrl : 'http://'+record.teacherAvailability.teacherProfile.conferenceUrl)
                     }}
                     disabled={record.teacherAvailability ? record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false : false}><u>Google Meet</u></Button>
             </Tooltip>,

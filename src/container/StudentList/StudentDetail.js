@@ -8,22 +8,24 @@ function StudentDetail(props) {
     const location = useLocation();
     const { params } = props.match;
     const [studentDetail, setStudentDetail] = useState();
-    const [student, setStudent] = useState(location.state.student);
 
     useEffect(() => {
-        //getDetailView();
+        getDetailView();
     }, []);
+
     const getDetailView = () => {
         getStudentDetail(params.id).then(data => {
             console.log('DATA ==> ', data)
             setStudentDetail(data)
         })
     }
+    
     return (
         <div>
+            { studentDetail ?
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{student.studentProfile.firstName} {student.studentProfile.lastName}</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{studentDetail.studentProfile.firstName} {studentDetail.studentProfile.lastName}</p>}
                 extra={[
                 ]}
             >
@@ -35,7 +37,7 @@ function StudentDetail(props) {
                                 <h4>Period</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.period}</h4>
+                                <h4 >{studentDetail.startDate}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -43,7 +45,7 @@ function StudentDetail(props) {
                                 <h4 >Subject</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.subject}</h4>
+                                <h4 >{studentDetail.subject}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -51,7 +53,7 @@ function StudentDetail(props) {
                                 <h4>Grade</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.studentProfile.grade}</h4>
+                                <h4 >{studentDetail.studentProfile.grade}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -59,7 +61,7 @@ function StudentDetail(props) {
                                 <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.studentProfile.studentEmail}</h4>
+                                <h4 >{studentDetail.studentProfile.studentEmail}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -67,23 +69,7 @@ function StudentDetail(props) {
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.studentProfile.phoneNumber}</h4>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
-                                <h4 >Comment</h4>
-                            </Col>
-                            <Col className="gutter-row" span={20}>
-                                <h4 >{student.comment}</h4>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className="gutter-row" span={4}>
-                                <h4 >resources</h4>
-                            </Col>
-                            <Col className="gutter-row" span={20}>
-                                <h4 >{student.resources}</h4>
+                                <h4 >{studentDetail.studentProfile.phoneNumber}</h4>
                             </Col>
                         </Row>
                     </Card>
@@ -94,7 +80,7 @@ function StudentDetail(props) {
                                 <h4>Name</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.firstName : '' : ''} {student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.lastName : '' : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.firstName : '' : ''} {studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.lastName : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -102,7 +88,7 @@ function StudentDetail(props) {
                                 <h4>Subjects</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.subjects.join(', ') : '' : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.subjects.join(', ') : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -110,7 +96,7 @@ function StudentDetail(props) {
                                 <h4 >Grades</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.grades.join(', ') : '' : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.grades.join(', ') : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -118,7 +104,7 @@ function StudentDetail(props) {
                                 <h4>ConferenceUrl</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.conferenceUrl : '' : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.conferenceUrl : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -126,7 +112,7 @@ function StudentDetail(props) {
                                 <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.internalEmail : '' : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.internalEmail : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -134,7 +120,7 @@ function StudentDetail(props) {
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.teacherProfile ? student.teacherAvailability.teacherProfile.phoneNumber : '' : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.phoneNumber : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -142,12 +128,12 @@ function StudentDetail(props) {
                                 <h4 >Comment</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
-                                <h4 >{student.teacherAvailability ? student.teacherAvailability.studentCount : ''}</h4>
+                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.studentCount : ''}</h4>
                             </Col>
                         </Row>
                     </Card>
                 </Row>
-            </PageHeader>
+            </PageHeader> : null }
         </div>
     )
 }

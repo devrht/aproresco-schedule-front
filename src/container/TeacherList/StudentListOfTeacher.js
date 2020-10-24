@@ -234,7 +234,12 @@ function StudentListOfTeacher(props) {
                     rowSelection={rowSelection}
                     rowKey="id"
                     onRow={(record) => ({
-                        onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
+                        onClick: (e) => {
+                            console.log('to go', record)
+                            e.stopPropagation();
+                            history.push(`/studentlist/studentDetail/${record.id}`)
+                        }
+
                     })} 
                 />
                 }
