@@ -1,4 +1,4 @@
-export const SERVER_ADDRESS = 'http://tower.watu.fi:9030/appui';
+export const SERVER_ADDRESS = 'http://tower.watu.fi:8030/appui';
 
 export const OAUTH = {
     GRANT_TYPE: 'password',
