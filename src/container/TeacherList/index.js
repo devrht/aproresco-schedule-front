@@ -54,22 +54,60 @@ function TeacherList() {
             //getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setTeacherList(data.content)
-                setTableProps({
-                    ...tableProps,
-                    totalCount: data.totalElements,
-                });
+                if(data) {
+                    if(data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalElements,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                
                 setLoading(false);
             })
         }
         else {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                setTeacherList(data.content)
-                setTableProps({
-                    ...tableProps,
-                    totalCount: data.totalElements,
-                    pageSize: 30,
-                });
+                if(data) {
+                    if(data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalElements,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
                 setLoading(false);
             })
         }

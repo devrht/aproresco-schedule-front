@@ -236,24 +236,60 @@ function StudentList() {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setStudentList(data.content)
-                setTableProps({
-                    ...tableProps,
-                    totalCount: data.totalElements,
-                    pageSize: 30,
-                });
+                if(data) {
+                    if(data.content) {
+                        setStudentList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalElements,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setStudentList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setStudentList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
                 setLoading(false);
             })
         }
         else {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                setStudentList(data.content)
-                setTableProps({
-                    ...tableProps,
-                    totalCount: data.totalElements,
-                    pageSize: 30,
-                });
+                if(data) {
+                    if(data.content) {
+                        setStudentList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalElements,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setStudentList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setStudentList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
                 setLoading(false);
             })
         }
