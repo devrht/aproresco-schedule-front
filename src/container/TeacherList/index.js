@@ -267,7 +267,7 @@ function TeacherList() {
     const handleTableChange = (pagination, filters, sorter) => {
         setTableProps({
             ...tableProps,
-            pageIndex: pagination.current,
+            pageIndex: pagination.current-1,
             pageSize: pagination.pageSize,
         });
         setLoading(true);
