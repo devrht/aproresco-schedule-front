@@ -3,20 +3,36 @@ import 'antd/dist/antd.css';
 import '../../Assets/Layout.css'
 import { useHistory } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
+import { useSelector, useDispatch } from 'react-redux'
 import {
   UserOutlined,
   VideoCameraOutlined,
-  LogoutOutlined
+  SettingOutlined
 } from '@ant-design/icons';
-import { GoogleLogout } from 'react-google-login';
+import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
+import { bridgeManagement, persistManagement } from '../../services/Student'
+
 const { Sider, Content } = Layout;
 
 function LayoutOfApp({ children }, props) {
-  //const { path, params } = props.match;
+
+
+  const dispatch = useDispatch();
   const history = useHistory();
   const [pathName,setPathName]=useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [assigning, setAssigning] = useState(false);
+  const deletingStatus = useSelector((state) => {
+    return state.Student.enableDeleting;
+  })
+  const assigningStatus = useSelector((state) => {
+    return state.Student.enableAssigning;
+  })
+
   useEffect(()=>{
+
     let today =  new Date();
     today.setDate(today.getDate() - 1 )
     let day = today.getDate() < 10 ? '0'+(today.getDate()) : (today.getDate())
@@ -44,19 +60,68 @@ function LayoutOfApp({ children }, props) {
     console.log(pathName);
   },[window.location.pathname])
 
+  const onShowSettings = () => {
+    setShowSettings(!showSettings);
+  }
+
+  const onEnableDeleting = () => {
+    setDeleting(!deleting);
+    dispatch(enableDeleting(!deleting))
+  }
+
+  const onEnableAssigning = () => {
+    setAssigning(!assigning);
+    dispatch(enableAssigning(!assigning))
+  }
+
+  const onBridgeAction = (status) => {
+    bridgeManagement(status).then(data => {
+      console.log(data);
+    });
+  }
+
+  const onPersistAction = (status) => {
+    persistManagement(status).then(data => {
+      console.log(data);
+    });
+  }
+
   return (
     <Layout>
       {
         logged ? 
         <Sider className="sider">
           <h1>Appui Scolaire</h1>
-          <Menu theme="dark" mode="inline" selectedKeys={[pathName]}>
+          <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>
             <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
               Student List
             </Menu.Item>
             <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
               Teacher List
-              </Menu.Item>
+            </Menu.Item>
+            <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { onShowSettings() }}>
+              Settings
+            </Menu.Item>
+            <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
+              <p onClick={() => { onEnableDeleting() }} style={{ cursor: "pointer" }}>
+                { deletingStatus ? 'Disable' : 'Enable' } deleting
+              </p>
+              <p onClick={() => { onEnableAssigning() }} style={{ cursor: "pointer" }}>
+                { assigningStatus ? 'Disable' : 'Enable' } reassigning
+              </p>
+              <p onClick={() => { onBridgeAction(true) }} style={{ cursor: "pointer" }}>
+                Open the bridge
+              </p>
+              <p onClick={() => { onBridgeAction(false) }} style={{ cursor: "pointer" }}>
+                Close the bridge
+              </p>
+              <p onClick={() => { onPersistAction(true) }} style={{ cursor: "pointer" }}>
+                Enable Persistence
+              </p>
+              <p onClick={() => { onPersistAction(false) }} style={{ cursor: "pointer" }}>
+                Disable Persistence
+              </p>
+            </div>
           </Menu>
         </Sider> : null
       }

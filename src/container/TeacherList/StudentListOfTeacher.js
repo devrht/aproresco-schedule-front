@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { Table, PageHeader, Button,Spin } from 'antd';
 import {getStudentListById} from '../../services/Student'
 import { useSelector, useDispatch } from 'react-redux'
-import { assignStudents } from '../../Action-Reducer/Student/action'
+import { assignStudents, enableAssigning } from '../../Action-Reducer/Student/action'
 import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '../../services/Student'
 import { Form, Row, Col, Card, Input } from 'antd'
 import { useLocation } from "react-router-dom";
@@ -60,11 +60,14 @@ function StudentListOfTeacher(props) {
     const [selectedRow, setSelectedRow] = useState([]);
     const assignStudentList = useSelector((state) => {
         return state.Student.assignStudent;
+    })    
+    
+    const assigningStatus = useSelector((state) => {
+        return state.Student.enableAssigning;
     })
     const rowSelection = {
         selectedRow,
         onChange: (selectedrow, records) => {
-            console.log('selectedRowKeys changed: ', records);
             var recordIdArray = [];
             setActive(false);
             records.map(record => {
@@ -135,6 +138,7 @@ function StudentListOfTeacher(props) {
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>}
                 extra={[
                     <Button key='3' type="primary"
+                        style={{ display: assigningStatus ? 'block' : 'none' }}
                         disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
                         onClick={() => {
                             assignStudent()

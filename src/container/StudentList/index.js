@@ -19,6 +19,9 @@ function StudentList() {
     const [studentList, setStudentList] = useState();
     const [sortingName, setSortingName] = useState("");
     const [sortingType, setSortingType] = useState("");
+    const deletingStatus = useSelector((state) => {
+      return state.Student.enableDeleting;
+    })
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
@@ -378,7 +381,7 @@ function StudentList() {
                         changeInput={changeSearch}
                         searchList={searchList}
                     />
-                    <Button onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
+                    <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                 </div>
             </div>
             

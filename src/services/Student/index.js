@@ -84,8 +84,8 @@ export const deleteStudentBooking = (studentIds) =>{
 }
 
 export const assignStudentToAnotherTeacher = (teacherId,studentIds) =>{
-    console.log(`${routes.SERVER_ADDRESS}/reschedule/student/${studentIds}/${teacherId}`);
-    return axios.get(`${routes.SERVER_ADDRESS}/reschedule/student/${studentIds}/${teacherId}`)
+    console.log(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`);
+    return axios.get(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`)
     .then(res =>{
         return res.data;
     })
@@ -97,6 +97,26 @@ export const assignStudentToAnotherTeacher = (teacherId,studentIds) =>{
 export const assignMeetingToAnotherTeacher = (teacherId,url) =>{
     console.log(`${routes.SERVER_ADDRESS}/reschedule/teacher/${teacherId}?url=${url}`);
     return axios.get(`${routes.SERVER_ADDRESS}/reschedule/teacher/${teacherId}?url=${url}`)
+    .then(res =>{
+        return res.data;
+    })
+    .catch(err =>{
+        alert(err.message);
+    })
+}
+
+export const bridgeManagement = (status) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/meet/bridge?open=${status}`)
+    .then(res =>{
+        return res.data;
+    })
+    .catch(err =>{
+        alert(err.message);
+    })
+}
+
+export const persistManagement = (status) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/meet/bridge?persist=${status}`)
     .then(res =>{
         return res.data;
     })

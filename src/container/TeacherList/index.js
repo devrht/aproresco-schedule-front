@@ -20,6 +20,12 @@ function TeacherList() {
     const [sortingName, setSortingName] = useState("");
     const [sortingType, setSortingType] = useState("");
     const [selectedRow, setSelectedRow] = useState([]);
+    const deletingStatus = useSelector((state) => {
+      return state.Student.enableDeleting;
+    })    
+    const assigningStatus = useSelector((state) => {
+        return state.Student.enableAssigning;
+    })
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
@@ -269,7 +275,7 @@ function TeacherList() {
                             cancelText="Cancel"
                             disabled={assignStudentList.length > 0 ? false : true}
                         >
-                            <Button disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()}>Assign Students</Button>
+                            <Button style={{ display: assigningStatus ? 'block' : 'none' }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()}>Assign Students</Button>
                         </Popconfirm>
                     </div>
                 )
@@ -370,7 +376,7 @@ function TeacherList() {
                             changeInput={changeSearch}
                             searchList={searchList}
                         />
-                        <Button onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
+                        <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                     </div>
                 </div>
                 {!teacherList ? <Spin className="loading-table" /> :
