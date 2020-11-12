@@ -10,7 +10,7 @@ import {
   SettingOutlined
 } from '@ant-design/icons';
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
-import { bridgeManagement, persistManagement } from '../../services/Student'
+import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
 
 const { Sider, Content } = Layout;
 
@@ -24,6 +24,8 @@ function LayoutOfApp({ children }, props) {
   const [showSettings, setShowSettings] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [assigning, setAssigning] = useState(false);
+  const [bridge, setBridge] = useState(false);
+  const [persist, setPersist] = useState(false);
   const deletingStatus = useSelector((state) => {
     return state.Student.enableDeleting;
   })
@@ -32,6 +34,12 @@ function LayoutOfApp({ children }, props) {
   })
 
   useEffect(()=>{
+
+    bridgeStatus().then(data => {
+      console.log(data)
+      setBridge(data.bridge);
+      setPersist(data.persist);
+    });
 
     let today =  new Date();
     today.setDate(today.getDate() - 1 )
@@ -77,12 +85,14 @@ function LayoutOfApp({ children }, props) {
   const onBridgeAction = (status) => {
     bridgeManagement(status).then(data => {
       console.log(data);
+      setBridge(status);
     });
   }
 
   const onPersistAction = (status) => {
     persistManagement(status).then(data => {
       console.log(data);
+      setPersist(status);
     });
   }
 
@@ -109,17 +119,11 @@ function LayoutOfApp({ children }, props) {
               <p onClick={() => { onEnableAssigning() }} style={{ cursor: "pointer" }}>
                 { assigningStatus ? 'Disable' : 'Enable' } reassigning
               </p>
-              <p onClick={() => { onBridgeAction(true) }} style={{ cursor: "pointer" }}>
-                Open the bridge
+              <p onClick={() => { onBridgeAction(!bridge) }} style={{ cursor: "pointer" }}>
+                { !bridge ? 'Open' : 'Close' } the bridge
               </p>
-              <p onClick={() => { onBridgeAction(false) }} style={{ cursor: "pointer" }}>
-                Close the bridge
-              </p>
-              <p onClick={() => { onPersistAction(true) }} style={{ cursor: "pointer" }}>
-                Enable Persistence
-              </p>
-              <p onClick={() => { onPersistAction(false) }} style={{ cursor: "pointer" }}>
-                Disable Persistence
+              <p onClick={() => { onPersistAction(!persist) }} style={{ cursor: "pointer" }}>
+                { !persist ? 'Enable' : 'Disable' } Persistence
               </p>
             </div>
           </Menu>

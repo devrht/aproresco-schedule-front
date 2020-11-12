@@ -79,9 +79,9 @@ function StudentListOfTeacher(props) {
     };
     
     useEffect(() => {
-        setConfUrl(location.state.teacher.conferenceUrl);
         getListView();
     },[]);
+
     const getListView = () =>{
         setStudents(null);
         setStudentList(null);
@@ -98,6 +98,7 @@ function StudentListOfTeacher(props) {
                 datas.push(elt.studentProfile);
                 setStudentsTmp(datas);
             });
+            setConfUrl(location.state.teacher.teacherProfile.conferenceUrl);
             setStudents(studentsTmp);
         })
     }

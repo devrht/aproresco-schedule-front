@@ -188,16 +188,15 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            render: (record) => <Tooltip title={record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.conferenceUrl ? record.teacherAvailability.teacherProfile.conferenceUrl : "Link Not Found": "Teacher Not Found" : "Teacher Not Found"}>
+            render: (record) => <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl  : "Link Not Found": "Student Not Found"}>
                 <Button
                     style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
                     onClick={(e) => {
                         //e.stopPropagation();
-                        if (record.teacherAvailability) 
-                                if(record.teacherAvailability.teacherProfile)
-                                    window.open(record.teacherAvailability.teacherProfile.conferenceUrl.includes('http') ? record.teacherAvailability.teacherProfile.conferenceUrl : 'http://'+record.teacherAvailability.teacherProfile.conferenceUrl)
-                    }}
-                    disabled={record.teacherAvailability ? record.teacherAvailability.teacherProfile ? !record.teacherAvailability.teacherProfile.conferenceUrl : false : false}><u>Google Meet</u></Button>
+                        if (record.studentProfile) 
+                                if(record.studentProfile.conferenceUrl)
+                                    window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://'+record.studentProfile.conferenceUrl)
+                    }}><u>Google Meet</u></Button>
             </Tooltip>,
         },
     ];

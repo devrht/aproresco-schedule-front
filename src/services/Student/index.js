@@ -124,3 +124,13 @@ export const persistManagement = (status) =>{
         alert(err.message);
     })
 }
+
+export const bridgeStatus = () =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/meet/bridge/status`)
+    .then(res =>{
+        return res.data;
+    })
+    .catch(err =>{
+        alert(err.message);
+    })
+}
