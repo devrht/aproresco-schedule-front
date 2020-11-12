@@ -73,6 +73,16 @@ export const assignStudentlistToTeacher = (teacherId,studentIds) =>{
         })
 }
 
+export const deleteStudentBooking = (studentIds) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/disable/${studentIds}`)
+        .then(res =>{
+            return res.data;
+        })
+        .catch(err =>{
+            alert(err.message);
+        })
+}
+
 export const assignStudentToAnotherTeacher = (teacherId,studentIds) =>{
     console.log(`${routes.SERVER_ADDRESS}/reschedule/student/${studentIds}/${teacherId}`);
     return axios.get(`${routes.SERVER_ADDRESS}/reschedule/student/${studentIds}/${teacherId}`)

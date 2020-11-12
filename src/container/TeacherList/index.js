@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Popconfirm } from 'antd';
-import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate } from '../../services/Teacher'
+import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities } from '../../services/Teacher'
 import { assignStudentToAnotherTeacher } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
@@ -19,6 +19,7 @@ function TeacherList() {
     const [teacherList, setTeacherList] = useState();
     const [sortingName, setSortingName] = useState("");
     const [sortingType, setSortingType] = useState("");
+    const [selectedRow, setSelectedRow] = useState([]);
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
@@ -41,7 +42,19 @@ function TeacherList() {
             </div>
         })}
     </div>
-    
+
+    const rowSelection = {
+        selectedRow,
+        onChange: (selectedrow, records) => {
+            console.log('selectedRowKeys changed: ', records);
+            var recordIdArray = [];
+            records.map(record => {
+                recordIdArray.push({ id: record.id })
+            })
+            setSelectedRow(recordIdArray);
+        }
+    };
+        
     useEffect(() => {
         getListView();
     }, [tableProps.pageIndex]);
@@ -327,6 +340,22 @@ function TeacherList() {
         })
     }
 
+    const deleteBooking = (selectedrow) => {
+        if(selectedrow.length > 0) {
+            let ids = selectedrow.reduce((a, b) => {
+                return a+','+b.id;
+            }, '')
+            console.log(ids.substring(1));
+            deleteTeacherAvailabilities(ids.substring(1)).then(data => {
+                console.log(data);
+                setSelectedRow([]);
+                getListView();
+            });
+        } else {
+            alert('Select at least one teacher');
+        }
+    }
+
     return (
         <React.Fragment>
             <PageHeader
@@ -341,12 +370,14 @@ function TeacherList() {
                             changeInput={changeSearch}
                             searchList={searchList}
                         />
+                        <Button onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                     </div>
                 </div>
                 {!teacherList ? <Spin className="loading-table" /> :
                     <Table
                         className="table-padding"
                         columns={columns}
+                        style={{ marginTop: '30px' }}
                         loading={loading}
                         dataSource={teacherList}
                         onChange={handleTableChange}
@@ -359,6 +390,8 @@ function TeacherList() {
                             onClick: () => history.push(`/studentlist/teacher/${record.id}`,
                             { teacher: record })
                         })}
+                        rowSelection={rowSelection}
+                        rowKey="id"
                     />}
 
             </PageHeader>

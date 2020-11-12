@@ -25,13 +25,15 @@ export const getTeacherListByDate = (start, end, page, size, sortName, sortType)
         })
 }
 
-// export const getTeacherListByFirstName = (name) =>{
-//     return axios.get(`${routes.SERVER_ADDRESS}/teachers/search/findByFirstName?name=${name}`)
-//         .then(res =>{
-//             console.log("env : ", process.env.REACT_APP_BASE_API_URL)
-//             return res.data;
-//         })
-// }
+export const deleteTeacherAvailabilities = (teacherIds) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/disable/${teacherIds}`)
+        .then(res =>{
+            return res.data;
+        })
+        .catch(err =>{
+            alert(err.message);
+        })
+}
 
 export const findTeacherListByFirstNameAndLastName = (firstName,start, end, page, size, sortName, sortType) =>{
     return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)

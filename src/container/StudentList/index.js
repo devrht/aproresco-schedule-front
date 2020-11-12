@@ -4,7 +4,7 @@ import { Table, PageHeader, Button, Spin, Tooltip, Row, Col, Result } from 'antd
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { getStudentList, findStudentListByFirstNameAndLastName, getStudentListByDate } from '../../services/Student'
+import { getStudentList, findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 //icon
@@ -231,6 +231,21 @@ function StudentList() {
         return result < min ? result : min;
     }
 
+    const deleteBooking = (selectedrow) => {
+        if(selectedrow.length > 0) {
+            let ids = selectedrow.reduce((a, b) => {
+                return a+','+b.id;
+            }, '')
+            deleteStudentBooking(ids.substring(1)).then(data => {
+                console.log(data);
+                setSelectedRow([]);
+                getListView();
+            });
+        } else {
+            alert('Select at least one student');
+        }
+    }
+
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
@@ -363,6 +378,7 @@ function StudentList() {
                         changeInput={changeSearch}
                         searchList={searchList}
                     />
+                    <Button onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                 </div>
             </div>
             
