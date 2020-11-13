@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   UserOutlined,
   VideoCameraOutlined,
-  SettingOutlined
+  SettingOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
 import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
@@ -109,10 +110,13 @@ function LayoutOfApp({ children }, props) {
             <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
               Teacher List
             </Menu.Item>
-            <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { onShowSettings() }}>
+            <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
               Settings
             </Menu.Item>
-            <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
+            <Menu.Item key="/shortmessages" icon={<MessageOutlined />} onClick={() => { history.push('/short-messages') }}>
+              Short Messages
+            </Menu.Item>
+            {/* <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
               <p onClick={() => { onEnableDeleting() }} style={{ cursor: "pointer" }}>
                 { deletingStatus ? 'Disable' : 'Enable' } deleting
               </p>
@@ -125,7 +129,7 @@ function LayoutOfApp({ children }, props) {
               <p onClick={() => { onPersistAction(!persist) }} style={{ cursor: "pointer" }}>
                 { !persist ? 'Enable' : 'Disable' } Persistence
               </p>
-            </div>
+            </div> */}
           </Menu>
         </Sider> : null
       }

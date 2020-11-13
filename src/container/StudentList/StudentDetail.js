@@ -66,6 +66,14 @@ function StudentDetail(props) {
                         </Row>
                         <Row gutter={16}>
                             <Col className="gutter-row" span={4}>
+                                <h4 >Conference URL</h4>
+                            </Col>
+                            <Col className="gutter-row" span={20}>
+                                <h4 >{studentDetail.studentProfile.conferenceUrl}</h4>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col className="gutter-row" span={4}>
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={20}>
