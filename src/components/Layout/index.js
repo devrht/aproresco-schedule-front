@@ -36,12 +36,6 @@ function LayoutOfApp({ children }, props) {
 
   useEffect(()=>{
 
-    bridgeStatus().then(data => {
-      console.log(data)
-      setBridge(data.bridge);
-      setPersist(data.persist);
-    });
-
     let today =  new Date();
     today.setDate(today.getDate() - 1 )
     let day = today.getDate() < 10 ? '0'+(today.getDate()) : (today.getDate())
