@@ -6,6 +6,7 @@ import {getStudentListById} from '../../services/Student'
 import { useSelector, useDispatch } from 'react-redux'
 import { assignStudents, enableAssigning } from '../../Action-Reducer/Student/action'
 import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '../../services/Student'
+import { markTeacherAsPresent } from '../../services/Teacher'
 import { Form, Row, Col, Card, Input } from 'antd'
 import { useLocation } from "react-router-dom";
 
@@ -52,6 +53,7 @@ function StudentListOfTeacher(props) {
     const {params} = props.match;
     const [studentList,setStudentList] = useState();
     const [confUrl,setConfUrl] = useState();
+    const [editable,setEditable] = useState(false);
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
     const [teacher, setTeacher] = useState(location.state.teacher);
@@ -79,6 +81,7 @@ function StudentListOfTeacher(props) {
     };
     
     useEffect(() => {
+        console.log(teacher)
         getListView();
     },[]);
 
@@ -115,19 +118,52 @@ function StudentListOfTeacher(props) {
                 setStudentList(null);
                 dispatch(assignStudents([])); 
                 getListView(); 
-                window.location.reload();
+                //window.location.reload();
             })
         } else {
             dispatch(assignStudents(selectedRow))
-            history.push('/teacherlist');
+            //history.push('/teacherlist');
+        }
+    };
+
+    const rejectStudent = () => {
+        if(active) {
+            let studentIdArray = [];
+            assignStudentList.map((student) => {
+                studentIdArray.push(student.id)
+            })
+            let studentIds = studentIdArray.join(',');
+            assignStudentToAnotherTeacher(null, studentIds)
+            .then(res => {
+                setStudentList(null);
+                dispatch(assignStudents([])); 
+                getListView(); 
+                //window.location.reload();
+            })
+        } else {
+            dispatch(assignStudents(selectedRow))
+            //history.push('/teacherlist');
         }
     };
 
     const setConferenceUrl = (url) => {
-        console.log(url.target.value);
         setConfUrl(url.target.value);
         if(url.target.value.length > 0)
             assignMeetingToAnotherTeacher(teacher.id, encodeURIComponent(url.target.value));
+    }
+
+    const markAsPresent = () => {
+        markTeacherAsPresent(teacher.id, teacher.effectiveStartDate ? false : true).then(data => {
+            console.log(data)
+            if(teacher.effectiveStartDate) {
+                delete teacher.effectiveStartDate;
+                setTeacher(teacher);
+            } else {
+                teacher.effectiveStartDate = new Date();
+                setTeacher(teacher);
+            }
+            history.push('/teacherlist');
+        });
     }
 
     return (
@@ -138,15 +174,31 @@ function StudentListOfTeacher(props) {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>}
                 extra={[
-                    <Button key='3' type="primary"
-                        style={{ display: assigningStatus ? 'block' : 'none' }}
-                        disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
-                        onClick={() => {
-                            assignStudent()
-                        }}
-                    >
-                        ASSIGN STUDENT
-                    </Button>
+                    <div style={{ display: 'flex' }}>
+                        <Button key='3' type="primary"
+                            onClick={() => markAsPresent()}
+                        >
+                            { teacher.effectiveStartDate ? 'MARK AS PRESENT' : 'MARK AS ABSENT' }
+                        </Button>
+                        <Button key='3' type="primary"
+                            style={{ display: assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
+                            disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
+                            onClick={() => {
+                                assignStudent()
+                            }}
+                        >
+                            ASSIGN STUDENT
+                        </Button>
+                        <Button key='4' type="primary"
+                            style={{ display: assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
+                            disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
+                            onClick={() => {
+                                rejectStudent()
+                            }}
+                            >
+                            REJECT STUDENT
+                        </Button>
+                    </div>
                 ]}
             >
 
@@ -205,20 +257,36 @@ function StudentListOfTeacher(props) {
                         </Row>
                         <Row gutter={16}>
                             <Col className="gutter-row" span={7}>
-                                <h4>Conference URL</h4>
+                                <h4>Effective Start Date</h4>
                             </Col>
                             <Col className="gutter-row" span={15}>
-                                <Form layout="inline">
-                                    <Form.Item>
-                                        <Input
-                                            type="text"
-                                            placeholder="Conference Url"
-                                            name="url"
-                                            value={confUrl}
-                                            onChange={setConferenceUrl}
-                                        />
-                                    </Form.Item>
-                                </Form>
+                                <h4>{teacher.effectiveStartDate}</h4>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col className="gutter-row" span={7}>
+                                <h4>Conference URL</h4>
+                            </Col>
+                            <Col className="gutter-row" span={15} onDoubleClick={() => setEditable(!editable)}>
+                                { !editable ?
+                                    confUrl :
+                                    <Form layout="inline">
+                                        <Form.Item>
+                                            <Input
+                                                type="text"
+                                                placeholder="Conference Url"
+                                                name="url"
+                                                value={confUrl}
+                                                onChange={setConferenceUrl}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        setEditable(false);
+                                                    }
+                                                }}
+                                            />
+                                        </Form.Item>
+                                    </Form>
+                                }
                             </Col>
                         </Row>
                         <Row gutter={16}>

@@ -35,6 +35,17 @@ export const deleteTeacherAvailabilities = (teacherIds) =>{
         })
 }
 
+
+export const markTeacherAsPresent = (teacherIds, value) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/update/${teacherIds}?present=${value}`)
+        .then(res =>{
+            return res.data;
+        })
+        .catch(err =>{
+            alert(err.message);
+        })
+}
+
 export const findTeacherListByFirstNameAndLastName = (firstName,start, end, page, size, sortName, sortType) =>{
     return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res =>{

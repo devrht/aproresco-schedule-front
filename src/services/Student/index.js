@@ -116,8 +116,8 @@ export const assignStudentToAnotherTeacher = (teacherId,studentIds) =>{
 }
 
 export const assignMeetingToAnotherTeacher = (teacherId,url) =>{
-    console.log(`${routes.SERVER_ADDRESS}/reschedule/teacher/${teacherId}?url=${url}`);
-    return axios.get(`${routes.SERVER_ADDRESS}/reschedule/teacher/${teacherId}?url=${url}`)
+    console.log(`${routes.SERVER_ADDRESS}/meet/assign/${teacherId}?url=${url}`);
+    return axios.get(`${routes.SERVER_ADDRESS}/meet/assign/${teacherId}?url=${url}`)
     .then(res =>{
         return res.data;
     })
@@ -150,6 +150,16 @@ export const bridgeStatus = () =>{
     return axios.get(`${routes.SERVER_ADDRESS}/meet/bridge/status`)
     .then(res =>{
         return res.data;
+    })
+    .catch(err =>{
+        alert(err.message);
+    })
+}
+
+export const editSubject = (id, subject) =>{
+    return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/update/${id}?subject=${subject}`)
+    .then(res =>{
+        return res;
     })
     .catch(err =>{
         alert(err.message);

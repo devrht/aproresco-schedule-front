@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Row, Col, Result } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip, Row, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { getStudentList, findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking } from '../../services/Student'
+import { findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, editSubject } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 //icon
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
-import DateFilter from '../../components/StudentList/DateFilter';
 
 
 function StudentList() {
@@ -33,6 +32,7 @@ function StudentList() {
         lastName: "",
     })
     const [selectedRow, setSelectedRow] = useState([]);
+    const [editableRow, setEditableRow] = useState([]);
     const [loading, setLoading] = useState(false);
     const startDate = useSelector((state) => {
         return state.StarDate.startDate;
@@ -117,7 +117,34 @@ function StudentList() {
                     }
                 };
             },
-            dataIndex: 'subject',
+            render: (record) => {
+                return (
+                    <div onDoubleClick={() => {
+                        if(!editableRow.includes(record)) {
+                            setEditableRow([...editableRow, record]);
+                        } else {
+                            setEditableRow(editableRow.filter(r => r.id !== record.id));
+                        }
+                    }}>
+                        { !editableRow.includes(record) ? record.subject : <Form layout="inline">
+                                    <Form.Item>
+                                        <Input
+                                            type="text"
+                                            placeholder="Subject"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    editSubject(record.id, e.target.value).then(data => {
+                                                        setEditableRow(editableRow.filter(r => r.id !== record.id));
+                                                        getListView();
+                                                    })
+                                                }
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </Form> }
+                    </div>
+                )
+            },
             key: 'subject',
         }
         ,
