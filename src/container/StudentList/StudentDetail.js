@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { getStudentDetail } from '../../services/Student'
 import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
 import { useLocation } from "react-router-dom";
+import { assignStudentToAnotherTeacher } from '../../services/Student'
 
 function StudentDetail(props) {
 
@@ -19,6 +20,15 @@ function StudentDetail(props) {
             setStudentDetail(data)
         })
     }
+
+
+    const rejectStudent = () => {
+        assignStudentToAnotherTeacher(null, studentDetail.id)
+        .then(res => {
+            getDetailView(); 
+            //window.location.reload();
+        })
+    };
     
     return (
         <div>
@@ -27,6 +37,13 @@ function StudentDetail(props) {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{studentDetail.studentProfile.firstName} {studentDetail.studentProfile.lastName}</p>}
                 extra={[
+                    <Button key='4' type="primary"
+                        onClick={() => {
+                            rejectStudent()
+                        }}
+                        >
+                        REJECT STUDENT
+                    </Button>
                 ]}
             >
 
