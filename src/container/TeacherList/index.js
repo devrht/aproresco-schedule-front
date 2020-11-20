@@ -172,7 +172,13 @@ function TeacherList() {
                     }
                 };
             },
-            dataIndex: 'startDate',
+            render: (record) => (
+                <div>
+                    {
+                        (new Date(record.startDate)).toLocaleString()
+                    }
+                </div>
+            ),
             key: 'startDate',
         },
         {

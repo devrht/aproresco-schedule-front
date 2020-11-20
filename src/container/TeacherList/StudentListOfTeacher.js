@@ -60,6 +60,7 @@ function StudentListOfTeacher(props) {
     const history = useHistory();
     const [active, setActive] = useState(true);
     const [present, setPresent] = useState(true);
+    const [effectiveStartDate, setEffectiveStartDate] = useState('');
     const [selectedRow, setSelectedRow] = useState([]);
     const assignStudentList = useSelector((state) => {
         return state.Student.assignStudent;
@@ -82,9 +83,8 @@ function StudentListOfTeacher(props) {
     };
     
     useEffect(() => {
-        console.log('Teacher => ', teacher);
-        console.log('teacher.effectiveStartDate ? false : true => ', teacher.effectiveStartDate ? false : true)
         setPresent(teacher.effectiveStartDate ? false : true);
+        setEffectiveStartDate((new Date(teacher.effectiveStartDate)).toLocaleString());
         getListView();
     },[]);
 
@@ -141,9 +141,11 @@ function StudentListOfTeacher(props) {
             if(teacher.effectiveStartDate) {
                 delete teacher.effectiveStartDate;
                 setTeacher(teacher);
+                setEffectiveStartDate('');
             } else {
-                teacher.effectiveStartDate = (new Date()).toISOString;
+                teacher.effectiveStartDate = (new Date()).toLocaleString();
                 setTeacher(teacher);
+                setEffectiveStartDate((new Date()).toLocaleString());
             }
             setPresent(teacher.effectiveStartDate ? false : true);
             //history.push('/teacherlist');
@@ -227,7 +229,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Start Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{teacher.startDate}</h4>
+                                <h4>{(new Date(teacher.startDate)).toLocaleString()}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -235,7 +237,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Effective Start Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{teacher.effectiveStartDate}</h4>
+                                <h4>{effectiveStartDate}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
