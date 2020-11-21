@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Popconfirm } from 'antd';
+import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities } from '../../services/Teacher'
-import { assignStudentToAnotherTeacher } from '../../services/Student'
+import { assignStudentToAnotherTeacher, editSubjectGrade } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 
@@ -20,6 +20,8 @@ function TeacherList() {
     const [sortingName, setSortingName] = useState("");
     const [sortingType, setSortingType] = useState("");
     const [selectedRow, setSelectedRow] = useState([]);
+    const [editableSubject, setEditableSubject] = useState([])
+    const [editableGrade, setEditableGrade] = useState([])
     const deletingStatus = useSelector((state) => {
       return state.Student.enableDeleting;
     })    
@@ -194,23 +196,67 @@ function TeacherList() {
             //         }
             //     };
             // },
-            render: (record) => (
-                <div>
-                    {
-                        record.teacherProfile.subjects.join(', ')
-                    }
-                </div>
-            )
+            render: (record) => {
+                return (
+                    <div onDoubleClick={() => {
+                        if(!editableSubject.includes(record)) {
+                            setEditableSubject([...editableSubject, record]);
+                        } else {
+                            setEditableSubject(editableSubject.filter(r => r.id !== record.id));
+                        }
+                    }}>
+                        { !editableSubject.includes(record) ? record.teacherProfile.subjects.join(', ') : <Form layout="inline">
+                                    <Form.Item>
+                                        <Input
+                                            type="text"
+                                            placeholder="Subjects"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    editSubjectGrade(record.id, e.target.value, record.teacherProfile.grades.join(',')).then(data => {
+                                                        setEditableSubject(editableSubject.filter(r => r.id !== record.id));
+                                                        getListView();
+                                                    })
+                                                }
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </Form> }
+                    </div>
+                )
+            }
         }
         ,
         {
             title: 'Grades',
             key: 'grades',
-            render: (record) => (
-                <div>
-                    {record.teacherProfile.grades.join(', ')}
-                </div>
-            )
+            render: (record) => {
+                return (
+                    <div onDoubleClick={() => {
+                        if(!editableGrade.includes(record)) {
+                            setEditableGrade([...editableGrade, record]);
+                        } else {
+                            setEditableGrade(editableGrade.filter(r => r.id !== record.id));
+                        }
+                    }}>
+                        { !editableGrade.includes(record) ? record.teacherProfile.grades.join(', ') : <Form layout="inline">
+                                    <Form.Item>
+                                        <Input
+                                            type="text"
+                                            placeholder="Grades"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    editSubjectGrade(record.id, record.teacherProfile.subjects.join(','), e.target.value).then(data => {
+                                                        setEditableGrade(editableGrade.filter(r => r.id !== record.id));
+                                                        getListView();
+                                                    })
+                                                }
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </Form> }
+                    </div>
+                )
+            }
         }
         ,
         {
@@ -398,10 +444,10 @@ function TeacherList() {
                             pageSize: tableProps.pageSize,
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
-                        onRow={(record) => ({
-                            onClick: () => history.push(`/studentlist/teacher/${record.id}`,
-                            { teacher: record })
-                        })}
+                        // onRow={(record) => ({
+                        //     onClick: () => history.push(`/studentlist/teacher/${record.id}`,
+                        //     { teacher: record })
+                        // })}
                         rowSelection={rowSelection}
                         rowKey="id"
                     />}
