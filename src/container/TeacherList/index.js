@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input } from 'antd';
+import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities } from '../../services/Teacher'
 import { assignStudentToAnotherTeacher, editSubjectGrade } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
@@ -155,6 +155,14 @@ function TeacherList() {
                     {record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
                 </div>
             ),
+            render: (record) => <Tooltip title={"Consulter les details de l'enseignant"}>
+                <Button
+                    style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
+                    }}>{record.teacherProfile.firstName + " " + record.teacherProfile.lastName}</Button>
+            </Tooltip>,
             key: 'name',
             fixed: 'left',
         },
