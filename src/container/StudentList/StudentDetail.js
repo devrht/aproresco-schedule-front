@@ -3,6 +3,7 @@ import { getStudentDetail } from '../../services/Student'
 import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
 import { useLocation } from "react-router-dom";
 import { assignStudentToAnotherTeacher } from '../../services/Student'
+import Moment from 'react-moment';
 
 function StudentDetail(props) {
 
@@ -55,7 +56,11 @@ function StudentDetail(props) {
                                 <h4>Period</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{(new Date(studentDetail.startDate)).toLocaleString()}</h4>
+                                <h4 > 
+                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        { studentDetail.startDate }
+                                    </Moment>
+                                </h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -81,6 +86,13 @@ function StudentDetail(props) {
                             <Col className="gutter-row" span={14}>
                                 <h4 >{studentDetail.studentProfile.studentEmail}</h4>
                             </Col>
+                        </Row><Row gutter={16}>
+                            <Col className="gutter-row" span={8}>
+                                <h4>Parent Email</h4>
+                            </Col>
+                            <Col className="gutter-row" span={14}>
+                                <h4 >{studentDetail.parentEmail}</h4>
+                            </Col>
                         </Row>
                         <Row gutter={16}>
                             <Col className="gutter-row" span={8}>
@@ -104,7 +116,12 @@ function StudentDetail(props) {
                                 <h4>Effective Start Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.effectiveStartDate ? (new Date(studentDetail.effectiveStartDate)).toLocaleString() : 'Undefined'}</h4>
+                                <h4 >{studentDetail.effectiveStartDate ? 
+                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        { studentDetail.effectiveStartDate }
+                                    </Moment> : 
+                                    'Undefined'}
+                                </h4>
                             </Col>
                         </Row>
 
@@ -113,7 +130,12 @@ function StudentDetail(props) {
                                 <h4>Rejection Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.rejectionDate ? (new Date(studentDetail.rejectionDate)).toLocaleString() : 'Undefined'}</h4>
+                                <h4 >{studentDetail.rejectionDate ? 
+                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        { studentDetail.rejectionDate }
+                                    </Moment> : 
+                                    'Undefined'}
+                                </h4>
                             </Col>
                         </Row>
 
@@ -122,7 +144,12 @@ function StudentDetail(props) {
                                 <h4>Teacher Assigned Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.teacherAssignedDate ? (new Date(studentDetail.teacherAssignedDate)).toLocaleString() : 'Undefined'}</h4>
+                                <h4 >{studentDetail.teacherAssignedDate ? 
+                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        { studentDetail.teacherAssignedDate }
+                                    </Moment> : 
+                                    'Undefined'}
+                                </h4>
                             </Col>
                         </Row>
                     </Card>

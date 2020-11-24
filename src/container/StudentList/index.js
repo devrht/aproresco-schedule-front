@@ -7,6 +7,7 @@ import '../../Assets/container/StudentList.css'
 import { findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, editSubject } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
+import Moment from 'react-moment';
 //icon
 
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
@@ -101,7 +102,9 @@ function StudentList() {
             render: (record) => (
                 <div>
                     {
-                        (new Date(record.startDate)).toLocaleString()
+                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                            { record.startDate }
+                        </Moment>
                     }
                 </div>
             ),

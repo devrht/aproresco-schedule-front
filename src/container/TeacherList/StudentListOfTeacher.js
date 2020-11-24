@@ -9,8 +9,15 @@ import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '..
 import { markTeacherAsPresent } from '../../services/Teacher'
 import { Form, Row, Col, Card, Input } from 'antd'
 import { useLocation } from "react-router-dom";
+import Moment from 'react-moment';
 
 const columns = [
+    {
+        title: 'Identifier',
+        dataIndex: 'id',
+        key: 'id',
+        fixed: 'left',
+    },
     {
         title: 'First Name',
         dataIndex: 'firstName',
@@ -84,7 +91,7 @@ function StudentListOfTeacher(props) {
     
     useEffect(() => {
         setPresent(teacher.effectiveStartDate ? false : true);
-        setEffectiveStartDate((new Date(teacher.effectiveStartDate)).toLocaleString());
+        setEffectiveStartDate(teacher.effectiveStartDate);
         getListView();
     },[]);
 
@@ -143,9 +150,9 @@ function StudentListOfTeacher(props) {
                 setTeacher(teacher);
                 setEffectiveStartDate('');
             } else {
-                teacher.effectiveStartDate = (new Date()).toLocaleString();
+                teacher.effectiveStartDate = new Date();
                 setTeacher(teacher);
-                setEffectiveStartDate((new Date()).toLocaleString());
+                setEffectiveStartDate(new Date());
             }
             setPresent(teacher.effectiveStartDate ? false : true);
             //history.push('/teacherlist');
@@ -221,6 +228,15 @@ function StudentListOfTeacher(props) {
                                 <h4>{ teacher.teacherProfile.subjects.join(', ') }</h4>
                             </Col>
                         </Row>
+
+                        <Row gutter={16}>
+                            <Col className="gutter-row" span={8}>
+                                <h4>Identifier</h4>
+                            </Col>
+                            <Col className="gutter-row" span={14}>
+                                <h4>{ teacher.id }</h4>
+                            </Col>
+                        </Row>
                     </Card>
 
                     <Card title="Availability" hoverable={true} bordered={true} style={{ width: "48%", marginLeft: '2%' }}>
@@ -229,7 +245,11 @@ function StudentListOfTeacher(props) {
                                 <h4>Start Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{(new Date(teacher.startDate)).toLocaleString()}</h4>
+                                <h4>
+                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        { teacher.startDate }
+                                    </Moment>
+                                </h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -237,7 +257,11 @@ function StudentListOfTeacher(props) {
                                 <h4>Effective Start Date</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{effectiveStartDate}</h4>
+                                <h4>
+                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        { effectiveStartDate }
+                                    </Moment>
+                                </h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>

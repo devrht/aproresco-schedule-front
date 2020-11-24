@@ -4,11 +4,25 @@ import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities } from '../../services/Teacher'
-import { assignStudentToAnotherTeacher, editSubjectGrade } from '../../services/Student'
+import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
-
+import Moment from 'react-moment';
+import Modal from 'react-modal';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+
+const customStyles = {
+    content : {
+      top                   : '10%',
+      width                 : '50%',
+      left                  : '25%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-30%',
+    }
+  };
+
+Modal.setAppElement(document.getElementById('root'))
 
 function TeacherList() {
     const history = useHistory();
@@ -17,9 +31,16 @@ function TeacherList() {
         return state.Student.assignStudent;
     })
     const [teacherList, setTeacherList] = useState();
+    const [teacherId, setTeacherId] = useState(0);
     const [sortingName, setSortingName] = useState("");
+    const [studentList, setStudentList] = useState();
     const [sortingType, setSortingType] = useState("");
     const [selectedRow, setSelectedRow] = useState([]);
+    
+    const [sortingNameStudent, setSortingNameStudent] = useState("");
+    const [sortingTypeStudent, setSortingTypeStudent] = useState("");
+    const [selectedRowStudent, setSelectedRowStudent] = useState([]);
+
     const [editableSubject, setEditableSubject] = useState([])
     const [editableGrade, setEditableGrade] = useState([])
     const deletingStatus = useSelector((state) => {
@@ -33,8 +54,14 @@ function TeacherList() {
         pageIndex: 0,
         pageSize: 30,
     });
-    const [start, setStart] = useState();
-    const [end, setEnd] = useState();
+
+    const [studentTableProps, setStudentTableProps] = useState({
+        totalCount: 0,
+        pageIndex: 0,
+        pageSize: 5,
+    });
+    // const [start, setStart] = useState();
+    // const [end, setEnd] = useState();
     const [loading,setLoading] = useState(false);
 
     const [search, setSearch] = useState({
@@ -42,6 +69,25 @@ function TeacherList() {
         firstName:"",
         lastName:"",
     })
+
+    const [studentSearch, setStudentSearch] = useState({
+        name:"",
+        firstName:"",
+        lastName:"",
+    })
+
+    const [modalIsOpen,setIsOpen] = React.useState(false);
+
+    function openModal(id) {
+        setTeacherId(id);
+        console.log(id)
+        setIsOpen(true);
+    }
+     
+    function closeModal(){
+        setIsOpen(false);
+    }
+
     const Assigntitle = <div>
         <h3>Assign Student List</h3>
         {assignStudentList.map((student, index) => {
@@ -53,7 +99,7 @@ function TeacherList() {
 
     const rowSelection = {
         selectedRow,
-        onChange: (selectedrow, records) => {
+        onChange: (__, records) => {
             console.log('selectedRowKeys changed: ', records);
             var recordIdArray = [];
             records.map(record => {
@@ -62,12 +108,26 @@ function TeacherList() {
             setSelectedRow(recordIdArray);
         }
     };
+
+    const rowSelectionStudent = {
+        selectedRowStudent,
+        onChange: (__, records) => {
+            console.log('selectedRowKeys changed: ', records);
+            var recordIdArray = [];
+            records.map(record => {
+                recordIdArray.push({ id: record.id })
+            })
+            setSelectedRowStudent(recordIdArray);
+        }
+    };
         
     useEffect(() => {
         getListView();
+        getStudentList();
     }, [tableProps.pageIndex]);
     useEffect(() => {
         getListView();
+        getStudentList();
     }, [sortingType,sortingName]);
 
     const getListView = () => {
@@ -133,6 +193,34 @@ function TeacherList() {
             })
         }
     }
+
+    const studentColumns = [
+        {
+            title: <div><span>Name of student</span>
+                {sortingNameStudent === "firstName" && sortingTypeStudent === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingNameStudent === "firstName" && sortingTypeStudent === "desc" && <VerticalAlignTopOutlined />}
+                {sortingNameStudent === "firstName" && sortingTypeStudent === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingNameStudent("firstName");
+                        if (sortingTypeStudent == "") { setSortingTypeStudent("asc") }
+                        else if (sortingTypeStudent == "asc") { setSortingTypeStudent("desc") }
+                        else if (sortingTypeStudent == "desc") { setSortingTypeStudent(""); setSortingNameStudent(""); }
+                    }
+                };
+            },
+            render: (record) => 
+                <Button
+                    style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}>
+                        {record.studentProfile.firstName + " " + record.studentProfile.lastName}
+                </Button>,
+            key: 'name',
+            fixed: 'left',
+        }
+    ]
+
     const columns = [
         {
             title: <div><span>Name </span>
@@ -150,11 +238,6 @@ function TeacherList() {
                     }
                 };
             },
-            render: (record) => (
-                <div>
-                    {record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                </div>
-            ),
             render: (record) => <Tooltip title={"Consulter les details de l'enseignant"}>
                 <Button
                     style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
@@ -185,7 +268,9 @@ function TeacherList() {
             render: (record) => (
                 <div>
                     {
-                        (new Date(record.startDate)).toLocaleString()
+                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                            { record.startDate }
+                        </Moment>
                     }
                 </div>
             ),
@@ -194,16 +279,6 @@ function TeacherList() {
         {
             title: 'Subjects',
             key: 'subjects',
-            // onHeaderCell: (column) => {
-            //     return {
-            //         onClick: () => {
-            //             setSortingName("subject");
-            //             if (sortingType == "") { setSortingType("asc") }
-            //             else if (sortingType == "asc") { setSortingType("desc") }
-            //             else if (sortingType == "desc") { setSortingType("") }
-            //         }
-            //     };
-            // },
             render: (record) => {
                 return (
                     <div onDoubleClick={() => {
@@ -295,15 +370,17 @@ function TeacherList() {
             title: 'Google meet',
             key: 'meet',
             render: (record) => 
-                <Button
-                    style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
-                    onClick={(e) => {
-                        window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: '')
-                    }}
-                    disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
-                        <u>Google Meet</u>
-                </Button>
-        },
+                <Tooltip title={record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: ''}>
+                    <Button
+                        style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
+                        onClick={(e) => {
+                            window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: '')
+                        }}
+                        disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
+                            <u>Google Meet</u>
+                    </Button>
+                </Tooltip>
+            },
         {
             title: 'Action',
             key: 'operation',
@@ -335,13 +412,73 @@ function TeacherList() {
                             cancelText="Cancel"
                             disabled={assignStudentList.length > 0 ? false : true}
                         >
-                            <Button style={{ display: assigningStatus ? 'block' : 'none' }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()}>Assign Students</Button>
+                            <Button style={{ display: assigningStatus && assignStudentList.length > 0 ? 'block' : 'none' }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()}>Assign Students</Button>
                         </Popconfirm>
+                        <Button style={{ display: assignStudentList.length <= 0 ? 'block' : 'none' }} onClick={(e) => openModal(record.id)}>Select Students</Button>
                     </div>
                 )
             },
         },
     ];
+
+    const getStudentList = () => {
+        if (studentSearch.firstName === "" && studentSearch.lastName === "") {
+                getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
+                if(data) {
+                    if(data.content) {
+                        setStudentList(data.content)
+                        setStudentTableProps({
+                            ...studentTableProps,
+                            totalCount: data.totalElements,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setStudentList([])
+                        setStudentTableProps({
+                            ...studentTableProps,
+                            totalCount: 0,
+                            pageSize: 5,
+                        });
+                    }
+                } else {
+                    setStudentList([])
+                    setStudentTableProps({
+                        ...studentTableProps,
+                        totalCount: 0,
+                        pageSize: 5,
+                    });
+                }
+            })
+        }
+        else {
+            findStudentListByFirstNameAndLastName(studentSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
+                if(data) {
+                    if(data.content) {
+                        setStudentList(data.content)
+                        setStudentTableProps({
+                            ...studentTableProps,
+                            totalCount: data.totalElements,
+                            pageSize: 5,
+                        });
+                    } else {
+                        setStudentList([])
+                        setStudentTableProps({
+                            ...studentTableProps,
+                            totalCount: 0,
+                            pageSize: 5,
+                        });
+                    }
+                } else {
+                    setStudentList([])
+                    setStudentTableProps({
+                        ...studentTableProps,
+                        totalCount: 0,
+                        pageSize: 5,
+                    });
+                }
+            })
+        }
+    }
 
     const handleTableChange = (pagination, filters, sorter) => {
         setTableProps({
@@ -352,6 +489,19 @@ function TeacherList() {
         setLoading(true);
         setTeacherList([]);
     };
+
+    const assigningStudents = (teacherId) => {
+        let studentIdArray = [];
+        selectedRowStudent.map((student) => {
+            studentIdArray.push(student.id)
+        })
+        let studentIds = studentIdArray.join(',');
+        assignStudentToAnotherTeacher(teacherId, studentIds)
+            .then(res => {
+                closeModal();
+                getListView(); 
+            })
+    }
 
     const computeLastName = (name) => {
         let lastName = '';
@@ -375,36 +525,31 @@ function TeacherList() {
             }
         }
     };
+
     const searchList = () => {
         getListView();
     }
 
-    const searchTeacherListByDate = (start, end) => {
-
-        if(start == null)
-            start = '01/01/1900%2000:00:00';
-        if(end == null)
-            end = '01/01/2100%2000:00:00';
-
-        // if(localStorage.getItem('startDateString') != null)
-        //     if(localStorage.getItem('startDateString').length > 0) {
-        //         start = localStorage.getItem('startDateString');
-        //     };
-        // if(localStorage.getItem('endDateString') != null)
-        //     if(localStorage.getItem('endDateString').length > 0) {
-        //         end = localStorage.getItem('endDateString');
-        //     };
-        //if
-        getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-            console.log('DATA ==> ', data)
-            setTeacherList(data._embedded.teacherAvailabilities)
-            setTableProps({
-                ...tableProps,
-                totalCount: data ? data.page ? data.page.totalElements ? 0 : 0 : 0 : 0,
-            });
-            setLoading(false);
-        })
+    const onKeyEnter = (e) => {
+        //alert("not enter")
+        if(e.keyCode == 13){
+            getStudentList();
+        }
     }
+
+    const changeStudentSearch = (e) => {
+        const { name, value } = e.target;
+        setStudentSearch({ ...search, [name]: value.trim() });
+        if(e.target.name==="name"){
+            var nameData = value.trim().split(" ");
+            if(nameData.length>1){
+                setStudentSearch({ ...search, firstName: nameData[0].trim(), lastName: computeLastName(nameData) });
+            }
+            else{
+                setStudentSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
+            }
+        }
+    };
 
     const deleteBooking = (selectedrow) => {
         if(selectedrow.length > 0) {
@@ -461,6 +606,43 @@ function TeacherList() {
                     />}
 
             </PageHeader>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Select students to assign to teacher"
+                >
+        
+                <h2>Select students to assign</h2>
+                <Form layout="inline" style={{ marginRight: '20px', width: "100%", display: 'flex' }}>
+                    <Form.Item style={{ width: '100%', height: '50px' }}>
+                        <Input
+                            type="text"
+                            placeholder="Enter Name a student to search"
+                            name="name"
+                            style={{ width: '70%', height: '40px' }}
+                            onKeyDown={onKeyEnter}
+                            onChange={changeStudentSearch}
+                        />
+                    <Button onClick={() => assigningStudents(teacherId)} disabled={ selectedRowStudent.length <= 0 || !assigningStatus ? true : false } style={{ backgroundColor: 'blue', color: 'white', height: '40px', marginLeft: '10px', marginTop: '0px' }}> ASSIGN ({selectedRowStudent.length}) STUDENT.S </Button>
+                    </Form.Item>
+                </Form>
+                {!studentList ? <Spin className="loading-table" /> :
+                    <Table
+                        className="table-padding"
+                        columns={studentColumns}
+                        style={{ marginTop: '30px' }}
+                        loading={loading}
+                        dataSource={studentList}
+                        onChange={handleTableChange}
+                        pagination={{
+                            total: tableProps.totalCount,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
+                        }}
+                        rowSelection={rowSelectionStudent}
+                        rowKey="id"
+                    />}
+            </Modal>
 
     </React.Fragment>
     )
