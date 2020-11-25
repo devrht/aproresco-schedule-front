@@ -13,12 +13,6 @@ import Moment from 'react-moment';
 
 const columns = [
     {
-        title: 'Identifier',
-        dataIndex: 'id',
-        key: 'id',
-        fixed: 'left',
-    },
-    {
         title: 'First Name',
         dataIndex: 'firstName',
         key: 'firstName',
@@ -226,15 +220,6 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>{ teacher.teacherProfile.subjects.join(', ') }</h4>
-                            </Col>
-                        </Row>
-
-                        <Row gutter={16}>
-                            <Col className="gutter-row" span={8}>
-                                <h4>Identifier</h4>
-                            </Col>
-                            <Col className="gutter-row" span={14}>
-                                <h4>{ teacher.id }</h4>
                             </Col>
                         </Row>
                     </Card>

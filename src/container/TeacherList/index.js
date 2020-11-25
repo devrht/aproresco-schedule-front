@@ -238,13 +238,15 @@ function TeacherList() {
                     }
                 };
             },
-            render: (record) => <Tooltip title={"Consulter les details de l'enseignant"}>
+            render: (record) => <Tooltip title={record.teacherProfile.firstName + " " + record.teacherProfile.lastName}>
                 <Button
                     style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
                     onClick={(e) => {
                         e.stopPropagation();
                         history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
-                    }}>{record.teacherProfile.firstName + " " + record.teacherProfile.lastName}</Button>
+                    }}>{(record.teacherProfile.firstName + " " + record.teacherProfile.lastName).length <= 20 ? 
+                            record.teacherProfile.firstName + " " + record.teacherProfile.lastName : 
+                            (record.teacherProfile.firstName + " " + record.teacherProfile.lastName).substring(0, 19)+'...'}</Button>
             </Tooltip>,
             key: 'name',
             fixed: 'left',
@@ -414,7 +416,7 @@ function TeacherList() {
                         >
                             <Button style={{ display: assigningStatus && assignStudentList.length > 0 ? 'block' : 'none' }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()}>Assign Students</Button>
                         </Popconfirm>
-                        <Button style={{ display: assignStudentList.length <= 0 ? 'block' : 'none' }} onClick={(e) => openModal(record.id)}>Select Students</Button>
+                        {/* <Button style={{ display: assignStudentList.length <= 0 ? 'block' : 'none' }} onClick={(e) => openModal(record.id)}>Select Students</Button> */}
                     </div>
                 )
             },
