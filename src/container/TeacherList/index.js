@@ -9,7 +9,7 @@ import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined } from "@ant-design/icons"
 
 const customStyles = {
     content : {
@@ -379,7 +379,7 @@ function TeacherList() {
                             window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: '')
                         }}
                         disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
-                            <u>Google Meet</u>
+                            <VideoCameraOutlined style={{ fontSize: 20 }}/>
                     </Button>
                 </Tooltip>
             },
