@@ -323,7 +323,7 @@ function TeacherList() {
                             setEditableGrade(editableGrade.filter(r => r.id !== record.id));
                         }
                     }}>
-                        { !editableGrade.includes(record) ? record.teacherProfile.grades.join(', ') : <Form layout="inline">
+                        { !editableGrade.includes(record) ? gradesToPrint(record.teacherProfile) : <Form layout="inline">
                                     <Form.Item>
                                         <Input
                                             type="text"
@@ -511,6 +511,35 @@ function TeacherList() {
             lastName = lastName.trim() +' '+name[index].trim();
         }
         return lastName
+    }
+
+
+    const gradesToPrint = (profile) => {
+        let i = 0;
+        let result = '';
+        if( profile == null ) {
+            return '';
+        }
+
+        for (i = 0; i < profile.grades.length; i++) {
+            if(i == 0) {
+                result += profile.grades[i];
+            } else {
+                if(i == (profile.grades.length-1))
+                    if(Number(profile.grades[i-1]) !== Number(profile.grades[i])-1)
+                        result = result + ', ' + profile.grades[i];
+                    else 
+                        result = result + '-' + profile.grades[i];
+                else 
+                    if(Number(profile.grades[i-1]) !== Number(profile.grades[i])-1)
+                        if(Number(profile.grades[i]) !== Number(profile.grades[i+1])-1)
+                            result = result + ',' + profile.grades[i] + ', '+profile.grades[i+1];
+                        else
+                            result = result + ',' + profile.grades[i];
+            }
+        }
+
+        return result;
     }
 
     const changeSearch = (e) => {

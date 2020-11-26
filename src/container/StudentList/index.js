@@ -18,26 +18,6 @@ import {
     EditOutlined
   } from '@ant-design/icons';
 
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-    { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 }
-]
-
 function StudentList() {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -262,7 +242,7 @@ function StudentList() {
             title: 'Action',
             key: 'operation',
             render: (record) => 
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', width: '200px' }}>
                     {
                         !editTeacher.includes(record) ?
                         <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl  : "Link Not Found": "Student Not Found"}>
@@ -282,9 +262,11 @@ function StudentList() {
                             inputValue={teacherName}
                             onInputChange={(__, newInputValue) => {
                                 setTeacherName(newInputValue);
+                                console.log(newInputValue)
                             }}
                             onChange={(__, newValue) => {
-                                setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                if(newValue != null)
+                                    setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
                               }}
                               open={open}
                                 onOpen={() => {
@@ -295,12 +277,13 @@ function StudentList() {
                                 }}
                             loading={loadingTeacher}
                             getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                            style={{ width: 300}}
+                            style={{ minWidth: 350, marginLeft: -90 }}
                             renderInput={(params) => 
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <TextField {...params} 
                                     label="Select a teacher to assign" 
                                     variant="outlined" 
-                                    onChange={changeTeacherSearch}
+                                    onChange={(e) => changeTeacherSearch(e)}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && !open) {
                                             let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
@@ -319,15 +302,32 @@ function StudentList() {
                                                 { params.InputProps.endAdornment }
                                             </React.Fragment>
                                         ),
-                                        }}
-                                    />
-                                }
+                                    }}
+                                />
+
+                                <Button style={{ marginLeft: 5 }} onClick={(e) => {
+                                    console.log(teacherName);
+                                    console.log(teacherName.length > 0);
+                                    if(teacherName.length > 0) {
+                                        let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
+                                        if(teachers.length === 0) {
+                                            alert('This teacher is not found');
+                                        } else {
+                                            assigningStudents(teachers[0], record.id);
+                                        }
+                                    } else {
+                                        setEditTeacher(editTeacher.filter(r => r.id !== record.id))
+                                    }}}>
+                                    {teacherName.length > 0 ? 'Confirm' : 'Cancel' }
+                                </Button>
+                                </div>
+                                
+                            }
                         />
                     }
                     {
                         !editTeacher.includes(record) ?
-                        <EditOutlined onClick={(e) => setEditTeacher([...editTeacher, record])} style={{ fontSize: 20 }}/>:
-                        <Button style={{ marginLeft: 30 }} onClick={(e) => setEditTeacher(editTeacher.filter(r => r.id !== record.id))}>Cancel</Button>
+                        <EditOutlined onClick={(e) => setEditTeacher([...editTeacher, record])} style={{ fontSize: 20, color: '#1890FF' }}/>: null
                     }
                 </div>,
         },
@@ -365,7 +365,7 @@ function StudentList() {
 
     const changeTeacherSearch = (e) => {
         const { name, value } = e.target;
-        //setTeacherName(value);
+        setTeacherName(value);
         setTeacherSearch({ ...search, [name]: value.trim() });
         if(e.target.name==="name"){
             var nameData = value.trim().split(" ");
