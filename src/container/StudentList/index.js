@@ -260,6 +260,7 @@ function StudentList() {
                             options={teacherList}
                             size="small"
                             inputValue={teacherName}
+                            closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
                             onInputChange={(__, newInputValue) => {
                                 setTeacherName(newInputValue);
                                 console.log(newInputValue)
@@ -327,7 +328,7 @@ function StudentList() {
                     }
                     {
                         !editTeacher.includes(record) ?
-                        <EditOutlined onClick={(e) => setEditTeacher([...editTeacher, record])} style={{ fontSize: 20, color: '#1890FF' }}/>: null
+                        <EditOutlined onClick={(e) => setEditTeacher([record])} style={{ fontSize: 20, color: '#1890FF' }}/>: null
                     }
                 </div>,
         },
