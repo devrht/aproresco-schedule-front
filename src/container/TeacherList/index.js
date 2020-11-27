@@ -9,7 +9,7 @@ import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined } from "@ant-design/icons"
 
 const customStyles = {
     content : {
@@ -369,24 +369,8 @@ function TeacherList() {
             key: 'studentCount',
         },
         {
-            title: 'Google meet',
+            title: 'Actions',
             key: 'meet',
-            render: (record) => 
-                <Tooltip title={record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: ''}>
-                    <Button
-                        style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
-                        onClick={(e) => {
-                            window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: '')
-                        }}
-                        disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
-                            <VideoCameraOutlined style={{ fontSize: 20 }}/>
-                    </Button>
-                </Tooltip>
-            },
-        {
-            title: 'Action',
-            key: 'operation',
-            fixed: 'right',
             render: (record) => {
                 const confirm = (e) => {
                     e.stopPropagation();
@@ -403,7 +387,18 @@ function TeacherList() {
                         })
                 }
                 return (
-                    <div>
+                    <div style={{ display: 'flex', flexDirection: 'row', width: '200px' }}>
+                        <Tooltip title={record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: ''}>
+                            <Button
+                                style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
+                                onClick={(e) => {
+                                    window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://'+record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://'+record.teacherProfile.conferenceUrl: '')
+                                }}
+                                disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
+                                    <VideoCameraOutlined style={{ fontSize: 20 }}/>
+                            </Button>
+                        </Tooltip>
+
                         <Popconfirm
                             icon={false}
                             title={Assigntitle}
@@ -414,13 +409,13 @@ function TeacherList() {
                             cancelText="Cancel"
                             disabled={assignStudentList.length > 0 ? false : true}
                         >
-                            <Button style={{ display: assigningStatus && assignStudentList.length > 0 ? 'block' : 'none' }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()}>Assign Students</Button>
+                            <ApiOutlined style={{ color: assigningStatus && assignStudentList.length > 0 ? '#1890FF' : 'gray', fontSize: 20 }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()} />
                         </Popconfirm>
-                        {/* <Button style={{ display: assignStudentList.length <= 0 ? 'block' : 'none' }} onClick={(e) => openModal(record.id)}>Select Students</Button> */}
                     </div>
                 )
-            },
-        },
+                
+            }
+        }
     ];
 
     const getStudentList = () => {

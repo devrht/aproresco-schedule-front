@@ -279,7 +279,7 @@ function StudentList() {
                                 }}
                             loading={loadingTeacher}
                             getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                            style={{ minWidth: 550, marginLeft: -300 }}
+                            style={{ minWidth: 450, marginLeft: -250 }}
                             renderInput={(params) => 
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <TextField {...params} 
@@ -307,9 +307,7 @@ function StudentList() {
                                     }}
                                 />
 
-                                <Button style={{ marginLeft: 5 }} onClick={(e) => {
-                                    console.log(teacherName);
-                                    console.log(teacherName.length > 0);
+                                {/* <Button style={{ marginLeft: 5 }} onClick={(e) => {
                                     if(teacherName.length > 0) {
                                         let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
                                         if(teachers.length === 0) {
@@ -321,7 +319,7 @@ function StudentList() {
                                         setEditTeacher(editTeacher.filter(r => r.id !== record.id))
                                     }}}>
                                     {teacherName.length > 0 ? 'Confirm' : 'Cancel' }
-                                </Button>
+                                </Button> */}
                                 </div>
                                 
                             }
@@ -329,7 +327,7 @@ function StudentList() {
                     }
                     {
                         !editTeacher.includes(record) ?
-                        <div id="edit" onClick={(e) => setEditTeacher([record])}><EditOutlined style={{ fontSize: 20, color: '#1890FF' }}/></div>: null
+                        <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><EditOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }}/></div>: null
                     }
                 </div>,
         },
@@ -508,13 +506,17 @@ function StudentList() {
             .then(res => {
                 getListView(); 
             }).finally(() => {
-                setEditTeacher(editTeacher.filter(r => r.id !== studentId));
+                setEditTeacher([]);
             })
     }
 
     return (
         <div onClick={(e) => { 
-                if(!e.target.id.includes('asynchronous-search') && editTeacher.length > 0) {
+                console.log(e.target.viewBox)
+                if(e.target.viewBox != undefined) {
+                    if(editTeacher.length > 0){
+                    }
+                } else if(!e.target.id.includes('asynchronous-search') && editTeacher.length > 0) {
                     setEditTeacher([]);
                 }
             }}>
