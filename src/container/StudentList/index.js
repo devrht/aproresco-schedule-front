@@ -222,6 +222,7 @@ function StudentList() {
                     <Row>Grades : {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades.join(', ') : "Nothing" : "Nothing"}</Row>
                 </div>
                 return (
+                   !editTeacher.includes(record) ?
                     <span>
                         <Tooltip placement="topLeft" title={text} color={"white"}>
                             <p onClick={(e) => {
@@ -233,7 +234,7 @@ function StudentList() {
                                 {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
                             </p>
                         </Tooltip>
-                    </span>
+                    </span> : null
                 )
             },
             key: 'studentCount',
@@ -256,11 +257,11 @@ function StudentList() {
                                 }}><VideoCameraOutlined style={{ fontSize: 20 }}/></Button>
                         </Tooltip>:
                         <Autocomplete
-                            id="asynchronous-demo"
+                            id="asynchronous-search"
                             options={teacherList}
                             size="small"
                             inputValue={teacherName}
-                            closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                            // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
                             onInputChange={(__, newInputValue) => {
                                 setTeacherName(newInputValue);
                                 console.log(newInputValue)
@@ -278,7 +279,7 @@ function StudentList() {
                                 }}
                             loading={loadingTeacher}
                             getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                            style={{ minWidth: 350, marginLeft: -90 }}
+                            style={{ minWidth: 550, marginLeft: -300 }}
                             renderInput={(params) => 
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <TextField {...params} 
@@ -328,7 +329,7 @@ function StudentList() {
                     }
                     {
                         !editTeacher.includes(record) ?
-                        <EditOutlined onClick={(e) => setEditTeacher([record])} style={{ fontSize: 20, color: '#1890FF' }}/>: null
+                        <div id="edit" onClick={(e) => setEditTeacher([record])}><EditOutlined style={{ fontSize: 20, color: '#1890FF' }}/></div>: null
                     }
                 </div>,
         },
@@ -512,47 +513,48 @@ function StudentList() {
     }
 
     return (
-        <React.Fragment>
-            
-        {/* <LayoutOfApp> */}
-        <PageHeader
-            ghost={false}
-            title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Students</p>}
-            extra={[
-            ]}
-        >
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div style={{ display: 'flex', flex: 1 }}>
-                    <SearchFilter
-                        changeInput={changeSearch}
-                        searchList={searchList}
-                    />
-                    <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
+        <div onClick={(e) => { 
+                if(!e.target.id.includes('asynchronous-search') && editTeacher.length > 0) {
+                    setEditTeacher([]);
+                }
+            }}>
+            <PageHeader 
+                ghost={false}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Students</p>}
+                extra={[
+                ]}
+            >
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ display: 'flex', flex: 1 }}>
+                        <SearchFilter
+                            changeInput={changeSearch}
+                            searchList={searchList}
+                        />
+                        <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
+                    </div>
                 </div>
-            </div>
-            
-            {!studentList ? <Spin className="loading-table" /> :
-                <Table
-                    className="table-padding"
-                    columns={columns}
-                    loading={loading}
-                    dataSource={studentList}
-                    onChange={handleTableChange}
-                    pagination={{
-                        total: tableProps.totalCount,
-                        pageSize: tableProps.pageSize,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
-                    }}
-                    rowSelection={rowSelection}
-                    rowKey="id"
-                    // onRow={(record) => ({
-                    //     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
-                    // })}
-                />}
+                
+                {!studentList ? <Spin className="loading-table" /> :
+                    <Table
+                        className="table-padding"
+                        columns={columns}
+                        loading={loading}
+                        dataSource={studentList}
+                        onChange={handleTableChange}
+                        pagination={{
+                            total: tableProps.totalCount,
+                            pageSize: tableProps.pageSize,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
+                        }}
+                        rowSelection={rowSelection}
+                        rowKey="id"
+                        // onRow={(record) => ({
+                        //     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
+                        // })}
+                    />}
 
-        </PageHeader>
-        {/* </LayoutOfApp> */}
-        </React.Fragment>
+            </PageHeader>
+        </div>
     )
 }
 export default StudentList
