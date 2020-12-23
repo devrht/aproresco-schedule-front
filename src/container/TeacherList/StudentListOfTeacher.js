@@ -1,8 +1,8 @@
-import React,{useState,useEffect} from 'react'
-import {useHistory} from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import 'antd/dist/antd.css';
-import { Table, PageHeader, Button,Spin } from 'antd';
-import {getStudentListById} from '../../services/Student'
+import { Table, PageHeader, Button, Spin } from 'antd';
+import { getStudentListById } from '../../services/Student'
 import { useSelector, useDispatch } from 'react-redux'
 import { assignStudents, enableAssigning } from '../../Action-Reducer/Student/action'
 import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '../../services/Student'
@@ -40,21 +40,21 @@ const columns = [
         dataIndex: 'grade',
         key: 'grade',
     },
-    {
-        title: 'Action',
-        key: 'operation',
-        fixed: 'right',
-        render: () => <Button>Edit</Button>,
-    },
+    // {
+    //     title: 'Action',
+    //     key: 'operation',
+    //     fixed: 'right',
+    //     render: () => <Button>Edit</Button>,
+    // },
 ];
 function StudentListOfTeacher(props) {
 
     const dispatch = useDispatch();
     const location = useLocation();
-    const {params} = props.match;
-    const [studentList,setStudentList] = useState();
-    const [confUrl,setConfUrl] = useState();
-    const [editable,setEditable] = useState(false);
+    const { params } = props.match;
+    const [studentList, setStudentList] = useState();
+    const [confUrl, setConfUrl] = useState();
+    const [editable, setEditable] = useState(false);
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
     const [teacher, setTeacher] = useState(location.state.teacher);
@@ -65,8 +65,8 @@ function StudentListOfTeacher(props) {
     const [selectedRow, setSelectedRow] = useState([]);
     const assignStudentList = useSelector((state) => {
         return state.Student.assignStudent;
-    })    
-    
+    })
+
     const assigningStatus = useSelector((state) => {
         return state.Student.enableAssigning;
     })
@@ -82,14 +82,14 @@ function StudentListOfTeacher(props) {
             dispatch(assignStudents(recordIdArray))
         }
     };
-    
+
     useEffect(() => {
         setPresent(teacher.effectiveStartDate ? false : true);
         setEffectiveStartDate(teacher.effectiveStartDate);
         getListView();
-    },[]);
+    }, []);
 
-    const getListView = () =>{
+    const getListView = () => {
         setStudents(null);
         setStudentList(null);
         setStudentsTmp([])
@@ -111,19 +111,19 @@ function StudentListOfTeacher(props) {
     }
 
     const assignStudent = () => {
-        if(active) {
+        if (active) {
             let studentIdArray = [];
             assignStudentList.map((student) => {
                 studentIdArray.push(student.id)
             })
             let studentIds = studentIdArray.join(',');
             assignStudentToAnotherTeacher(params.id, studentIds)
-            .then(res => {
-                setStudentList(null);
-                dispatch(assignStudents([])); 
-                getListView(); 
-                //window.location.reload();
-            })
+                .then(res => {
+                    setStudentList(null);
+                    dispatch(assignStudents([]));
+                    getListView();
+                    //window.location.reload();
+                })
         } else {
             dispatch(assignStudents(selectedRow))
             //history.push('/teacherlist');
@@ -131,15 +131,16 @@ function StudentListOfTeacher(props) {
     };
 
     const setConferenceUrl = (url) => {
+        console.log(teacher)
         setConfUrl(url.target.value);
-        if(url.target.value.length > 0)
-            assignMeetingToAnotherTeacher(teacher.id, encodeURIComponent(url.target.value));
+        if (url.target.value.length > 0)
+            assignMeetingToAnotherTeacher(teacher.id, url.target.value);
     }
 
     const markAsPresent = () => {
 
         markTeacherAsPresent(teacher.id, teacher.effectiveStartDate ? false : true).then(data => {
-            if(teacher.effectiveStartDate) {
+            if (teacher.effectiveStartDate) {
                 delete teacher.effectiveStartDate;
                 setTeacher(teacher);
                 setEffectiveStartDate('');
@@ -159,13 +160,14 @@ function StudentListOfTeacher(props) {
             students history.... {params.id} */}
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>}
                 extra={[
                     <div style={{ display: 'flex' }}>
                         <Button key='3' type="primary"
+                            style={{ display: 'none' }}
                             onClick={() => markAsPresent()}
                         >
-                            { present ? 'MARK AS PRESENT' : 'MARK AS ABSENT' }
+                            {present ? 'MARK AS PRESENT' : 'MARK AS ABSENT'}
                         </Button>
                         <Button key='3' type="primary"
                             style={{ display: assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
@@ -187,7 +189,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Name</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{ `${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}` }</h4>
+                                <h4>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -195,7 +197,7 @@ function StudentListOfTeacher(props) {
                                 <h4 >External Email</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{ `${teacher.teacherProfile.externalEmail}` }</h4>
+                                <h4>{`${teacher.teacherProfile.externalEmail}`}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -203,7 +205,7 @@ function StudentListOfTeacher(props) {
                                 <h4 >Internal Email</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{ `${teacher.teacherProfile.internalEmail}` }</h4>
+                                <h4>{`${teacher.teacherProfile.internalEmail}`}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -211,7 +213,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Conference URL</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{ `${teacher.teacherProfile.conferenceUrl}` }</h4>
+                                <h4>{`${teacher.teacherProfile.conferenceUrl}`}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -219,7 +221,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Subjects</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{ teacher.teacherProfile.subjects.join(', ') }</h4>
+                                <h4>{teacher.teacherProfile.subjects.join(', ')}</h4>
                             </Col>
                         </Row>
                     </Card>
@@ -232,7 +234,7 @@ function StudentListOfTeacher(props) {
                             <Col className="gutter-row" span={14}>
                                 <h4>
                                     <Moment format="D MMM YYYY HH:MM" withTitle>
-                                        { teacher.startDate }
+                                        {teacher.startDate}
                                     </Moment>
                                 </h4>
                             </Col>
@@ -244,7 +246,7 @@ function StudentListOfTeacher(props) {
                             <Col className="gutter-row" span={14}>
                                 <h4>
                                     <Moment format="D MMM YYYY HH:MM" withTitle>
-                                        { effectiveStartDate }
+                                        {effectiveStartDate}
                                     </Moment>
                                 </h4>
                             </Col>
@@ -254,7 +256,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Conference URL</h4>
                             </Col>
                             <Col className="gutter-row" span={14} onDoubleClick={() => setEditable(!editable)}>
-                                { !editable ?
+                                {!editable ?
                                     confUrl :
                                     <Form layout="inline">
                                         <Form.Item>
@@ -280,27 +282,27 @@ function StudentListOfTeacher(props) {
                                 <h4>Students</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{ teacher.studentCount }</h4>
+                                <h4>{teacher.studentCount}</h4>
                             </Col>
                         </Row>
                     </Card>
                 </Row>
-               
-                {!studentList || !students ?<Spin/>:
-                <Table 
-                    columns={columns} 
-                    dataSource={students}
-                    rowSelection={rowSelection}
-                    rowKey="id"
-                    onRow={(record) => ({
-                        onClick: (e) => {
-                            console.log('to go', record)
-                            e.stopPropagation();
-                            history.push(`/studentlist/studentDetail/${record.id}`)
-                        }
 
-                    })} 
-                />
+                {!studentList || !students ? <Spin /> :
+                    <Table
+                        columns={columns}
+                        dataSource={students}
+                        rowSelection={rowSelection}
+                        rowKey="id"
+                        // onRow={(record) => ({
+                        //     onClick: (e) => {
+                        //         console.log('to go', record)
+                        //         e.stopPropagation();
+                        //         history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
+                        //     }
+
+                        // })}
+                    />
                 }
             </PageHeader>
         </div>

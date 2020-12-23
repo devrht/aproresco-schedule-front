@@ -104,8 +104,20 @@ export const deleteStudentBooking = (studentIds) => {
 }
 
 export const assignStudentToAnotherTeacher = (teacherId, studentIds) => {
-    console.log(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`);
-    return axios.get(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`)
+    let student_ids = [];
+
+    studentIds.split(',').forEach(id => {
+        let item = {};
+        item.id = id;
+        student_ids.push(item);
+    });
+
+    let data = {
+        "studentBookings":
+            student_ids
+    }
+    // console.log(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`);
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher_availability/${teacherId}`, data)
         .then(res => {
             return res.data;
         })
@@ -115,8 +127,12 @@ export const assignStudentToAnotherTeacher = (teacherId, studentIds) => {
 }
 
 export const assignMeetingToAnotherTeacher = (teacherId, url) => {
-    console.log(`${routes.SERVER_ADDRESS}/meet/assign/${teacherId}?url=${url}`);
-    return axios.get(`${routes.SERVER_ADDRESS}/meet/assign/${teacherId}?url=${url}`)
+    let data = {
+        "teacherProfile": {
+            "conferenceUrl": url
+        }
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher_availability/${teacherId}`, data)
         .then(res => {
             return res.data;
         })

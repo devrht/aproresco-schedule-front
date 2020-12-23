@@ -59,7 +59,7 @@ function StudentList() {
             console.log('selectedRowKeys changed: ', records);
             var recordIdArray = [];
             records.map(record => {
-                recordIdArray.push({ id: record.id, firstName: record.firstName, lastName: record.lastName })
+                recordIdArray.push({ id: record.id, firstName: record.studentProfile.firstName, lastName: record.studentProfile.lastName })
             })
             setSelectedRow(recordIdArray);
             dispatch(assignStudents(recordIdArray))
@@ -87,7 +87,6 @@ function StudentList() {
                 <Button
                     style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
                     onClick={(e) => {
-                        e.stopPropagation();
                         e.stopPropagation();
                         history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
                         // history.push(`/studentlist/studentDetail/${record.id}`)
@@ -504,6 +503,7 @@ function StudentList() {
     };
 
     const assigningStudents = (teacher, studentId) => {
+        console.log(teacher);
         assignStudentToAnotherTeacher(teacher.id, studentId)
             .then(res => {
                 getListView(); 
