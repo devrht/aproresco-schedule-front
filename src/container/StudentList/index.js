@@ -25,9 +25,9 @@ function StudentList() {
     const [loadingTeacher, setLoadingTeacher] = useState(false);
     const [teacherList, setTeacherList] = useState([]);
     const [open, setOpen] = useState(false);
-    const [sortingName, setSortingName] = useState("");
+    const [sortingName, setSortingName] = useState("firstName");
     const [teacherName, setTeacherName] = useState("");
-    const [sortingType, setSortingType] = useState("");
+    const [sortingType, setSortingType] = useState("asc");
     const deletingStatus = useSelector((state) => {
       return state.Student.enableDeleting;
     })
@@ -88,7 +88,9 @@ function StudentList() {
                     style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
                     onClick={(e) => {
                         e.stopPropagation();
-                        history.push(`/studentlist/studentDetail/${record.id}`)
+                        e.stopPropagation();
+                        history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
+                        // history.push(`/studentlist/studentDetail/${record.id}`)
                     }}>
                         {(record.studentProfile.firstName + " " + record.studentProfile.lastName).length <= 20 ? 
                             record.studentProfile.firstName + " " + record.studentProfile.lastName : 
@@ -352,8 +354,8 @@ function StudentList() {
         setLoadingTeacher(true);
         findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, sortingName, sortingType).then(data => {
             if(data) {
-                if(data.content) {
-                    setTeacherList(data.content)
+                if(data) {
+                    setTeacherList(data)
                 } else {
                     setTeacherList([])
                 }
@@ -417,11 +419,11 @@ function StudentList() {
                 getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if(data) {
-                    if(data.content) {
-                        setStudentList(data.content)
+                    if(data) {
+                        setStudentList(data)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {
@@ -447,11 +449,11 @@ function StudentList() {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if(data) {
-                    if(data.content) {
-                        setStudentList(data.content)
+                    if(data) {
+                        setStudentList(data)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {

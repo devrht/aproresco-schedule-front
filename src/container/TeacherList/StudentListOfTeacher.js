@@ -94,8 +94,8 @@ function StudentListOfTeacher(props) {
         setStudentList(null);
         setStudentsTmp([])
         getStudentListById(params.id).then(data => {
-            setStudentList(data._embedded.studentBookings);
-            data._embedded.studentBookings.forEach(student => {
+            setStudentList(data);
+            data.forEach(student => {
                 let datas = studentsTmp;
                 let elt = new Object();
                 elt.studentProfile = student.studentProfile;

@@ -17,8 +17,8 @@ function ShortMessageList() {
     const dispatch = useDispatch();
     const history = useHistory();
     const [studentList, setStudentList] = useState();
-    const [sortingName, setSortingName] = useState("");
-    const [sortingType, setSortingType] = useState("");
+    const [sortingName, setSortingName] = useState("firstName");
+    const [sortingType, setSortingType] = useState("asc");
     const deletingStatus = useSelector((state) => {
       return state.Student.enableDeleting;
     })
@@ -135,11 +135,11 @@ function ShortMessageList() {
                 getShortMessagesByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if(data) {
-                    if(data.content) {
-                        setStudentList(data.content)
+                    if(data) {
+                        setStudentList(data)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {
@@ -166,10 +166,10 @@ function ShortMessageList() {
                 console.log('DATA ==> ', data)
                 if(data) {
                     if(data.content) {
-                        setStudentList(data.content)
+                        setStudentList(data)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {
@@ -207,25 +207,6 @@ function ShortMessageList() {
     };
     const searchList = () => {
         getListView();
-    }
-
-    const searchStudentListByDate = (start, end) => {
-
-        if(start == null)
-            start = '01/01/1900%2000:00:00';
-        if(end == null)
-            end = '01/01/2100%2000:00:00';
-
-
-        getStudentListByDate(start, end).then(data => {
-            console.log('DATA ==> ', data)
-            setStudentList(data.content)
-            setTableProps({
-                ...tableProps,
-                totalCount: data ? data.page ? data.page.totalElements ? 0 : 0 : 0 : 0,
-            });
-            setLoading(false);
-        })
     }
 
     const handleTableChange = (pagination, filters, sorter) => {

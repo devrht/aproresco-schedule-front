@@ -32,13 +32,13 @@ function TeacherList() {
     })
     const [teacherList, setTeacherList] = useState();
     const [teacherId, setTeacherId] = useState(0);
-    const [sortingName, setSortingName] = useState("");
+    const [sortingName, setSortingName] = useState("firstName");
     const [studentList, setStudentList] = useState();
-    const [sortingType, setSortingType] = useState("");
+    const [sortingType, setSortingType] = useState("asc");
     const [selectedRow, setSelectedRow] = useState([]);
     
-    const [sortingNameStudent, setSortingNameStudent] = useState("");
-    const [sortingTypeStudent, setSortingTypeStudent] = useState("");
+    const [sortingNameStudent, setSortingNameStudent] = useState("firstName");
+    const [sortingTypeStudent, setSortingTypeStudent] = useState("asc");
     const [selectedRowStudent, setSelectedRowStudent] = useState([]);
 
     const [editableSubject, setEditableSubject] = useState([])
@@ -136,11 +136,11 @@ function TeacherList() {
                 getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if(data) {
-                    if(data.content) {
-                        setTeacherList(data.content)
+                    if(data) {
+                        setTeacherList(data)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {
@@ -166,11 +166,11 @@ function TeacherList() {
         else {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if(data) {
-                    if(data.content) {
-                        setTeacherList(data.content)
+                    if(data) {
+                        setTeacherList(data)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {
@@ -422,11 +422,11 @@ function TeacherList() {
         if (studentSearch.firstName === "" && studentSearch.lastName === "") {
                 getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
                 if(data) {
-                    if(data.content) {
-                        setStudentList(data.content)
+                    if(data) {
+                        setStudentList(data)
                         setStudentTableProps({
                             ...studentTableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 30,
                         });
                     } else {
@@ -450,11 +450,11 @@ function TeacherList() {
         else {
             findStudentListByFirstNameAndLastName(studentSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
                 if(data) {
-                    if(data.content) {
-                        setStudentList(data.content)
+                    if(data) {
+                        setStudentList(data)
                         setStudentTableProps({
                             ...studentTableProps,
-                            totalCount: data.totalElements,
+                            totalCount: data.length,
                             pageSize: 5,
                         });
                     } else {

@@ -7,48 +7,47 @@ const headers = {
     Authorization: 'Basic ' + btoa(routes.OAUTH.CLIENT_ID + ":" + routes.OAUTH.CLIENT_SECRET)
 }
 
-export const getTeacherList = (page,size,sortName,sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`
-    )
-        .then(res =>{
+export const getTeacherList = (page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher_availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
             return res.data;
         })
 }
 
-export const getTeacherListByDate = (start, end, page, size, sortName, sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
-        .then(res =>{
+export const getTeacherListByDate = (start, end, page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher_availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
             return res.data;
         })
-        .catch(err =>{
-            alert(err.message);
+        .catch(err => {
+            //alert(err.message);
         })
 }
 
-export const deleteTeacherAvailabilities = (teacherIds) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/disable/${teacherIds}`)
-        .then(res =>{
+export const deleteTeacherAvailabilities = (teacherIds) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/teacher_availabilities/disable/${teacherIds}`)
+        .then(res => {
             return res.data;
         })
-        .catch(err =>{
-            alert(err.message);
+        .catch(err => {
+            //alert(err.message);
         })
 }
 
 
-export const markTeacherAsPresent = (teacherIds, value) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/update/${teacherIds}?present=${value}`)
-        .then(res =>{
+export const markTeacherAsPresent = (teacherIds, value) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/teacher_availabilities/update/${teacherIds}?present=${value}`)
+        .then(res => {
             return res.data;
         })
-        .catch(err =>{
-            alert(err.message);
+        .catch(err => {
+            //alert(err.message);
         })
 }
 
-export const findTeacherListByFirstNameAndLastName = (firstName,start, end, page, size, sortName, sortType) =>{
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teachers_availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
-        .then(res =>{
+export const findTeacherListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher_availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
             return res.data;
         })
 }
@@ -74,7 +73,7 @@ export const googleSignUp = (user) => {
     body.append('password', '1234');
 
     return axios.post(`${routes.SERVER_ADDRESS}/auth/google/signup`, body).then(res => {
-            console.log(res)
-            return res;
-        })
+        console.log(res)
+        return res;
+    })
 }

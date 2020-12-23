@@ -9,10 +9,10 @@ function StudentDetail(props) {
 
     const location = useLocation();
     const { params } = props.match;
-    const [studentDetail, setStudentDetail] = useState();
+    const [studentDetail, setStudentDetail] = useState(location.state.student);
 
     useEffect(() => {
-        getDetailView();
+        // getDetailView();
     }, []);
 
     const getDetailView = () => {

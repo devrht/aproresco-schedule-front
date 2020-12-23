@@ -44,7 +44,7 @@ function LayoutOfApp({ children }, props) {
     console.log('Date: '+year+'-'+month+'-'+day)
     if(localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
       localStorage.setItem('startDate', year+'-'+month+'-'+day)
-      localStorage.setItem('toStart', month+'/'+day+'/'+year+'%2000:00:00')
+      localStorage.setItem('toStart', month+'%2F'+day+'%2F'+year+'%2000:00:00 -0500')
     }
 
     today =  new Date();
@@ -55,7 +55,7 @@ function LayoutOfApp({ children }, props) {
 
     if(localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
       localStorage.setItem('endDate', year+'-'+month+'-'+day)
-      localStorage.setItem('toEnd', month+'/'+day+'/'+year+'%2000:00:00')
+      localStorage.setItem('toEnd', month+'%2F'+day+'%2F'+year+'%2000:00:00 -0500')
 
     }
 
