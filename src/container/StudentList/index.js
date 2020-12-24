@@ -92,8 +92,13 @@ function StudentList() {
             },
             render: (record) =>
                 <div
-                    style={{ display: "flex", flexDirection: 'row' }}
+                    style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
                 >
+                    <Tooltip title={record.studentProfile.lastSeenRoom != null ? record.studentProfile.lastSeenRoom : "No last seen room"}>
+                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }} />
+                    </Tooltip>
                     <Tooltip title={(record.studentProfile.firstName + " " + record.studentProfile.lastName)}>
                         <Button
                             style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
@@ -108,14 +113,6 @@ function StudentList() {
                                     (record.studentProfile.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
                             </p>
                         </Button>
-                    </Tooltip>
-                    <Tooltip title={record.studentProfile.lastSeenRoom != null ? record.studentProfile.lastSeenRoom : "No last seen room"}>
-                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }}/>
-                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }}/>
-                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }}/>
-                        {/* <BulbFilled style={{ marginLeft: 80, color: "green", fontSize: "1.1em", display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }} />
-                        <BulbFilled style={{ marginLeft: 80, color: "orange", fontSize: "1.1em", display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }} />
-                        <BulbFilled style={{ marginLeft: 80, color: "red", fontSize: "1.1em", display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }} /> */}
                     </Tooltip>
                 </div>,
             key: 'name',
