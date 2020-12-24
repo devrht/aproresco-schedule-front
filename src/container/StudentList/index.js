@@ -16,11 +16,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     VideoCameraOutlined,
     EditOutlined,
+    BulbFilled,
     MinusCircleFilled,
     CloseCircleFilled,
     CheckCircleFilled
 
 } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 function StudentList() {
     const dispatch = useDispatch();
@@ -107,9 +110,12 @@ function StudentList() {
                         </Button>
                     </Tooltip>
                     <Tooltip title={record.studentProfile.lastSeenRoom != null ? record.studentProfile.lastSeenRoom : "No last seen room"}>
-                        <CheckCircleFilled style={{ marginLeft: 80, color: "green", fontSize: "1.5em", display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }} />
-                        <MinusCircleFilled style={{ marginLeft: 80, color: "orange", fontSize: "1.5em", display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }} />
-                        <CloseCircleFilled style={{ marginLeft: 80, color: "red", fontSize: "1.5em", display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }}/>
+                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }}/>
+                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }}/>
+                        {/* <BulbFilled style={{ marginLeft: 80, color: "green", fontSize: "1.1em", display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }} />
+                        <BulbFilled style={{ marginLeft: 80, color: "orange", fontSize: "1.1em", display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }} />
+                        <BulbFilled style={{ marginLeft: 80, color: "red", fontSize: "1.1em", display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }} /> */}
                     </Tooltip>
                 </div>,
             key: 'name',
@@ -354,7 +360,7 @@ function StudentList() {
         getListView();
         const interval = setInterval(() => {
             getListView();
-        }, 30000);
+        }, 15000);
         return () => clearInterval(interval);
     }, [tableProps.pageIndex]);
 
