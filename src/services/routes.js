@@ -1,4 +1,4 @@
-export const SERVER_ADDRESS = 'http://tower.watu.fi:8443';
+export const SERVER_ADDRESS = 'https://tower.watu.fi:8443';
 
 export const OAUTH = {
     GRANT_TYPE: 'password',

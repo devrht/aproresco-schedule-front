@@ -28,7 +28,7 @@
         "redux-thunk": "^2.3.0"
     },
     "scripts": {
-        "start": "set PORT=3006 && react-scripts start",
+        "start": "set PORT=3006 && HTTPS=true SSL_CRT_FILE=/home/linuxbrew/.linuxbrew/Cellar/mkcert/1.4.3/bin/localhost.pem SSL_KEY_FILE=/home/linuxbrew/.linuxbrew/Cellar/mkcert/1.4.3/bin/localhost-key.pem react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

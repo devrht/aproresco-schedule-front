@@ -15,8 +15,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     VideoCameraOutlined,
-    EditOutlined
-  } from '@ant-design/icons';
+    EditOutlined,
+    MinusCircleFilled,
+    CloseCircleFilled,
+    CheckCircleFilled
+
+} from '@ant-design/icons';
 
 function StudentList() {
     const dispatch = useDispatch();
@@ -29,7 +33,7 @@ function StudentList() {
     const [teacherName, setTeacherName] = useState("");
     const [sortingType, setSortingType] = useState("asc");
     const deletingStatus = useSelector((state) => {
-      return state.Student.enableDeleting;
+        return state.Student.enableDeleting;
     })
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
@@ -43,9 +47,9 @@ function StudentList() {
     })
 
     const [teacherSearch, setTeacherSearch] = useState({
-        name:"",
-        firstName:"",
-        lastName:"",
+        name: "",
+        firstName: "",
+        lastName: "",
     })
 
     const [selectedRow, setSelectedRow] = useState([]);
@@ -83,19 +87,31 @@ function StudentList() {
                     }
                 };
             },
-            render: (record) => <Tooltip title={(record.studentProfile.firstName + " " + record.studentProfile.lastName)}>
-                <Button
-                    style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
-                        // history.push(`/studentlist/studentDetail/${record.id}`)
-                    }}>
-                        {(record.studentProfile.firstName + " " + record.studentProfile.lastName).length <= 20 ? 
-                            record.studentProfile.firstName + " " + record.studentProfile.lastName : 
-                            (record.studentProfile.firstName + " " + record.studentProfile.lastName).substring(0, 19)+'...'}
-                </Button>
-            </Tooltip>,
+            render: (record) =>
+                <div
+                    style={{ display: "flex", flexDirection: 'row' }}
+                >
+                    <Tooltip title={(record.studentProfile.firstName + " " + record.studentProfile.lastName)}>
+                        <Button
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
+                                // history.push(`/studentlist/studentDetail/${record.id}`)
+                            }}>
+                            <p style={{ width: "50%", textAlign: "left" }}>
+                                {(record.studentProfile.firstName + " " + record.studentProfile.lastName).length <= 20 ?
+                                    record.studentProfile.firstName + " " + record.studentProfile.lastName :
+                                    (record.studentProfile.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                            </p>
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title={record.studentProfile.lastSeenRoom != null ? record.studentProfile.lastSeenRoom : "No last seen room"}>
+                        <CheckCircleFilled style={{ marginLeft: 80, color: "green", fontSize: "1.5em", display: record.studentProfile.onlineStatus == 0 ? "block" : "none" }} />
+                        <MinusCircleFilled style={{ marginLeft: 80, color: "orange", fontSize: "1.5em", display: record.studentProfile.onlineStatus == 1 ? "block" : "none" }} />
+                        <CloseCircleFilled style={{ marginLeft: 80, color: "red", fontSize: "1.5em", display: record.studentProfile.onlineStatus == 2 ? "block" : "none" }} />
+                    </Tooltip>
+                </div>,
             key: 'name',
             fixed: 'left',
         },
@@ -119,7 +135,7 @@ function StudentList() {
                 <div>
                     {
                         <Moment format="D MMM YYYY HH:MM" withTitle>
-                            { record.startDate }
+                            {record.startDate}
                         </Moment>
                     }
                 </div>
@@ -145,28 +161,28 @@ function StudentList() {
             render: (record) => {
                 return (
                     <div onDoubleClick={() => {
-                        if(!editableRow.includes(record)) {
+                        if (!editableRow.includes(record)) {
                             setEditableRow([...editableRow, record]);
                         } else {
                             setEditableRow(editableRow.filter(r => r.id !== record.id));
                         }
                     }}>
-                        { !editableRow.includes(record) ? record.subject : <Form layout="inline">
-                                    <Form.Item>
-                                        <Input
-                                            type="text"
-                                            placeholder="Subject"
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    editSubject(record.id, e.target.value).then(data => {
-                                                        setEditableRow(editableRow.filter(r => r.id !== record.id));
-                                                        getListView();
-                                                    })
-                                                }
-                                            }}
-                                        />
-                                    </Form.Item>
-                                </Form> }
+                        {!editableRow.includes(record) ? record.subject : <Form layout="inline">
+                            <Form.Item>
+                                <Input
+                                    type="text"
+                                    placeholder="Subject"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            editSubject(record.id, e.target.value).then(data => {
+                                                setEditableRow(editableRow.filter(r => r.id !== record.id));
+                                                getListView();
+                                            })
+                                        }
+                                    }}
+                                />
+                            </Form.Item>
+                        </Form>}
                     </div>
                 )
             },
@@ -223,19 +239,19 @@ function StudentList() {
                     <Row>Grades : {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades.join(', ') : "Nothing" : "Nothing"}</Row>
                 </div>
                 return (
-                   !editTeacher.includes(record) ?
-                    <span>
-                        <Tooltip placement="topLeft" title={text} color={"white"}>
-                            <p onClick={(e) => {
-                                //e.stopPropagation();
-                                if (record.teacherAvailability) 
-                                    if(record.teacherAvailability.teacherProfile)
-                                        history.push(`/studentlist/teacher/${record.teacherAvailability.id}`, { teacher: record.teacherAvailability })
-                            }} style={{ cursor: 'pointer', color: isSubjectContains ? 'black': 'orange' }}>
-                                {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
-                            </p>
-                        </Tooltip>
-                    </span> : null
+                    !editTeacher.includes(record) ?
+                        <span>
+                            <Tooltip placement="topLeft" title={text} color={"white"}>
+                                <p onClick={(e) => {
+                                    //e.stopPropagation();
+                                    if (record.teacherAvailability)
+                                        if (record.teacherAvailability.teacherProfile)
+                                            history.push(`/studentlist/teacher/${record.teacherAvailability.id}`, { teacher: record.teacherAvailability })
+                                }} style={{ cursor: 'pointer', color: isSubjectContains ? 'black' : 'orange' }}>
+                                    {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
+                                </p>
+                            </Tooltip>
+                        </span> : null
                 )
             },
             key: 'studentCount',
@@ -243,72 +259,72 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            render: (record) => 
+            render: (record) =>
                 <div style={{ display: 'flex', flexDirection: 'row', width: '200px' }}>
                     {
                         !editTeacher.includes(record) ?
-                        <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl  : "Link Not Found": "Student Not Found"}>
-                            <Button
-                                style={{backgroundColor:"transparent",border:"0px",color:"#1890FF"}}
-                                onClick={(e) => {
-                                    //e.stopPropagation();
-                                    if (record.studentProfile) 
-                                            if(record.studentProfile.conferenceUrl)
-                                                window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://'+record.studentProfile.conferenceUrl)
-                                }}><VideoCameraOutlined style={{ fontSize: 20 }}/></Button>
-                        </Tooltip>:
-                        <Autocomplete
-                            id="asynchronous-search"
-                            options={teacherList}
-                            size="small"
-                            inputValue={teacherName}
-                            // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
-                            onInputChange={(__, newInputValue) => {
-                                setTeacherName(newInputValue);
-                                console.log(newInputValue)
-                            }}
-                            onChange={(__, newValue) => {
-                                if(newValue != null)
-                                    setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
-                              }}
-                              open={open}
+                            <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl : "Link Not Found" : "Student Not Found"}>
+                                <Button
+                                    style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
+                                    onClick={(e) => {
+                                        //e.stopPropagation();
+                                        if (record.studentProfile)
+                                            if (record.studentProfile.conferenceUrl)
+                                                window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://' + record.studentProfile.conferenceUrl)
+                                    }}><VideoCameraOutlined style={{ fontSize: 20 }} /></Button>
+                            </Tooltip> :
+                            <Autocomplete
+                                id="asynchronous-search"
+                                options={teacherList}
+                                size="small"
+                                inputValue={teacherName}
+                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                onInputChange={(__, newInputValue) => {
+                                    setTeacherName(newInputValue);
+                                    console.log(newInputValue)
+                                }}
+                                onChange={(__, newValue) => {
+                                    if (newValue != null)
+                                        setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                }}
+                                open={open}
                                 onOpen={() => {
                                     setOpen(true);
                                 }}
                                 onClose={() => {
                                     setOpen(false);
                                 }}
-                            loading={loadingTeacher}
-                            getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                            style={{ minWidth: 450, marginLeft: -250 }}
-                            renderInput={(params) => 
-                                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <TextField {...params} 
-                                    label="Select a teacher to assign" 
-                                    variant="outlined" 
-                                    onChange={(e) => changeTeacherSearch(e)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !open) {
-                                            let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
-                                            if(teachers.length === 0) {
-                                                alert('This teacher is not found');
-                                            } else {
-                                                assigningStudents(teachers[0], record.id);
-                                            }
-                                        }
-                                    }} 
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                { loadingTeacher ? <CircularProgress color="inherit" size={20} /> : null }
-                                                { params.InputProps.endAdornment }
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                />
+                                loading={loadingTeacher}
+                                getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
+                                style={{ minWidth: 450, marginLeft: -250 }}
+                                renderInput={(params) =>
+                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                        <TextField {...params}
+                                            label="Select a teacher to assign"
+                                            variant="outlined"
+                                            onChange={(e) => changeTeacherSearch(e)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !open) {
+                                                    let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
+                                                    if (teachers.length === 0) {
+                                                        alert('This teacher is not found');
+                                                    } else {
+                                                        assigningStudents(teachers[0], record.id);
+                                                    }
+                                                }
+                                            }}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <React.Fragment>
+                                                        {loadingTeacher ? <CircularProgress color="inherit" size={20} /> : null}
+                                                        {params.InputProps.endAdornment}
+                                                    </React.Fragment>
+                                                ),
+                                            }}
+                                        />
 
-                                {/* <Button style={{ marginLeft: 5 }} onClick={(e) => {
+                                        {/* <Button style={{ marginLeft: 5 }} onClick={(e) => {
                                     if(teacherName.length > 0) {
                                         let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
                                         if(teachers.length === 0) {
@@ -321,14 +337,14 @@ function StudentList() {
                                     }}}>
                                     {teacherName.length > 0 ? 'Confirm' : 'Cancel' }
                                 </Button> */}
-                                </div>
-                                
-                            }
-                        />
+                                    </div>
+
+                                }
+                            />
                     }
                     {
                         !editTeacher.includes(record) ?
-                        <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><EditOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }}/></div>: null
+                            <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><EditOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }} /></div> : null
                     }
                 </div>,
         },
@@ -336,7 +352,12 @@ function StudentList() {
 
     useEffect(() => {
         getListView();
+        const interval = setInterval(() => {
+            getListView();
+        }, 30000);
+        return () => clearInterval(interval);
     }, [tableProps.pageIndex]);
+
     useEffect(() => {
         getListView();
     }, [sortingType, sortingName]);
@@ -344,7 +365,7 @@ function StudentList() {
     const computeLastName = (name) => {
         let lastName = '';
         for (let index = 1; index < name.length; index++) {
-            lastName = lastName.trim() +' '+name[index].trim();
+            lastName = lastName.trim() + ' ' + name[index].trim();
         }
         return lastName
     }
@@ -352,8 +373,8 @@ function StudentList() {
     const getTeacherListView = () => {
         setLoadingTeacher(true);
         findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, sortingName, sortingType).then(data => {
-            if(data) {
-                if(data) {
+            if (data) {
+                if (data) {
                     setTeacherList(data)
                 } else {
                     setTeacherList([])
@@ -361,19 +382,19 @@ function StudentList() {
             } else {
                 setTeacherList([])
             }
-        }).finally(() => setLoadingTeacher(false) );
+        }).finally(() => setLoadingTeacher(false));
     }
 
     const changeTeacherSearch = (e) => {
         const { name, value } = e.target;
         setTeacherName(value);
         setTeacherSearch({ ...search, [name]: value.trim() });
-        if(e.target.name==="name"){
+        if (e.target.name === "name") {
             var nameData = value.trim().split(" ");
-            if(nameData.length>1){
+            if (nameData.length > 1) {
                 setTeacherSearch({ ...search, firstName: nameData[0].trim(), lastName: computeLastName(nameData) });
             }
-            else{
+            else {
                 setTeacherSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
@@ -383,7 +404,7 @@ function StudentList() {
     const computeMinGrade = (min, profile, grade) => {
         let i = 0;
         let result = min;
-        if( profile == null ) {
+        if (profile == null) {
             return 0;
         }
 
@@ -398,9 +419,9 @@ function StudentList() {
     }
 
     const deleteBooking = (selectedrow) => {
-        if(selectedrow.length > 0) {
+        if (selectedrow.length > 0) {
             let ids = selectedrow.reduce((a, b) => {
-                return a+','+b.id;
+                return a + ',' + b.id;
             }, '')
             deleteStudentBooking(ids.substring(1)).then(data => {
                 console.log(data);
@@ -415,10 +436,10 @@ function StudentList() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                if(data) {
-                    if(data) {
+                if (data) {
+                    if (data) {
                         setStudentList(data)
                         setTableProps({
                             ...tableProps,
@@ -447,8 +468,8 @@ function StudentList() {
         else {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
-                if(data) {
-                    if(data) {
+                if (data) {
+                    if (data) {
                         setStudentList(data)
                         setTableProps({
                             ...tableProps,
@@ -495,7 +516,7 @@ function StudentList() {
     const handleTableChange = (pagination, filters, sorter) => {
         setTableProps({
             ...tableProps,
-            pageIndex: pagination.current-1,
+            pageIndex: pagination.current - 1,
             pageSize: pagination.pageSize,
         });
         setLoading(true);
@@ -506,25 +527,26 @@ function StudentList() {
         console.log(teacher);
         assignStudentToAnotherTeacher(teacher.id, studentId)
             .then(res => {
-                getListView(); 
+                getListView();
             }).finally(() => {
                 setEditTeacher([]);
             })
     }
 
     return (
-        <div onClick={(e) => { 
-                console.log(e.target.viewBox)
-                if(e.target.viewBox != undefined) {
-                    if(editTeacher.length > 0){
-                    }
-                } else if(!e.target.id.includes('asynchronous-search') && editTeacher.length > 0) {
-                    setEditTeacher([]);
+
+        <div onClick={(e) => {
+            console.log(e.target.viewBox)
+            if (e.target.viewBox != undefined) {
+                if (editTeacher.length > 0) {
                 }
-            }}>
-            <PageHeader 
+            } else if (!e.target.id.includes('asynchronous-search') && editTeacher.length > 0) {
+                setEditTeacher([]);
+            }
+        }}>
+            <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Students</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Students</p>}
                 extra={[
                 ]}
             >
@@ -537,7 +559,7 @@ function StudentList() {
                         <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                     </div>
                 </div>
-                
+
                 {!studentList ? <Spin className="loading-table" /> :
                     <Table
                         className="table-padding"
@@ -552,9 +574,9 @@ function StudentList() {
                         }}
                         rowSelection={rowSelection}
                         rowKey="id"
-                        // onRow={(record) => ({
-                        //     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
-                        // })}
+                    // onRow={(record) => ({
+                    //     onClick: () => (history.push(`/studentlist/studentDetail/${record.id}`))
+                    // })}
                     />}
 
             </PageHeader>
