@@ -78,10 +78,26 @@ export const findTeacherListByFirstNameAndLastName = (firstName, start, end, pag
 
 export const googleSignIn = (google_id) => {
     const body = new FormData();
-    body.append('idToken', google_id);
-    return axios.post(`${routes.SERVER_ADDRESS}/auth/login/google`, body).then(res => {
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('expireAt', res.data.expireAt);
+    body.append('idToken', "email");
+
+    var config = {
+        headers: {
+            'Content-Length': 0,
+            'Content-Type': 'text/plain'
+        },
+        responseType: 'text'
+    };
+
+    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { email: "email" }, {
+        headers: {
+            'Content-Type': 'text/plain'
+        }
+    }).then(res => {
+        console.log("DATA RESPONSE => ", res)
+        localStorage.setItem('token', res);
+        var date = new Date(); // Now
+        date.setDate(date.getDate() + 30); // Set now + 30 days as the new date
+        localStorage.setItem('expireAt', date);
         return res;
     })
 }

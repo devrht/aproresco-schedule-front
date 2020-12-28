@@ -11,7 +11,7 @@ function Login() {
         googleSignIn(data.tokenObj.id_token)
         .then(user => {
             console.log('USER ==> ', user)
-            user.data.token ? window.location.reload(true) : alert('your account is not registered in the system');
+            user ? window.location.reload(true) : alert('your account is not registered in the system');
         })
         .catch(apiError => {
             alert('your account is not registered in the system');
