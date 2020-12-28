@@ -8,7 +8,8 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   SettingOutlined,
-  MessageOutlined
+  MessageOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
 import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
@@ -20,7 +21,7 @@ function LayoutOfApp({ children }, props) {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const [pathName,setPathName]=useState(window.location.pathname);
+  const [pathName, setPathName] = useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -34,34 +35,62 @@ function LayoutOfApp({ children }, props) {
     return state.Student.enableAssigning;
   })
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    let today =  new Date();
-    today.setDate(today.getDate() - 1 )
-    let day = today.getDate() < 10 ? '0'+(today.getDate()) : (today.getDate())
-    let month = today.getMonth()+1 < 10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1);
+    let today = new Date();
+    today.setDate(today.getDate() - 1)
+    let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
+    let month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
     let year = today.getFullYear();
-    console.log('Date: '+year+'-'+month+'-'+day)
-    if(localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
-      localStorage.setItem('startDate', year+'-'+month+'-'+day)
-      localStorage.setItem('toStart', month+'%2F'+day+'%2F'+year+'%2000:00:00 -0500')
+    console.log('Date: ' + year + '-' + month + '-' + day)
+    if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
+      localStorage.setItem('startDate', year + '-' + month + '-' + day)
+      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
     }
 
-    today =  new Date();
+    today = new Date();
     today.setDate(today.getDate() + 1);
-    day = today.getDate() < 10 ? '0'+(today.getDate()) : (today.getDate())
-    month = today.getMonth()+1 < 10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1);
+    day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
+    month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
     year = today.getFullYear();
 
-    if(localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
-      localStorage.setItem('endDate', year+'-'+month+'-'+day)
-      localStorage.setItem('toEnd', month+'%2F'+day+'%2F'+year+'%2000:00:00 -0500')
+    if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
+      localStorage.setItem('endDate', year + '-' + month + '-' + day)
+      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
 
     }
+
+    let expireAt = new Date(localStorage.getItem("expireAt"));
+
+    // console.log("LE TRUC EST => ", localStorage.getItem("expireAt") == null)
+    // if (localStorage.getItem("expireAt") == null) {
+    //   setLogged(false);
+    //   history.push('/login');
+    // } else
+    //   if (localStorage.getItem("expireAt").length > 0)
+    //     if (today.getTime() <= expireAt.getTime()) {
+    //       setLogged(true);
+    //       if (window.location.pathname == '/login')
+    //         history.push('/teacherlist');
+    //     } else {
+    //       setLogged(false);
+    //       history.push('/login');
+    //     }
+    //   else {
+    //     setLogged(false);
+    //     history.push('/login');
+    //   }
 
     setPathName(window.location.pathname);
     console.log(pathName);
-  },[window.location.pathname])
+  }, [window.location.pathname])
+
+  const logout = () => {
+    setLogged(false);
+    localStorage.setItem("token", null);
+    localStorage.setItem("expireAt", null);
+    history.push('/login')
+  }
 
   const onShowSettings = () => {
     setShowSettings(!showSettings);
@@ -94,23 +123,26 @@ function LayoutOfApp({ children }, props) {
   return (
     <Layout>
       {
-        logged ? 
-        <Sider className="sider">
-          <h1>Appui Scolaire</h1>
-          <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>
-            <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
-              Student List
+        true ?
+          <Sider className="sider">
+            <h1>Appui Scolaire</h1>
+            <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>
+              <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
+                Student List
             </Menu.Item>
-            <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
-              Teacher List
+              <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
+                Teacher List
             </Menu.Item>
-            <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
-              Settings
+              <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
+                Settings
             </Menu.Item>
-            <Menu.Item key="/shortmessages" icon={<MessageOutlined />} onClick={() => { history.push('/short-messages') }}>
-              Short Messages
+              <Menu.Item key="/shortmessages" icon={<MessageOutlined />} onClick={() => { history.push('/short-messages') }}>
+                Short Messages
             </Menu.Item>
-            {/* <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
+              <Menu.Item key="/login" icon={<LogoutOutlined />} onClick={() => { logout(); }}>
+                Log out
+            </Menu.Item>
+              {/* <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
               <p onClick={() => { onEnableDeleting() }} style={{ cursor: "pointer" }}>
                 { deletingStatus ? 'Disable' : 'Enable' } deleting
               </p>
@@ -124,8 +156,8 @@ function LayoutOfApp({ children }, props) {
                 { !persist ? 'Enable' : 'Disable' } Persistence
               </p>
             </div> */}
-          </Menu>
-        </Sider> : null
+            </Menu>
+          </Sider> : null
       }
       <Layout className="childLayout">
         <Content className="content">

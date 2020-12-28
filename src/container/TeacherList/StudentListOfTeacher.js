@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import 'antd/dist/antd.css';
-import { Table, PageHeader, Button, Spin } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { getStudentListById } from '../../services/Student'
 import { useSelector, useDispatch } from 'react-redux'
 import { assignStudents, enableAssigning } from '../../Action-Reducer/Student/action'
 import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '../../services/Student'
-import { markTeacherAsPresent } from '../../services/Teacher'
+import { markTeacherAsPresent, markAsSupervisor, markAsAdmin } from '../../services/Teacher'
 import { Form, Row, Col, Card, Input } from 'antd'
 import { useLocation } from "react-router-dom";
 import Moment from 'react-moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCrown, faShieldAlt } from '@fortawesome/free-solid-svg-icons'
 
 const columns = [
     {
@@ -55,6 +57,8 @@ function StudentListOfTeacher(props) {
     const [studentList, setStudentList] = useState();
     const [confUrl, setConfUrl] = useState();
     const [editable, setEditable] = useState(false);
+    const [supervisor, setSupervisor] = useState(location.state.teacher.teacherProfile.supervisor ? true : false);
+    const [admin, setAdmin] = useState(location.state.teacher.teacherProfile.tenantAdmin ? true : false);
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
     const [teacher, setTeacher] = useState(location.state.teacher);
@@ -154,13 +158,35 @@ function StudentListOfTeacher(props) {
         });
     }
 
+    const markTeacherAsAdmin = () => {
+        markAsAdmin(teacher.teacherProfile.id, !admin).then(data => {
+            setAdmin(!admin);
+        });
+    }
+
+    const markTeacherAsSupervisor = () => {
+        markAsSupervisor(teacher.teacherProfile.id, !supervisor).then(data => {
+            setSupervisor(!supervisor);
+        });
+    }
+
     return (
         <div>
             {/* {console.log(params)}
             students history.... {params.id} */}
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>}
+                title={
+                    <div style={{ display: "flex", flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
+                        <p style={{ fontSize: '3em', textAlign: 'center', margin: '20px' }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>
+                        <Tooltip title={admin ? "Administrator" : "Not An Administrator"}>
+                            <FontAwesomeIcon onClick={() => markTeacherAsAdmin()} icon={faCrown} color={ admin ? "gold" : "gray" } size={"2x"} style={{ marginLeft: 20 }} />
+                        </Tooltip>
+                        <Tooltip title={supervisor ? "Supervisor" : "Not A Supervisor"}>
+                            <FontAwesomeIcon onClick={() => markTeacherAsSupervisor()} icon={faShieldAlt} color={ supervisor ? "blue" : "gray" } size={"2x"} style={{ marginLeft: 20 }} />
+                        </Tooltip>
+                    </div>
+                }
                 extra={[
                     <div style={{ display: 'flex' }}>
                         <Button key='3' type="primary"
@@ -294,14 +320,14 @@ function StudentListOfTeacher(props) {
                         dataSource={students}
                         rowSelection={rowSelection}
                         rowKey="id"
-                        // onRow={(record) => ({
-                        //     onClick: (e) => {
-                        //         console.log('to go', record)
-                        //         e.stopPropagation();
-                        //         history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
-                        //     }
+                    // onRow={(record) => ({
+                    //     onClick: (e) => {
+                    //         console.log('to go', record)
+                    //         e.stopPropagation();
+                    //         history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
+                    //     }
 
-                        // })}
+                    // })}
                     />
                 }
             </PageHeader>

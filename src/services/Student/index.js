@@ -9,7 +9,7 @@ const headers = {
 }
 
 export const getStudentListById = (TeacherId) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/teacher_availability/${TeacherId}/student_bookings`)
+    return axios.get(`${routes.SERVER_ADDRESS}/teacher-availability/${TeacherId}/student-bookings`)
         .then(res => {
             console.log(res.data);
             return res.data;
@@ -21,7 +21,7 @@ export const getStudentListById = (TeacherId) => {
 
 export const getStudentList = (page, size, sortName, sortType) => {
 
-    return axios.get(`${routes.SERVER_ADDRESS}/search/student_bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -31,7 +31,7 @@ export const getStudentList = (page, size, sortName, sortType) => {
 }
 
 export const getStudentListByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/student_bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -41,7 +41,7 @@ export const getStudentListByDate = (start, end, page, size, sortName, sortType)
 }
 
 export const getShortMessagesByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/short_messages?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/short-messages?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -51,7 +51,7 @@ export const getShortMessagesByDate = (start, end, page, size, sortName, sortTyp
 }
 
 export const getStudentDetail = (studentId) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/student_bookings/${studentId}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/student-bookings/${studentId}`)
         .then(res => {
             return res.data;
         })
@@ -62,7 +62,7 @@ export const getStudentDetail = (studentId) => {
 
 export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/student_bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -73,7 +73,7 @@ export const findStudentListByFirstNameAndLastName = (firstName, start, end, pag
 
 export const getShortMessages = (firstName, start, end, page, size, sortName, sortType) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/short_messages?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/short-messages?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -94,7 +94,7 @@ export const assignStudentlistToTeacher = (teacherId, studentIds) => {
 }
 
 export const deleteStudentBooking = (studentIds) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/student_bookings/disable/${studentIds}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/student-bookings/disable/${studentIds}`)
         .then(res => {
             return res.data;
         })
@@ -117,7 +117,7 @@ export const assignStudentToAnotherTeacher = (teacherId, studentIds) => {
             student_ids
     }
     // console.log(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`);
-    return axios.patch(`${routes.SERVER_ADDRESS}/teacher_availability/${teacherId}`, data)
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-availability/${teacherId}`, data)
         .then(res => {
             return res.data;
         })
@@ -132,7 +132,7 @@ export const assignMeetingToAnotherTeacher = (teacherId, url) => {
             "conferenceUrl": url
         }
     }
-    return axios.patch(`${routes.SERVER_ADDRESS}/teacher_availability/${teacherId}`, data)
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-availability/${teacherId}`, data)
         .then(res => {
             return res.data;
         })
@@ -172,7 +172,7 @@ export const bridgeStatus = () => {
 }
 
 export const editSubject = (id, subject) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/student_bookings/update/${id}?subject=${subject}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/student-bookings/update/${id}?subject=${subject}`)
         .then(res => {
             return res;
         })

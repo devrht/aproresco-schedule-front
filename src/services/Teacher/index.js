@@ -8,14 +8,38 @@ const headers = {
 }
 
 export const getTeacherList = (page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher_availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
+            return res.data;
+        })
+}
+
+export const markAsSupervisor = (id, value) => {
+
+    let data = {
+        "supervisor": value
+    }
+
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data)
+        .then(res => {
+            return res.data;
+        })
+}
+
+export const markAsAdmin = (id, value) => {
+
+    let data = {
+        "tenantAdmin": value
+    }
+
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data)
         .then(res => {
             return res.data;
         })
 }
 
 export const getTeacherListByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher_availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -25,7 +49,7 @@ export const getTeacherListByDate = (start, end, page, size, sortName, sortType)
 }
 
 export const deleteTeacherAvailabilities = (teacherIds) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/teacher_availabilities/disable/${teacherIds}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/teacher-availabilities/disable/${teacherIds}`)
         .then(res => {
             return res.data;
         })
@@ -36,7 +60,7 @@ export const deleteTeacherAvailabilities = (teacherIds) => {
 
 
 export const markTeacherAsPresent = (teacherIds, value) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/teacher_availabilities/update/${teacherIds}?present=${value}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/teacher-availabilities/update/${teacherIds}?present=${value}`)
         .then(res => {
             return res.data;
         })
@@ -46,7 +70,7 @@ export const markTeacherAsPresent = (teacherIds, value) => {
 }
 
 export const findTeacherListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher_availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
