@@ -283,7 +283,9 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14} onDoubleClick={() => setEditable(!editable)}>
                                 {!editable ?
-                                    confUrl :
+                                    <p onClick={(e) => {
+                                        window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                    }} >{ confUrl }</p> :
                                     <Form layout="inline">
                                         <Form.Item>
                                             <Input
@@ -320,7 +322,7 @@ function StudentListOfTeacher(props) {
                         dataSource={students}
                         rowSelection={rowSelection}
                         rowKey="id"
-                    // onRow={(record) => ({
+                    // onRow={(teacher) => ({
                     //     onClick: (e) => {
                     //         console.log('to go', record)
                     //         e.stopPropagation();

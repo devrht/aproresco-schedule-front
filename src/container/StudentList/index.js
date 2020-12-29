@@ -442,11 +442,11 @@ function StudentList() {
             getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
-                    if (data) {
-                        setStudentList(data)
+                    if (data.content) {
+                        setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.length,
+                            totalCount: data.totalCount,
                             pageSize: 30,
                         });
                     } else {
@@ -472,11 +472,11 @@ function StudentList() {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
-                    if (data) {
-                        setStudentList(data)
+                    if (data.content) {
+                        setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.length,
+                            totalCount: data.totalCount,
                             pageSize: 30,
                         });
                     } else {

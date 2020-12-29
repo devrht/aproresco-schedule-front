@@ -62,7 +62,7 @@ function LayoutOfApp({ children }, props) {
 
     let expireAt = new Date(localStorage.getItem("expireAt"));
 
-    console.log("LE TRUC EST => ", localStorage.getItem("expireAt") == null)
+    // console.log("LE TRUC EST => ", localStorage.getItem("expireAt") == null)
     if (localStorage.getItem("expireAt") == null) {
       setLogged(false);
       history.push('/login');

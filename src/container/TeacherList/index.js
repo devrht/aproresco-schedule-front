@@ -61,7 +61,7 @@ function TeacherList() {
     const [studentTableProps, setStudentTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
-        pageSize: 5,
+        pageSize: 30,
     });
     // const [start, setStart] = useState();
     // const [end, setEnd] = useState();
@@ -139,11 +139,11 @@ function TeacherList() {
             getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
-                    if (data) {
-                        setTeacherList(data)
+                    if (data.content) {
+                        setTeacherList(data.content)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.length,
+                            totalCount: data.totalCount,
                             pageSize: 30,
                         });
                     } else {
@@ -169,11 +169,11 @@ function TeacherList() {
         else {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
-                    if (data) {
-                        setTeacherList(data)
+                    if (data.content) {
+                        setTeacherList(data.content)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.length,
+                            totalCount: data.totalCount,
                             pageSize: 30,
                         });
                     } else {

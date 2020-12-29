@@ -99,7 +99,7 @@ function StudentDetail(props) {
                                 <h4 >Conference URL</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.studentProfile.conferenceUrl}</h4>
+                                <h4 onClick={() => window.open(studentDetail.studentProfile.conferenceUrl.includes('http') ? studentDetail.studentProfile.conferenceUrl : 'http://' + studentDetail.studentProfile.conferenceUrl)}>{studentDetail.studentProfile.conferenceUrl}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>

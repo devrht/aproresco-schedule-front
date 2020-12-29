@@ -4,11 +4,19 @@ import * as routes from '../routes';
 const headers = {
     'Content-type': 'multipart/form-data',
     Accept: 'application/json',
-    Authorization: 'Basic ' + btoa(routes.OAUTH.CLIENT_ID + ":" + routes.OAUTH.CLIENT_SECRET)
+    AccessControlAllowOrigin: '*'
+    // Authorization: 'Basic ' + btoa(routes.OAUTH.CLIENT_ID + ":" + routes.OAUTH.CLIENT_SECRET)
 }
 
 export const getTeacherList = (page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+        headers: {
+            // AccessControlAllowOrigin: "*",
+            AccessControlAllowHeaders: "Content-Type",
+            AccessControlAllowMethods: "GET, POST, OPTIONS, DELETE, PATCH",
+            AccessControlAllowCredentials: "true"
+        },
+    })
         .then(res => {
             return res.data;
         })
@@ -39,7 +47,14 @@ export const markAsAdmin = (id, value) => {
 }
 
 export const getTeacherListByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, DELETE, PATCH",
+            "Access-Control-Allow-Credentials": "true"
+        },
+    })
         .then(res => {
             return res.data;
         })
@@ -70,7 +85,14 @@ export const markTeacherAsPresent = (teacherIds, value) => {
 }
 
 export const findTeacherListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, DELETE, PATCH",
+            "Access-Control-Allow-Credentials": "true"
+        },
+    })
         .then(res => {
             return res.data;
         })
@@ -88,7 +110,7 @@ export const googleSignIn = (google_id) => {
         responseType: 'text'
     };
 
-    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { email: "email" }, {
+    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { email: google_id }, {
         headers: {
             'Content-Type': 'text/plain'
         }
