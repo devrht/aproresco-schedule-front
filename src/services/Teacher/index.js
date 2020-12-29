@@ -110,7 +110,7 @@ export const googleSignIn = (google_id) => {
         responseType: 'text'
     };
 
-    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { email: google_id }, {
+    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { email: google_id, source: 'google' }, {
         headers: {
             'Content-Type': 'text/plain'
         }

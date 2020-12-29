@@ -239,7 +239,9 @@ function StudentListOfTeacher(props) {
                                 <h4>Conference URL</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{`${teacher.teacherProfile.conferenceUrl}`}</h4>
+                                <p onClick={(e) => {
+                                        window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                    }}>{`${teacher.teacherProfile.conferenceUrl}`}</p>
                             </Col>
                         </Row>
                         <Row gutter={16}>
