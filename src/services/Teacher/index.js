@@ -98,9 +98,9 @@ export const findTeacherListByFirstNameAndLastName = (firstName, start, end, pag
         })
 }
 
-export const googleSignIn = (google_id) => {
+export const googleSignIn = (id_token) => {
     const body = new FormData();
-    body.append('idToken', "email");
+    body.append('idToken', id_token);
 
     var config = {
         headers: {
@@ -110,13 +110,13 @@ export const googleSignIn = (google_id) => {
         responseType: 'text'
     };
 
-    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { email: google_id, source: 'google' }, {
+    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { token: id_token, source: 'google' }, {
         headers: {
             'Content-Type': 'text/plain'
         }
     }).then(res => {
         console.log("DATA RESPONSE => ", res)
-        localStorage.setItem('token', res);
+        localStorage.setItem('token', JSON.stringify(res));
         var date = new Date(); // Now
         date.setDate(date.getDate() + 30); // Set now + 30 days as the new date
         localStorage.setItem('expireAt', date);

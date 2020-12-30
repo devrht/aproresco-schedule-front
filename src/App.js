@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
+import addToken from './services/interceptor'
 import LayoutOfApp from './components/Layout'
 // Pages
 const TeacherList = React.lazy(() => import('./container/TeacherList'));
@@ -10,6 +11,9 @@ const Settings = React.lazy(() => import('./container/StudentList/Settings'));
 const ShortMessages = React.lazy(() => import('./container/StudentList/shortMessages'));
 const StudentsOfTeacher = React.lazy(() => import('./container/TeacherList/StudentListOfTeacher'));
 const StudentDetail = React.lazy(() => import('./container/StudentList/StudentDetail'))
+
+addToken();
+
 function App() {
   return (
 
