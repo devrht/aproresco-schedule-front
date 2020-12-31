@@ -16,10 +16,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     VideoCameraOutlined,
     EditOutlined,
-    BulbFilled,
-    MinusCircleFilled,
-    CloseCircleFilled,
-    CheckCircleFilled
 
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -326,20 +322,6 @@ function StudentList() {
                                                 ),
                                             }}
                                         />
-
-                                        {/* <Button style={{ marginLeft: 5 }} onClick={(e) => {
-                                    if(teacherName.length > 0) {
-                                        let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
-                                        if(teachers.length === 0) {
-                                            alert('This teacher is not found');
-                                        } else {
-                                            assigningStudents(teachers[0], record.id);
-                                        }
-                                    } else {
-                                        setEditTeacher(editTeacher.filter(r => r.id !== record.id))
-                                    }}}>
-                                    {teacherName.length > 0 ? 'Confirm' : 'Cancel' }
-                                </Button> */}
                                     </div>
 
                                 }

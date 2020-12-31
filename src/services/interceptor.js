@@ -7,9 +7,14 @@ const addToken = () => {
             try {
                 // Get auth token
                 const accessToken = JSON.parse(localStorage.getItem("token"));
-                
+                const tenant = JSON.parse(localStorage.getItem("tenant"));
+
                 if (accessToken) {
                     config.headers['Authorization'] = 'Bearer ' + accessToken;
+                }
+                
+                if (tenant) {
+                    config.headers['TenantKey'] = tenant;
                 }
 
                 // config.headers['Content-Type'] = 'application/json';
@@ -21,6 +26,30 @@ const addToken = () => {
 
         },
         error => Promise.reject(error));
+
+    axios.interceptors.response.use(
+        response => {
+            return response;
+        },
+        error => {
+            if (error) {
+                if (error.response) {
+                    switch (error.response.status) {
+                        case 401:
+                            localStorage.removeItem("token");
+                            localStorage.removeItem("email");
+                            localStorage.removeItem("expireAt");
+                            window.location.reload(true);
+                            return Promise.reject(error);
+                        default:
+                            console.log("Je suis une erreur inconnue")
+                            return Promise.reject(error);
+                    }
+                }
+            }
+
+            return Promise.reject(error);
+        });
 }
 
 

@@ -84,6 +84,17 @@ export const markTeacherAsPresent = (teacherIds, value) => {
         })
 }
 
+export const getTeacherProfile = () => {
+    let email = JSON.parse(localStorage.getItem("email"));
+    return axios.get(`${routes.SERVER_ADDRESS}/teacher-profile/email/${email}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
 export const findTeacherListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
         headers: {
@@ -100,7 +111,10 @@ export const findTeacherListByFirstNameAndLastName = (firstName, start, end, pag
 
 export const googleSignIn = (id_token) => {
     const body = new FormData();
-    body.append('idToken', id_token);
+    body.append('token', id_token);
+    body.append('provider', 'google');
+
+    let data = { "token": id_token, "provider": 'google' }
 
     var config = {
         headers: {
@@ -110,13 +124,8 @@ export const googleSignIn = (id_token) => {
         responseType: 'text'
     };
 
-    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, { token: id_token, source: 'google' }, {
-        headers: {
-            'Content-Type': 'text/plain'
-        }
-    }).then(res => {
-        console.log("DATA RESPONSE => ", res)
-        localStorage.setItem('token', JSON.stringify(res));
+    return axios.post(`${routes.SERVER_ADDRESS}/oauth/verify`, data).then(res => {
+        localStorage.setItem('token', JSON.stringify(res.data));
         var date = new Date(); // Now
         date.setDate(date.getDate() + 30); // Set now + 30 days as the new date
         localStorage.setItem('expireAt', date);

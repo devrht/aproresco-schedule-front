@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './style.css';
 import GoogleLogin from 'react-google-login';
 import { googleSignIn } from '../../services/Teacher'
@@ -10,8 +9,12 @@ function Login() {
   const _onGoogleSignIn = (data) => {
     googleSignIn(data.tokenObj.id_token)
       .then(user => {
-        console.log('USER ==> ', user)
-        user ? window.location.reload(true) : alert('your account is not registered in the system');
+        if(user) {
+          localStorage.setItem('email', JSON.stringify(data.profileObj.email));
+          window.location.reload(true)
+        } else {
+          alert('your account is not registered in the system');
+        }
       })
       .catch(apiError => {
         console.log(apiError)
