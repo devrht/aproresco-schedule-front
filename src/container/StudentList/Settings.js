@@ -10,7 +10,7 @@ function Settings(props) {
   const dispatch = useDispatch();
   const [deleting, setDeleting] = useState(false);
   const [assigning, setAssigning] = useState(false);
-  const [bridge, setBridge] = useState(false);
+  // const [bridge, setBridge] = useState(false);
   const [persist, setPersist] = useState(false);
   const [teacher, setTeacher] = useState(null);
   const [tenant, setTenant] = useState(null);
@@ -23,10 +23,10 @@ function Settings(props) {
 
   useEffect(() => {
 
-    bridgeStatus().then(data => {
-      setBridge(data.bridge);
-      setPersist(data.persist);
-    });
+    // bridgeStatus().then(data => {
+    //   setBridge(data.bridge);
+    //   setPersist(data.persist);
+    // });
 
     getTeacherProfile().then(data => {
       setTeacher(data);
@@ -43,12 +43,12 @@ function Settings(props) {
     dispatch(enableAssigning(!assigning))
   }
 
-  const onBridgeAction = (status) => {
-    bridgeManagement(status).then(data => {
-      console.log(data);
-      setBridge(status);
-    });
-  }
+  // const onBridgeAction = (status) => {
+  //   bridgeManagement(status).then(data => {
+  //     console.log(data);
+  //     setBridge(status);
+  //   });
+  // }
 
   const onPersistAction = (status) => {
     persistManagement(status).then(data => {
@@ -75,9 +75,9 @@ function Settings(props) {
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
             onClick={() => onEnableAssigning()}> {assigningStatus ? 'Disable' : 'Enable'} reassigning </Button>
 
-          <Button
+          {/* <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
-            onClick={() => onBridgeAction(!bridge)}> {!bridge ? 'Open' : 'Close'} the bridge </Button>
+            onClick={() => onBridgeAction(!bridge)}> {!bridge ? 'Open' : 'Close'} the bridge </Button> */}
 
           <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}

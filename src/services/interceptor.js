@@ -12,10 +12,13 @@ const addToken = () => {
                 if (accessToken) {
                     config.headers['Authorization'] = 'Bearer ' + accessToken;
                 }
-                
-                if (tenant) {
-                    config.headers['TenantKey'] = tenant;
+
+                if (!config.url.toString().includes('teacher-profile/email')) {
+                    if (tenant) {
+                        config.headers['TenantKey'] = tenant;
+                    }
                 }
+                    
 
                 // config.headers['Content-Type'] = 'application/json';
                 return config;
@@ -35,7 +38,7 @@ const addToken = () => {
             if (error) {
                 if (error.response) {
                     switch (error.response.status) {
-                        case 401:
+                        case 401 || 500:
                             localStorage.removeItem("token");
                             localStorage.removeItem("email");
                             localStorage.removeItem("expireAt");
