@@ -41,6 +41,7 @@ const addToken = () => {
                         case 401 || 500:
                             localStorage.removeItem("token");
                             localStorage.removeItem("email");
+                            localStorage.removeItem("tenant");
                             localStorage.removeItem("expireAt");
                             window.location.reload(true);
                             return Promise.reject(error);

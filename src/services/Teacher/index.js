@@ -84,8 +84,8 @@ export const markTeacherAsPresent = (teacherIds, value) => {
         })
 }
 
-export const getTeacherProfile = () => {
-    let email = JSON.parse(localStorage.getItem("email"));
+export const getTeacherProfile = (email = null) => {
+    email = email == null ? JSON.parse(localStorage.getItem("email")) : email;
     return axios.get(`${routes.SERVER_ADDRESS}/teacher-profile/email/${email}`)
         .then(res => {
             return res.data;

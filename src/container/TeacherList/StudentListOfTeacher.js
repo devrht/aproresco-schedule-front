@@ -26,12 +26,12 @@ const columns = [
         key: 'lastName',
         fixed: 'left',
     },
-    {
-        title: 'Start Date',
-        dataIndex: 'startDate',
-        key: 'startDate',
-        fixed: 'left',
-    },
+    // {
+    //     title: 'Start Date',
+    //     dataIndex: 'startDate',
+    //     key: 'startDate',
+    //     fixed: 'left',
+    // },
     {
         title: 'Subject',
         dataIndex: 'subject',
@@ -103,10 +103,13 @@ function StudentListOfTeacher(props) {
                 data.forEach(student => {
                     let datas = studentsTmp;
                     let elt = new Object();
-                    elt.studentProfile = student.studentProfile;
+                    elt.studentProfile = new Object();
+                    elt.studentProfile.firstName = student.firstName;
+                    elt.studentProfile.grade = student.grade;
+                    elt.studentProfile.lastName = student.lastName;
                     elt.studentProfile.subject = student.subject;
                     elt.studentProfile.id = student.id;
-                    elt.studentProfile.startDate = student.startDate
+                    // elt.studentProfile.startDate = student.startDate
                     datas.push(elt.studentProfile);
                     setStudentsTmp(datas);
                 });

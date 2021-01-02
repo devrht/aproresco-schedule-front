@@ -612,7 +612,7 @@ function TeacherList() {
         <React.Fragment>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Teachers</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Teachers Availabilities</p>}
                 extra={[
                 ]}
             >

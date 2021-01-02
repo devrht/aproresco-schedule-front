@@ -90,6 +90,7 @@ function LayoutOfApp({ children }, props) {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     localStorage.removeItem("expireAt");
+    localStorage.removeItem("tenant");
     history.push('/login')
   }
 
@@ -129,16 +130,16 @@ function LayoutOfApp({ children }, props) {
             <h1>Appui Scolaire</h1>
             <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>
               <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
-                Student List
+                Student bookings
             </Menu.Item>
               <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
-                Teacher List
-            </Menu.Item>
-              <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
-                Settings
+                Teacher availabilities
             </Menu.Item>
               <Menu.Item key="/shortmessages" icon={<MessageOutlined />} onClick={() => { history.push('/short-messages') }}>
                 Short Messages
+            </Menu.Item>
+              <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
+                Settings
             </Menu.Item>
               <Menu.Item key="/login" icon={<LogoutOutlined />} onClick={() => { logout(); }}>
                 Log out

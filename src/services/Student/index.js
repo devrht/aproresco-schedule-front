@@ -142,7 +142,7 @@ export const assignMeetingToAnotherTeacher = (teacherId, url) => {
 }
 
 export const bridgeManagement = (status) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/meet/bridge?open=${status}`)
+    return axios.get(`https://meet.appui.io/bridge?open=${status}`)
         .then(res => {
             return res.data;
         })

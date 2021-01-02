@@ -531,7 +531,7 @@ function StudentList() {
         }}>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Students</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student bookings</p>}
                 extra={[
                 ]}
             >

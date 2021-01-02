@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import GoogleLogin from 'react-google-login';
-import { googleSignIn } from '../../services/Teacher'
+import { googleSignIn, getTeacherProfile } from '../../services/Teacher'
 
 function Login() {
 
@@ -10,8 +10,10 @@ function Login() {
     googleSignIn(data.tokenObj.id_token)
       .then(user => {
         if(user) {
-          localStorage.setItem('email', JSON.stringify(data.profileObj.email));
-          window.location.reload(true)
+          getTeacherProfile(data.profileObj.email).then(data => {
+            localStorage.setItem('email', JSON.stringify(data.externalEmail));
+            window.location.reload(true)
+          });
         } else {
           alert('your account is not registered in the system');
         }
