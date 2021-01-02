@@ -13,6 +13,7 @@ function StudentDetail(props) {
 
     useEffect(() => {
         // getDetailView();
+        console.log(location.state.student);
     }, []);
 
     const getDetailView = () => {
@@ -84,14 +85,14 @@ function StudentDetail(props) {
                                 <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.studentProfile.studentEmail}</h4>
+                                <h4 >{studentDetail.studentProfile.email}</h4>
                             </Col>
                         </Row><Row gutter={16}>
                             <Col className="gutter-row" span={8}>
                                 <h4>Parent Email</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.parentEmail}</h4>
+                                <h4 >{studentDetail.studentProfile.parent ? studentDetail.studentProfile.parent.email : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -107,7 +108,7 @@ function StudentDetail(props) {
                                 <h4>Phone</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.studentProfile.phoneNumber}</h4>
+                                <h4 >{studentDetail.studentProfile.parent ? studentDetail.studentProfile.parent.phoneNumber : ''}</h4>
                             </Col>
                         </Row>
 

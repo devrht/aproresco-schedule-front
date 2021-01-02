@@ -98,19 +98,25 @@ function StudentListOfTeacher(props) {
         setStudentList(null);
         setStudentsTmp([])
         getStudentListById(params.id).then(data => {
-            setStudentList(data);
-            data.forEach(student => {
-                let datas = studentsTmp;
-                let elt = new Object();
-                elt.studentProfile = student.studentProfile;
-                elt.studentProfile.subject = student.subject;
-                elt.studentProfile.id = student.id;
-                elt.studentProfile.startDate = student.startDate
-                datas.push(elt.studentProfile);
-                setStudentsTmp(datas);
-            });
-            setConfUrl(location.state.teacher.teacherProfile.conferenceUrl);
-            setStudents(studentsTmp);
+            if (data) {
+                setStudentList(data);
+                data.forEach(student => {
+                    let datas = studentsTmp;
+                    let elt = new Object();
+                    elt.studentProfile = student.studentProfile;
+                    elt.studentProfile.subject = student.subject;
+                    elt.studentProfile.id = student.id;
+                    elt.studentProfile.startDate = student.startDate
+                    datas.push(elt.studentProfile);
+                    setStudentsTmp(datas);
+                });
+                setConfUrl(location.state.teacher.teacherProfile.conferenceUrl);
+                setStudents(studentsTmp);
+            } else {
+                setStudents([]);
+                setStudentList([]);
+                setStudentsTmp([])
+            }
         })
     }
 
@@ -180,10 +186,10 @@ function StudentListOfTeacher(props) {
                     <div style={{ display: "flex", flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
                         <p style={{ fontSize: '3em', textAlign: 'center', margin: '20px' }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>
                         <Tooltip title={admin ? "Administrator" : "Not An Administrator"}>
-                            <FontAwesomeIcon onClick={() => markTeacherAsAdmin()} icon={faCrown} color={ admin ? "gold" : "gray" } size={"2x"} style={{ marginLeft: 20 }} />
+                            <FontAwesomeIcon onClick={() => markTeacherAsAdmin()} icon={faCrown} color={admin ? "gold" : "gray"} size={"2x"} style={{ marginLeft: 20 }} />
                         </Tooltip>
                         <Tooltip title={supervisor ? "Supervisor" : "Not A Supervisor"}>
-                            <FontAwesomeIcon onClick={() => markTeacherAsSupervisor()} icon={faShieldAlt} color={ supervisor ? "blue" : "gray" } size={"2x"} style={{ marginLeft: 20 }} />
+                            <FontAwesomeIcon onClick={() => markTeacherAsSupervisor()} icon={faShieldAlt} color={supervisor ? "blue" : "gray"} size={"2x"} style={{ marginLeft: 20 }} />
                         </Tooltip>
                     </div>
                 }
@@ -240,8 +246,8 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <p onClick={(e) => {
-                                        window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
-                                    }}>{`${teacher.teacherProfile.conferenceUrl}`}</p>
+                                    window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                }}>{`${teacher.teacherProfile.conferenceUrl}`}</p>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -287,7 +293,7 @@ function StudentListOfTeacher(props) {
                                 {!editable ?
                                     <p onClick={(e) => {
                                         window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
-                                    }} >{ confUrl }</p> :
+                                    }} >{confUrl}</p> :
                                     <Form layout="inline">
                                         <Form.Item>
                                             <Input

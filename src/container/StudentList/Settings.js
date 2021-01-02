@@ -88,7 +88,7 @@ function Settings(props) {
             <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>
               <h1>Tenants</h1>
               <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
-                <Select size={'large'} style={{ width: '80%' }} onChange={(e) => setTenant(e)}>
+                <Select size={'large'} style={{ width: '100%' }} onChange={(e) => { setTenant(e); localStorage.setItem("tenant", JSON.stringify(e)) }}>
                   {teacher.tenants ? teacher.tenants.map(tenant => {
                     return (
                       <Option value={tenant.key}>{tenant.displayName}</Option>
@@ -96,9 +96,9 @@ function Settings(props) {
                   }) : null
                   }
                 </Select>
-                <Button
+                {/* <Button
                   style={{ flex: 1, marginRight: "20px", height: "40px", color: "white", backgroundColor: "#1890ff" }}
-                  onClick={() => localStorage.setItem("tenant", JSON.stringify(tenant))}>Confirm</Button>
+                  onClick={() => localStorage.setItem("tenant", JSON.stringify(tenant))}>Confirm</Button> */}
               </div>
             </div> : null}
 

@@ -133,13 +133,12 @@ function ShortMessageList() {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 getShortMessagesByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if(data) {
-                    if(data) {
-                        setStudentList(data)
+                    if(data.content) {
+                        setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.length,
+                            totalCount: data.totalCount,
                             pageSize: 30,
                         });
                     } else {
@@ -163,13 +162,12 @@ function ShortMessageList() {
         }
         else {
             getShortMessages(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if(data) {
                     if(data.content) {
-                        setStudentList(data)
+                        setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
-                            totalCount: data.length,
+                            totalCount: data.totalCount,
                             pageSize: 30,
                         });
                     } else {
