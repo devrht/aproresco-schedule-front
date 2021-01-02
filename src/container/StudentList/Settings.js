@@ -22,7 +22,7 @@ function Settings(props) {
   })
 
   useEffect(() => {
-
+    setTenant(JSON.parse(localStorage.getItem('tenant')));
     // bridgeStatus().then(data => {
     //   setBridge(data.bridge);
     //   setPersist(data.persist);
@@ -88,7 +88,7 @@ function Settings(props) {
             <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>
               <h1>Tenants</h1>
               <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
-                <Select size={'large'} style={{ width: '100%' }} onChange={(e) => { setTenant(e); localStorage.setItem("tenant", JSON.stringify(e)) }}>
+                <Select defaultValue={tenant} size={'large'} style={{ width: '100%' }} onChange={(e) => { setTenant(e); localStorage.setItem("tenant", JSON.stringify(e)) }}>
                   {teacher.tenants ? teacher.tenants.map(tenant => {
                     return (
                       <Option value={tenant.key}>{tenant.displayName}</Option>
