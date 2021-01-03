@@ -40,7 +40,7 @@ const addToken = () => {
                     switch (error.response.status) {
                         case 401 || 500:
                             localStorage.removeItem("token");
-                            localStorage.removeItem("email");
+                            // localStorage.removeItem("email");
                             // localStorage.removeItem("tenant");
                             localStorage.removeItem("expireAt");
                             window.location.reload(true);
