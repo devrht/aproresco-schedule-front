@@ -88,9 +88,9 @@ function LayoutOfApp({ children }, props) {
   const logout = () => {
     setLogged(false);
     localStorage.removeItem("token");
-    // localStorage.removeItem("email");
+    localStorage.removeItem("email");
     localStorage.removeItem("expireAt");
-    localStorage.removeItem("tenant");
+    // localStorage.removeItem("tenant");
     history.push('/login')
   }
 
