@@ -59,7 +59,7 @@ function StudentDetail(props) {
                             <Col className="gutter-row" span={14}>
                                 <h4 > 
                                     <Moment format="D MMM YYYY HH:MM" withTitle>
-                                        { studentDetail.startDate }
+                                        { studentDetail.schedule.startDate }
                                     </Moment>
                                 </h4>
                             </Col>
@@ -69,7 +69,7 @@ function StudentDetail(props) {
                                 <h4 >Subject</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.subject}</h4>
+                                <h4 >{studentDetail.schedule.subject}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>

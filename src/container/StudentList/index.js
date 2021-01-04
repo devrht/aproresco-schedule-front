@@ -134,7 +134,7 @@ function StudentList() {
                 <div>
                     {
                         <Moment format="D MMM YYYY HH:MM" withTitle>
-                            {record.startDate}
+                            {record.schedule.startDate}
                         </Moment>
                     }
                 </div>
@@ -166,7 +166,7 @@ function StudentList() {
                             setEditableRow(editableRow.filter(r => r.id !== record.id));
                         }
                     }}>
-                        {!editableRow.includes(record) ? record.subject : <Form layout="inline">
+                        {!editableRow.includes(record) ? record.schedule.subject : <Form layout="inline">
                             <Form.Item>
                                 <Input
                                     type="text"
