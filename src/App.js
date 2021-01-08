@@ -7,10 +7,14 @@ import LayoutOfApp from './components/Layout'
 const TeacherList = React.lazy(() => import('./container/TeacherList'));
 const Login = React.lazy(() => import('./container/Login'));
 const StudentList = React.lazy(() => import('./container/StudentList'));
+const StudentProfile = React.lazy(() => import('./container/StudentProfile'));
+const TeacherProfile = React.lazy(() => import('./container/TeacherProfile'));
 const Settings = React.lazy(() => import('./container/StudentList/Settings'));
 const ShortMessages = React.lazy(() => import('./container/StudentList/shortMessages'));
 const StudentsOfTeacher = React.lazy(() => import('./container/TeacherList/StudentListOfTeacher'));
 const StudentDetail = React.lazy(() => import('./container/StudentList/StudentDetail'))
+const StudentDetails = React.lazy(() => import('./container/StudentProfile/StudentDetails'))
+const Schedules = React.lazy(() => import('./container/Schedule'))
 
 addToken();
 
@@ -24,10 +28,14 @@ function App() {
             <Route exact path="/login" name="Login Page" render={props => <Login {...props} />} />
             <Route exact path="/" name="Student Page" render={props => <StudentList {...props} />} />
             <Route exact path="/studentlist" name="Student Page" render={props => <StudentList {...props} />} />
+            <Route exact path="/studentprofiles" name="Student Page" render={props => <StudentProfile {...props} />} />
+            <Route exact path="/studentprofiles/:id/details" name="Student Page" render={props => <StudentDetails {...props} />} />
+            <Route exact path="/teacherprofiles" name="Teacher Page" render={props => <TeacherProfile {...props} />} />
             <Route exact path="/settings" name="Settings Page" render={props => <Settings {...props} />} />
             <Route exact path="/short-messages" name="Settings Page" render={props => <ShortMessages {...props} />} />
             <Route exact path="/studentlist/teacher/:id" name="StudentOfTeacher Page" render={props => <StudentsOfTeacher {...props} />} />
             <Route exact path="/teacherlist" name="Teacher Page" render={props => <TeacherList {...props} />} />
+            <Route exact path="/schedules" name="Schedules Page" render={props => <Schedules {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />
             <Redirect from="/" to="/login" />
           </React.Suspense>

@@ -9,7 +9,9 @@ import {
   VideoCameraOutlined,
   SettingOutlined,
   MessageOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  CalendarOutlined,
+  BookOutlined
 } from '@ant-design/icons';
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
 import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
@@ -129,21 +131,30 @@ function LayoutOfApp({ children }, props) {
           <Sider className="sider">
             <h1>Appui Scolaire</h1>
             <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>
-              <Menu.Item key="/studentlist" icon={<UserOutlined />} onClick={() => { history.push('/studentlist') }}>
+              <Menu.Item key="/studentprofiles" icon={<UserOutlined />} onClick={() => { history.push('/studentprofiles') }}>
+                Student profiles
+              </Menu.Item>
+              <Menu.Item key="/studentlist" icon={<BookOutlined />} onClick={() => { history.push('/studentlist') }}>
                 Student bookings
-            </Menu.Item>
+              </Menu.Item>
               <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
-                Teacher availabilities
-            </Menu.Item>
+                Teachers availabilities
+              </Menu.Item>
+              <Menu.Item key="/teacherprofiles" icon={<UserOutlined />} onClick={() => { history.push('/teacherprofiles') }}>
+                Teachers profiles
+              </Menu.Item>
               <Menu.Item key="/shortmessages" icon={<MessageOutlined />} onClick={() => { history.push('/short-messages') }}>
                 Short Messages
-            </Menu.Item>
+              </Menu.Item>
+              <Menu.Item key="/schedules" icon={<CalendarOutlined />} onClick={() => { history.push('/schedules') }}>
+                Schedules
+              </Menu.Item>
               <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
                 Settings
-            </Menu.Item>
+              </Menu.Item>
               <Menu.Item key="/login" icon={<LogoutOutlined />} onClick={() => { logout(); }}>
                 Log out
-            </Menu.Item>
+              </Menu.Item>
               {/* <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
               <p onClick={() => { onEnableDeleting() }} style={{ cursor: "pointer" }}>
                 { deletingStatus ? 'Disable' : 'Enable' } deleting
@@ -161,9 +172,9 @@ function LayoutOfApp({ children }, props) {
             </Menu>
           </Sider> : null
       }
-      <Layout className="childLayout">
+      <Layout className="childLayout" style={{ marginLeft: !logged ? 0 : '200px' }}>
         <Content className="content">
-          <div className="content-div">{children}</div>
+          <div className="content-div" style={{ padding: 0 }}>{children}</div>
         </Content>
       </Layout>
     </Layout>
