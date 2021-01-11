@@ -9,7 +9,7 @@
   }
   
   .App-header {
-    min-height: 100vh;
+    min-height: 90vh;
     display: flex;
     margin-top: -120px;
     flex-direction: column;

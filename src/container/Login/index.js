@@ -1,7 +1,11 @@
-import React from 'react';
-import './style.css';
-import background from '../../Assets/image.png';
-import vector from '../../Assets/vector.png';
+import React, { useEffect } from 'react';
+import './assets/css/global.css';
+import './assets/css/custom.css';
+import background from './assets/images/bg.jpg';
+import vector from './assets/images/logo.png';
+import fb from './assets/images/facebook.png';
+import { Button } from 'antd'
+import go from './assets/images/google.png';
 import { useHistory } from 'react-router-dom'
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
@@ -33,41 +37,65 @@ function Login() {
       });
   }
 
+  useEffect(() => {
+    document.body.classList.add("img-bg");
+    document.body.classList.add("min-height-full");
+    document.body.style.backgroundImage = `url(${background})`;
+    document.getElementById('root').style.height = '100%';
+    document.getElementsByClassName('ant-layout')[0].style.height = '100%';
+    document.getElementsByClassName('childLayout')[0].style.background = 'rgba(255, 255, 255, 0)';
+    document.getElementsByClassName('ant-layout')[0].style.background = 'rgba(255, 255, 255, 0)';
+    document.getElementsByClassName('ant-layout')[1].style.height = '100%';
+    document.getElementsByClassName('content-div')[0].style.height = '100%';
+    document.getElementsByClassName('content-div')[0].style.backgroundColor = 'rgba(255, 255, 255, 0)';
+  }, []);
+
+  const test = () => {
+    console.log('click')
+  }
 
   return (
-    <div style={{ backgroundImage: `url(${background})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
-      <img src={vector} style={{ width: '120px', marginLeft: '2%', marginTop: '2%' }} />
-      <header className="App-header">
-        <p className='pStyle'>
-          Appuie Scolaire de la Reussite
-        </p>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', minWidth: '25%' }}>
-          <GoogleLogin
-            clientId="631785752296-26dcjnpcnjma16s630fcvhivhi8qsdg6.apps.googleusercontent.com"
-            buttonText="Sign in with Google"
-            style={{
-              width: '331px',
-              height: '60px',
-              borderRadius: '60px',
-              backgroundColor: '#f6f9ff',
-              marginRight: '20px',
-              border: '5px solid rgba(255,255,255,0.3)'
-            }}
-            onSuccess={(data) => _onGoogleSignIn(data)}
-            onFailure={(error) => console.log('ERROR ==> ', error)} >
-          </GoogleLogin>
-          <FacebookLogin
-            appId="1088597931155576"
-            autoLoad={true}
-            buttonText="Sign in with Facebook"
-            fields="name,email,picture"
-            size={'small'}
-          // onClick={componentClicked}
-          // callback={responseFacebook} 
-          />
-        </div>
+    <section className="wrapper" style={{ height: '100%' }}>
+      <header className="header" style={{ height: '100%' }}>
+        <a className="header-logo" href=""><img src={vector} alt="" /></a>
       </header>
-    </div>
+      <article className="loginBox min-height-full" style={{ height: '100%' }}>
+        <div className="loginBox__inner">
+          <h1 className="loginBox__title">Appui Scolaire de la Reussite</h1>
+          <div className="loginBox__btn-wrapper" style={{ height: '100%' }}>
+            <GoogleLogin
+              clientId="631785752296-26dcjnpcnjma16s630fcvhivhi8qsdg6.apps.googleusercontent.com"
+              buttonText="Sign in with Google"
+              render={renderProps => (
+                <Button onClick={renderProps.onClick} disabled={renderProps.disabled} className="loginBox__btn" style={{ height: 'auto'}}><img src={go} alt="" /><span>Sign in with Google</span></Button>
+              )}
+              onSuccess={(data) => _onGoogleSignIn(data)}
+              onFailure={(error) => console.log('ERROR ==> ', error)} 
+              cookiePolicy={'single_host_origin'}
+            />
+            {/* <FacebookLogin
+              appId="1088597931155576"
+              autoLoad={false}
+              buttonText="Sign in with Facebook"
+              fields="name,email,picture"
+              render={renderProps => (
+                <Button onClick={renderProps.onClick} className="loginBox__btn" style={{ height: 'auto'}}><img src={fb} alt="" /><span>Sign in with Facebook</span></Button>
+              )} */}
+            {/* <Button onClick={() => console.log('click')} className="loginBox__btn" style={{ height: 'auto'}}><img src={go} alt="" /><span>Sign in with Google</span></Button> */}
+            <button className="loginBox__btn"><img src={fb} alt="" /><span>Sign in with Facebook</span></button>
+          </div>
+        </div>
+      </article>
+      <footer className="footer">
+
+        <div className="footer-copyright">
+          <span>© 2013 - 2021 Aproresco</span>
+          <a href="#">Terms and Services</a> |
+            <a href="#">Privacy</a> |
+            <a href="#">Contact Us</a>
+        </div>
+      </footer>
+    </section>
   );
 }
 

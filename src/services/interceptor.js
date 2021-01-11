@@ -17,7 +17,7 @@ const addToken = () => {
                     if (tenant) {
                         config.headers['TenantKey'] = tenant;
                     }
-                    config.headers['TenantKey'] = 'alpha';
+                    // config.headers['TenantKey'] = 'alpha';
                 }
 
                 // config.headers['Content-Type'] = 'application/json';

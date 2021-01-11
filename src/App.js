@@ -15,6 +15,7 @@ const StudentsOfTeacher = React.lazy(() => import('./container/TeacherList/Stude
 const StudentDetail = React.lazy(() => import('./container/StudentList/StudentDetail'))
 const StudentDetails = React.lazy(() => import('./container/StudentProfile/StudentDetails'))
 const Schedules = React.lazy(() => import('./container/Schedule'))
+const CreateSchedule = React.lazy(() => import('./container/Schedule/create'))
 
 addToken();
 
@@ -36,6 +37,7 @@ function App() {
             <Route exact path="/studentlist/teacher/:id" name="StudentOfTeacher Page" render={props => <StudentsOfTeacher {...props} />} />
             <Route exact path="/teacherlist" name="Teacher Page" render={props => <TeacherList {...props} />} />
             <Route exact path="/schedules" name="Schedules Page" render={props => <Schedules {...props} />} />
+            <Route exact path="/schedules/add" name="Create Schedule Page" render={props => <CreateSchedule {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />
             <Redirect from="/" to="/login" />
           </React.Suspense>

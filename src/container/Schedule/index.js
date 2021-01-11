@@ -247,6 +247,11 @@ function Schedule() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Schedules</p>}
                 extra={[
+                    <div style={{ display: 'flex' }}>
+                        <Button key='3' type="primary" size="large" onClick={() => history.push('schedules/add')}>
+                            Create schedule
+                        </Button>
+                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>

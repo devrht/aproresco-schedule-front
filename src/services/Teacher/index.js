@@ -148,3 +148,14 @@ export const googleSignUp = (user) => {
         return res;
     })
 }
+
+export const createSchedule = (subject, startDate, description) => {
+    let data = {
+        subject,
+        startDate,
+        description
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}//schedule`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
