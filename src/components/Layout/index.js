@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import 'antd/dist/antd.css';
 import '../../Assets/Layout.css'
 import { useHistory } from 'react-router-dom'
+import background from '../../container/Login/assets/images/bg.jpg';
 import { Layout, Menu } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -39,7 +40,7 @@ function LayoutOfApp({ children }, props) {
 
   useEffect(() => {
 
-    if(!logged) {
+    if (!logged) {
       document.body.classList.remove("img-bg");
       document.body.classList.remove("min-height-full");
       document.body.style.backgroundImage = null;
@@ -100,35 +101,7 @@ function LayoutOfApp({ children }, props) {
     // localStorage.removeItem("email");
     localStorage.removeItem("expireAt");
     // localStorage.removeItem("tenant");
-    history.push('/login')
-  }
-
-  const onShowSettings = () => {
-    setShowSettings(!showSettings);
-  }
-
-  const onEnableDeleting = () => {
-    setDeleting(!deleting);
-    dispatch(enableDeleting(!deleting))
-  }
-
-  const onEnableAssigning = () => {
-    setAssigning(!assigning);
-    dispatch(enableAssigning(!assigning))
-  }
-
-  const onBridgeAction = (status) => {
-    bridgeManagement(status).then(data => {
-      console.log(data);
-      setBridge(status);
-    });
-  }
-
-  const onPersistAction = (status) => {
-    persistManagement(status).then(data => {
-      console.log(data);
-      setPersist(status);
-    });
+    window.location.reload();
   }
 
   return (
