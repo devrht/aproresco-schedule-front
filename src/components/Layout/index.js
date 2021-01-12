@@ -39,6 +39,14 @@ function LayoutOfApp({ children }, props) {
 
   useEffect(() => {
 
+    if(!logged) {
+      document.body.classList.remove("img-bg");
+      document.body.classList.remove("min-height-full");
+      document.body.style.backgroundImage = null;
+    }
+
+    document.getElementById('root').style.height = '100%';
+
     let today = new Date();
     today.setDate(today.getDate() - 1)
     let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
@@ -64,23 +72,23 @@ function LayoutOfApp({ children }, props) {
 
     let expireAt = new Date(localStorage.getItem("expireAt"));
 
-    // if (localStorage.getItem("expireAt") == null) {
-    //   setLogged(false);
-    //   history.push('/login');
-    // } else
-    //   if (localStorage.getItem("expireAt").length > 0)
-    //     if (today.getTime() <= expireAt.getTime()) {
-    //       setLogged(true);
-    //       if (window.location.pathname == '/login')
-    //         history.push('/teacherlist');
-    //     } else {
-    //       setLogged(false);
-    //       history.push('/login');
-    //     }
-    //   else {
-    //     setLogged(false);
-    //     history.push('/login');
-    //  }
+    if (localStorage.getItem("expireAt") == null) {
+      setLogged(false);
+      history.push('/login');
+    } else
+      if (localStorage.getItem("expireAt").length > 0)
+        if (today.getTime() <= expireAt.getTime()) {
+          setLogged(true);
+          if (window.location.pathname == '/login')
+            history.push('/teacherlist');
+        } else {
+          setLogged(false);
+          history.push('/login');
+        }
+      else {
+        setLogged(false);
+        history.push('/login');
+      }
 
     setPathName(window.location.pathname);
     console.log(pathName);
@@ -126,7 +134,7 @@ function LayoutOfApp({ children }, props) {
   return (
     <Layout>
       {
-        true ?
+        logged ?
           <Sider className="sider">
             <h1>Appui Scolaire</h1>
             <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>

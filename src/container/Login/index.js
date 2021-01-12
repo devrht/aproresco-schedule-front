@@ -40,19 +40,17 @@ function Login() {
   useEffect(() => {
     document.body.classList.add("img-bg");
     document.body.classList.add("min-height-full");
-    document.body.style.backgroundImage = `url(${background})`;
-    document.getElementById('root').style.height = '100%';
-    document.getElementsByClassName('ant-layout')[0].style.height = '100%';
-    document.getElementsByClassName('childLayout')[0].style.background = 'rgba(255, 255, 255, 0)';
-    document.getElementsByClassName('ant-layout')[0].style.background = 'rgba(255, 255, 255, 0)';
-    document.getElementsByClassName('ant-layout')[1].style.height = '100%';
-    document.getElementsByClassName('content-div')[0].style.height = '100%';
-    document.getElementsByClassName('content-div')[0].style.backgroundColor = 'rgba(255, 255, 255, 0)';
+    if (window.location.pathname == '/login') {
+      document.body.style.backgroundImage = `url(${background})`;
+      document.getElementById('root').style.height = '100%';
+      document.getElementsByClassName('ant-layout')[0].style.height = '100%';
+      document.getElementsByClassName('childLayout')[0].style.background = 'rgba(255, 255, 255, 0)';
+      document.getElementsByClassName('ant-layout')[0].style.background = 'rgba(255, 255, 255, 0)';
+      document.getElementsByClassName('ant-layout')[1].style.height = '100%';
+      document.getElementsByClassName('content-div')[0].style.height = '100%';
+      document.getElementsByClassName('content-div')[0].style.backgroundColor = 'rgba(255, 255, 255, 0)';
+    }
   }, []);
-
-  const test = () => {
-    console.log('click')
-  }
 
   return (
     <section className="wrapper" style={{ height: '100%' }}>
@@ -67,10 +65,10 @@ function Login() {
               clientId="631785752296-26dcjnpcnjma16s630fcvhivhi8qsdg6.apps.googleusercontent.com"
               buttonText="Sign in with Google"
               render={renderProps => (
-                <Button onClick={renderProps.onClick} disabled={renderProps.disabled} className="loginBox__btn" style={{ height: 'auto'}}><img src={go} alt="" /><span>Sign in with Google</span></Button>
+                <Button onClick={renderProps.onClick} disabled={renderProps.disabled} className="loginBox__btn" style={{ height: 'auto' }}><img src={go} alt="" /><span>Sign in with Google</span></Button>
               )}
               onSuccess={(data) => _onGoogleSignIn(data)}
-              onFailure={(error) => console.log('ERROR ==> ', error)} 
+              onFailure={(error) => console.log('ERROR ==> ', error)}
               cookiePolicy={'single_host_origin'}
             />
             {/* <FacebookLogin

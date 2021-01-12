@@ -41,8 +41,9 @@ export const getStudentListByDate = (start, end, page, size, sortName, sortType)
         })
 }
 
-export const getScheduleByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?grade=0&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
+    let tenant = JSON.parse(localStorage.getItem("tenant"));
+    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&tenantKey=${tenant}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -111,8 +112,9 @@ export const findStudentListByFirstNameAndLastName = (firstName, start, end, pag
         })
 }
 
-export const findScheduleByGrade = (firstName, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?grade=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+export const findScheduleByGrade = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
+    let tenant = JSON.parse(localStorage.getItem("tenant"));
+    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&tenantKey=${tenant}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -213,7 +215,7 @@ export const assignMeetingToAnotherTeacher = (teacherId, url) => {
 }
 
 export const bridgeManagement = (status) => {
-    return axios.get(`https://meet.appui.io/bridge?open=${status}`)
+    return axios.get(`https://meet.appui.io:8443/bridge?open=${status}`)
         .then(res => {
             return res.data;
         })

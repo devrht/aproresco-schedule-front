@@ -65,7 +65,8 @@ function TeacherProfile() {
                             style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
+                                record.teacherProfile = record;
+                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
                                 // history.push(`/studentlist/studentDetail/${record.id}`)
                             }}>
                             <p style={{ width: "50%", textAlign: "left" }}>

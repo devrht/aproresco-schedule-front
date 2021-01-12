@@ -16,6 +16,8 @@ function Schedule() {
     const [schedules, setSchedules] = useState();
     const [sortingName, setSortingName] = useState("startDate");
     const [sortingType, setSortingType] = useState("asc");
+    const [gradeMin, setGradeMin] = useState("0");
+    const [gradeMax, setGradeMax] = useState("100");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -87,15 +89,15 @@ function Schedule() {
         }
         ,
         {
-            title: <div><span>Description </span>
-                {sortingName === "description" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "description" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "description" && sortingType === "" && ""}
+            title: <div><span>End Date </span>
+                {sortingName === "endDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "endDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "endDate" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("description");
+                        setSortingName("endDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -104,20 +106,20 @@ function Schedule() {
             },
             render: (record) => {
                 return (
-                    <span>{record.description}</span>
+                    <span>
+                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                            {record.endDate}
+                        </Moment>
+                    </span>
                 )
             },
-            key: 'description',
+            key: 'endDate',
         }
         
     ];
 
     useEffect(() => {
         getListView();
-        const interval = setInterval(() => {
-            getListView();
-        }, 15000);
-        return () => clearInterval(interval);
     }, [tableProps.pageIndex]);
 
     useEffect(() => {
@@ -152,7 +154,7 @@ function Schedule() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-            getScheduleByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getScheduleByDate(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -182,7 +184,7 @@ function Schedule() {
             })
         }
         else {
-            findScheduleByGrade(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            findScheduleByGrade(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -224,6 +226,14 @@ function Schedule() {
                 setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
+
+        if(e.target.name === "gradeMin") {
+            setGradeMin(value)
+        }
+
+        if(e.target.name === "gradeMax") {
+            setGradeMax(value)
+        }
     };
     const searchList = () => {
         getListView();
@@ -259,6 +269,7 @@ function Schedule() {
                         <SearchFilter
                             changeInput={changeSearch}
                             searchList={searchList}
+                            type='schedule'
                         />
                     </div>
                 </div>

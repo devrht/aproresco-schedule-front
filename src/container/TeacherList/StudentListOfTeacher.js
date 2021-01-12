@@ -12,18 +12,33 @@ import { useLocation } from "react-router-dom";
 import Moment from 'react-moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown, faShieldAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 const columns = [
     {
-        title: 'First Name',
-        dataIndex: 'firstName',
-        key: 'firstName',
-        fixed: 'left',
-    },
-    {
-        title: 'Last Name',
-        dataIndex: 'lastName',
-        key: 'lastName',
+        title: <div><span>Name </span>
+        </div>,
+        render: (record) =>
+            <div
+                style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+            >
+                <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
+                    <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
+                    <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
+                    <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
+                </Tooltip>
+                <Tooltip title={(record.firstName + " " + record.lastName)}>
+                    <Button
+                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}>
+                        <p style={{ width: "50%", textAlign: "left" }}>
+                            {(record.firstName + " " + record.lastName).length <= 20 ?
+                                record.firstName + " " + record.lastName :
+                                (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                        </p>
+                    </Button>
+                </Tooltip>
+            </div>,
+        key: 'name',
         fixed: 'left',
     },
     // {
@@ -32,11 +47,11 @@ const columns = [
     //     key: 'startDate',
     //     fixed: 'left',
     // },
-    {
-        title: 'Subject',
-        dataIndex: 'subject',
-        key: 'subjects',
-    },
+    // {
+    //     title: 'Subject',
+    //     dataIndex: 'subject',
+    //     key: 'subjects',
+    // },
     {
         title: 'Grade',
         dataIndex: 'grade',
@@ -99,16 +114,17 @@ function StudentListOfTeacher(props) {
         setStudentsTmp([])
         getStudentListById(params.id).then(data => {
             if (data) {
-                setStudentList(data);
-                data.forEach(student => {
+                setStudentList(data.content);
+                data.content.forEach(student => {
                     let datas = studentsTmp;
                     let elt = new Object();
                     elt.studentProfile = new Object();
-                    elt.studentProfile.firstName = student.firstName;
-                    elt.studentProfile.grade = student.grade;
-                    elt.studentProfile.lastName = student.lastName;
-                    elt.studentProfile.subject = student.subject;
-                    elt.studentProfile.id = student.id;
+                    elt.studentProfile.firstName = student.studentProfile.firstName;
+                    elt.studentProfile.grade = student.studentProfile.grade;
+                    elt.studentProfile.lastName = student.studentProfile.lastName;
+                    // elt.studentProfile.subject = student.subject;
+                    elt.studentProfile.id = student.studentProfile.id;
+                    elt.studentProfile.onlineStatus = student.studentProfile.onlineStatus;
                     // elt.studentProfile.startDate = student.startDate
                     datas.push(elt.studentProfile);
                     setStudentsTmp(datas);

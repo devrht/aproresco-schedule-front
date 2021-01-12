@@ -283,7 +283,8 @@ function TeacherList() {
                 };
             },
             render: (record) => (
-                <div>
+                <div
+                style={{ display: "flex", flexDirection: 'row', alignItems: "center", width: '150px' }}>
                     {
                         <Moment format="D MMM YYYY HH:MM" withTitle>
                             {record.startDate}
@@ -304,6 +305,9 @@ function TeacherList() {
                         } else {
                             setEditableSubject(editableSubject.filter(r => r.id !== record.id));
                         }
+                    }}
+                    style={{
+                        width: '200px'
                     }}>
                         {!editableSubject.includes(record) ? record.teacherProfile.subjects.join(', ') : <Form layout="inline">
                             <Form.Item>
@@ -402,7 +406,7 @@ function TeacherList() {
                         })
                 }
                 return (
-                    <div style={{ display: 'flex', flexDirection: 'row', width: '200px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', width: '100px' }}>
                         <Tooltip title={record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://' + record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://' + record.teacherProfile.conferenceUrl : ''}>
                             <Button
                                 style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
