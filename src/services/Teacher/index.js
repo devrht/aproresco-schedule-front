@@ -202,3 +202,14 @@ export const createBooking = (studentProfile, schedule, studentComment) => {
         return res;
     }).catch(err => console.log(err));
 }
+
+
+export const createAvailibility = (teacherProfile, schedule) => {
+    let data = {
+        teacherProfile,
+        schedule,
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/teacher-availability`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}

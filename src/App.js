@@ -19,6 +19,7 @@ const CreateSchedule = React.lazy(() => import('./container/Schedule/create'))
 const CreateStudent = React.lazy(() => import('./container/StudentProfile/create'))
 const CreateTeacher = React.lazy(() => import('./container/TeacherProfile/create'))
 const CreateBooking = React.lazy(() => import('./container/StudentList/create'))
+const CreateAvailibility = React.lazy(() => import('./container/TeacherList/create'))
 
 addToken();
 
@@ -42,6 +43,7 @@ function App() {
             <Route exact path="/short-messages" name="Settings Page" render={props => <ShortMessages {...props} />} />
             <Route exact path="/studentlist/teacher/:id" name="StudentOfTeacher Page" render={props => <StudentsOfTeacher {...props} />} />
             <Route exact path="/teacherlist" name="Teacher Page" render={props => <TeacherList {...props} />} />
+            <Route exact path="/teacherlist/add" name="Create Availibility Teacher Page" render={props => <CreateAvailibility {...props} />} />
             <Route exact path="/schedules" name="Schedules Page" render={props => <Schedules {...props} />} />
             <Route exact path="/schedules/add" name="Create Schedule Page" render={props => <CreateSchedule {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />

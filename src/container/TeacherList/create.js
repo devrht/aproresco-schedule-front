@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
-import { createBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, getSchedule } from '../../services/Student'
+import { createAvailibility } from '../../services/Teacher';
+import { getTeacherProfileByDate, getSchedule } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -16,13 +16,12 @@ const formReducer = (state, event) => {
     }
 }
 
-function CreateBooking() {
+function CreateAvailibility() {
 
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState(null);
-    const [comment, setComment] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [studentList, setStudentList] = useState([]);
     const [children, setChildren] = useState(null);
@@ -77,11 +76,11 @@ function CreateBooking() {
 
     const handleSubmit = () => {
         let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
-        if (comment == null || s == null || children == null)
+        if (s == null || children == null)
             alert('Fill the form');
         setLoading(true);
-        createBooking(children, s, comment).then(data => {
-            history.push(`/studentlist`)
+        createAvailibility(children, s).then(data => {
+            history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
@@ -91,7 +90,7 @@ function CreateBooking() {
 
     const getStudents = () => {
         setLoadingS(true);
-        getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 1000, 'firstName', 'asc').then(data => {
+        getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 1000, 'firstName', 'asc').then(data => {
             if (data) {
                 if (data.content) {
                     setStudentList(data.content);
@@ -116,7 +115,7 @@ function CreateBooking() {
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
 
-                    <Form.Item label="Student" required>
+                    <Form.Item label="Teacher" required>
                         <Autocomplete
                             id="asynchronous-search"
                             options={studentList}
@@ -179,9 +178,6 @@ function CreateBooking() {
                             }
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Comment" required>
-                        <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} />
-                    </Form.Item>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">Submit</Button>
                     </Form.Item>
@@ -190,4 +186,4 @@ function CreateBooking() {
         </div>
     )
 }
-export default CreateBooking
+export default CreateAvailibility

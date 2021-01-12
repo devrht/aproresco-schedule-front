@@ -284,7 +284,7 @@ function TeacherList() {
             },
             render: (record) => (
                 <div
-                style={{ display: "flex", flexDirection: 'row', alignItems: "center", width: '150px' }}>
+                    style={{ display: "flex", flexDirection: 'row', alignItems: "center", width: '150px' }}>
                     {
                         <Moment format="D MMM YYYY HH:MM" withTitle>
                             {record.startDate}
@@ -306,25 +306,31 @@ function TeacherList() {
                             setEditableSubject(editableSubject.filter(r => r.id !== record.id));
                         }
                     }}
-                    style={{
-                        width: '200px'
-                    }}>
-                        {!editableSubject.includes(record) ? record.teacherProfile.subjects.join(', ') : <Form layout="inline">
-                            <Form.Item>
-                                <Input
-                                    type="text"
-                                    placeholder="Subjects"
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            editSubjectGrade(record.id, e.target.value, record.teacherProfile.grades.join(',')).then(data => {
-                                                setEditableSubject(editableSubject.filter(r => r.id !== record.id));
-                                                getListView();
-                                            })
-                                        }
-                                    }}
-                                />
-                            </Form.Item>
-                        </Form>}
+                        style={{
+                            width: '200px'
+                        }}>
+                        {!editableSubject.includes(record) ?
+
+                            <Tooltip title={record.teacherProfile.subjects.join(', ')}>
+                                {record.teacherProfile.subjects.join(', ').length <= 20 ?
+                                    record.teacherProfile.subjects.join(', ') :
+                                    (record.teacherProfile.subjects.join(', ')).substring(0, 19) + '...'}
+                            </Tooltip> : <Form layout="inline">
+                                <Form.Item>
+                                    <Input
+                                        type="text"
+                                        placeholder="Subjects"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                editSubjectGrade(record.id, e.target.value, record.teacherProfile.grades.join(',')).then(data => {
+                                                    setEditableSubject(editableSubject.filter(r => r.id !== record.id));
+                                                    getListView();
+                                                })
+                                            }
+                                        }}
+                                    />
+                                </Form.Item>
+                            </Form>}
                     </div>
                 )
             }
@@ -618,6 +624,11 @@ function TeacherList() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Teachers Availabilities</p>}
                 extra={[
+                    <div style={{ display: 'flex' }}>
+                        <Button key='3' type="primary" size="large" onClick={() => history.push('teacherlist/add')}>
+                            Create Availability
+                        </Button>
+                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
