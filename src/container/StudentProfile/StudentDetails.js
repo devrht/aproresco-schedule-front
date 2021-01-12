@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, PageHeader, Card, Table, Spin } from 'antd';
 import { useLocation } from "react-router-dom";
-import { getBookings } from '../../services/Student'
+import { getStudentListById } from '../../services/Student'
 import Moment from 'react-moment';
 
 const columns = [
@@ -37,11 +37,11 @@ function StudentDetail(props) {
     const [studentDetail, setStudentDetail] = useState(location.state.student);
 
     useEffect(() => {
-        // getDetailView();
+        getDetailView();
     }, []);
 
     const getDetailView = () => {
-        getBookings(location.state.student.id).then(data => {
+        getStudentListById(location.state.student.id, 'profileId').then(data => {
             setBookings(data)
         }).catch(() => setBookings(null))
     }
@@ -177,13 +177,13 @@ function StudentDetail(props) {
                         </Row>
                     </Card> */}
                 </Row>
-                {/* {!bookings ? <Spin /> :
+                {!bookings ? <Spin /> :
                     <Table
                         columns={columns}
                         dataSource={bookings}
                         rowKey="id"
                     />
-                } */}
+                }
             </PageHeader> : null }
         </div>
     )

@@ -293,6 +293,11 @@ function StudentProfile() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student profiles</p>}
                 extra={[
+                    <div style={{ display: 'flex' }}>
+                        <Button key='3' type="primary" size="large" onClick={() => history.push('studentprofiles/add')}>
+                            Create student
+                        </Button>
+                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>

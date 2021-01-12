@@ -533,6 +533,11 @@ function StudentList() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student bookings</p>}
                 extra={[
+                    <div style={{ display: 'flex' }}>
+                        <Button key='3' type="primary" size="large" onClick={() => history.push('studentlist/add')}>
+                            Create booking
+                        </Button>
+                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>

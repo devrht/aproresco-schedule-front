@@ -155,7 +155,50 @@ export const createSchedule = (subject, startDate, description) => {
         startDate,
         description
     }
-    return axios.post(`${routes.SERVER_ADDRESS}//schedule`, data).then(res => {
+    return axios.post(`${routes.SERVER_ADDRESS}/schedule`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const createStudent = (firstName, lastName, email, schoolName, schoolBoard, grade, parent) => {
+    let data = {
+        firstName,
+        lastName,
+        email,
+        schoolName,
+        schoolBoard,
+        grade,
+        parent: {email: parent}
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/student-profile`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const createTeacher = (firstName, lastName, email, iemail, schoolName, schoolBoard, grade, subjects, phone) => {
+    let data = {
+        firstName,
+        lastName,
+        externalEmail: email,
+        internalEmail: iemail,
+        schoolName,
+        schoolBoard,
+        grade,
+        phoneNumber: phone,
+        subjects: subjects.split(',')
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/register`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const createBooking = (studentProfile, schedule, studentComment) => {
+    let data = {
+        studentProfile,
+        schedule,
+        studentComment
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/student-booking`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

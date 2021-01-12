@@ -8,8 +8,9 @@ const headers = {
     Authorization: 'Basic ' + btoa(routes.OAUTH.CLIENT_ID + ":" + routes.OAUTH.CLIENT_SECRET)
 }
 
-export const getStudentListById = (TeacherId) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/teacher-availability/${TeacherId}/student-bookings`)
+export const getStudentListById = (TeacherId, type = 'availabilityId') => {
+    // return axios.get(`${routes.SERVER_ADDRESS}/teacher-availability/${TeacherId}/student-bookings`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?${type}=${TeacherId}`)
         .then(res => {
             console.log(res.data);
             return res.data;

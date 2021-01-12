@@ -293,6 +293,11 @@ function TeacherProfile() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Teacher profiles</p>}
                 extra={[
+                    <div style={{ display: 'flex' }}>
+                        <Button key='3' type="primary" size="large" onClick={() => history.push('teacherprofiles/add')}>
+                            Create teacher
+                        </Button>
+                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
