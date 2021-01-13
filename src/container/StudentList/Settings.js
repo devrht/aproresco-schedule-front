@@ -1,18 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { PageHeader, Button, Select } from 'antd';
+import React, { useState, useEffect, useReducer } from 'react'
+import { PageHeader, Button, Select, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
 import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
-import { getTeacherProfile } from '../../services/Teacher'
+import { getTeacherProfile, newTenant } from '../../services/Teacher'
 const { Option } = Select;
 
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value
+  }
+}
+
 function Settings(props) {
+
+
+  const history = useHistory();
   const dispatch = useDispatch();
   const [deleting, setDeleting] = useState(false);
   const [assigning, setAssigning] = useState(false);
   const [bridge, setBridge] = useState(false);
   const [persist, setPersist] = useState(false);
   const [teacher, setTeacher] = useState(null);
+  const [formData, setFormData] = useReducer(formReducer, {});
+  const [form] = Form.useForm();
   const [tenant, setTenant] = useState(null);
   const deletingStatus = useSelector((state) => {
     return state.Student.enableDeleting;
@@ -30,6 +43,37 @@ function Settings(props) {
       setTeacher(data);
     });
   }, []);
+
+  const handleChange = event => {
+    setFormData({
+      name: event.target.name,
+      value: event.target.value,
+    });
+  }
+
+
+  const handleSubmit = () => {
+
+    if (formData.tenant) {
+      if (
+        formData.tenant.toString().length <= 0
+      ) {
+        alert("Please, fill the form!");
+        return
+      }
+    } else {
+      alert("Please, fill the form!");
+      return
+    }
+
+    newTenant(formData.tenant).then(data => {
+      history.push(`/studentprofiles`)
+    }).catch(err => {
+      alert("Error occured when saving data, please retry!")
+      console.log(err)
+    });
+
+  }
 
   const onEnableDeleting = () => {
     setDeleting(!deleting);
@@ -80,7 +124,23 @@ function Settings(props) {
           <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
             onClick={() => onPersistAction(!persist)}> {!persist ? 'Enable' : 'Disable'} Persistence </Button>
+
         </div>
+
+        <Form
+          form={form}
+          onFinish={handleSubmit}
+          layout="vertical"
+          style={{ width: '100%', marginTop: '2%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Form.Item label="New tenant" size={'large'} style={{ width: '80%' }}>
+            <Input type="tenant" name="tenant" onChange={handleChange} style={{ height: '50px' }} />
+          </Form.Item>
+
+          <Form.Item label=" " style={{ width: '20%', marginLeft: '30px' }}>
+            <Button type="primary" size="large" htmlType="submit" style={{ height: '50px' }}>Submit</Button>
+          </Form.Item>
+        </Form>
         {
           teacher != null ?
             <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>

@@ -41,6 +41,16 @@ export const getStudentListByDate = (start, end, page, size, sortName, sortType)
         })
 }
 
+export const getParentProfile = (start, end, page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-parents?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
     let tenant = JSON.parse(localStorage.getItem("tenant"));
     return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&tenantKey=${tenant}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
@@ -84,8 +94,8 @@ export const getTeacherProfileByDate = (start, end, page, size, sortName, sortTy
         })
 }
 
-export const getShortMessagesByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/short-messages?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+export const getShortMessagesByDate = (type, start, end, page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/customer-messages?category=${type}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -116,6 +126,16 @@ export const getBookings = (studentId) => {
 
 export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
+export const findParentProfileByEmail = (email, start, end, page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-parents?email=${email}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -156,9 +176,20 @@ export const findTeacherProfileByFirstNameAndLastName = (firstName, start, end, 
         })
 }
 
-export const getShortMessages = (firstName, start, end, page, size, sortName, sortType) => {
+export const getShortMessages = (type, firstName, start, end, page, size, sortName, sortType) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/short-messages?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/customer-messages?category=${type}&firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
+export const getShortMessagesTemplates = (type, page, size, sortName, sortType) => {
+    //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/customer-message-templates?category=${type}&page=${page}&size=${size}`)
         .then(res => {
             return res.data;
         })

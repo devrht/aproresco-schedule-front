@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Row, Col, Result } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip} from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { getStudentList, findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, getShortMessages, getShortMessagesByDate } from '../../services/Student'
+import { getShortMessages, getShortMessagesByDate } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 //icon
 
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
-import DateFilter from '../../components/StudentList/DateFilter';
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
 
 
-function ShortMessageList() {
+function ShortMessageList(props) {
     const dispatch = useDispatch();
     const history = useHistory();
+    const { params } = props.match;
     const [studentList, setStudentList] = useState();
     const [sortingName, setSortingName] = useState("firstName");
     const [sortingType, setSortingType] = useState("asc");
@@ -123,6 +123,7 @@ function ShortMessageList() {
     ];
 
     useEffect(() => {
+        console.log(params.id);
         getListView();
     }, [tableProps.pageIndex]);
     useEffect(() => {
@@ -132,7 +133,7 @@ function ShortMessageList() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                getShortMessagesByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                getShortMessagesByDate(params.id, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if(data) {
                     if(data.content) {
                         setStudentList(data.content)
@@ -161,7 +162,7 @@ function ShortMessageList() {
             })
         }
         else {
-            getShortMessages(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getShortMessages(params.id, search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if(data) {
                     if(data.content) {
                         setStudentList(data.content)
@@ -224,6 +225,9 @@ function ShortMessageList() {
             ghost={false}
             title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Short Messages</p>}
             extra={[
+                <Button key='3' size="large" type="primary" onClick={() => history.push('/messages/add/'+params.id)}>
+                    <PlusOutlined />
+                </Button>
             ]}
         >
             <div style={{ display: 'flex', flexDirection: 'row' }}>

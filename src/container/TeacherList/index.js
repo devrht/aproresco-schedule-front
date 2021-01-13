@@ -9,7 +9,7 @@ import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined , PlusOutlined} from "@ant-design/icons"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -625,8 +625,8 @@ function TeacherList() {
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Teachers Availabilities</p>}
                 extra={[
                     <div style={{ display: 'flex' }}>
-                        <Button key='3' type="primary" size="large" onClick={() => history.push('teacherlist/add')}>
-                            Create Availability
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('teacherlist/add')}>
+                            <PlusOutlined />
                         </Button>
                     </div>
                 ]}

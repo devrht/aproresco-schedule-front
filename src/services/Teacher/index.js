@@ -46,6 +46,24 @@ export const markAsAdmin = (id, value) => {
         })
 }
 
+export const newTenant = (value) => {
+
+    let data = {
+        tenants: [
+            {
+              "key": value
+            }
+        ]
+    }
+
+    let id = JSON.parse(localStorage.getItem("id"));
+
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data)
+        .then(res => {
+            return res.data;
+        })
+}
+
 export const getTeacherListByDate = (start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
         headers: {
@@ -210,6 +228,37 @@ export const createAvailibility = (teacherProfile, schedule) => {
         schedule,
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-availability`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const createParent = (phoneNumber, countryCode, email, tenant) => {
+    let data = {
+        phoneNumber,
+        countryCode,
+        email,
+        tenants: [
+            {
+              "key": tenant
+            }
+        ]
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/student-parent`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const createMessage = (type, startDate, endDate, message, subject, async, template) => {
+    let data = {
+        startDate,
+        endDate,
+        message,
+        subject,
+        async,
+        template
+    }
+    let url = type == 'StudentProfile' ? '/reminder/students' : '/reminder/teachers';
+    return axios.post(`${routes.SERVER_ADDRESS}/${url}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

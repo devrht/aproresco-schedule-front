@@ -4,14 +4,14 @@ import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate } from '../../services/Student'
+import { findParentProfileByEmail, getParentProfile } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-function StudentProfile() {
+function ParentProfile() {
     const history = useHistory();
     const [studentList, setStudentList] = useState();
     const [sortingName, setSortingName] = useState("firstName");
@@ -55,23 +55,13 @@ function StudentProfile() {
                 <div
                     style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
                 >
-                    <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
-                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
-                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
-                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
-                    </Tooltip>
                     <Tooltip title={(record.firstName + " " + record.lastName)}>
                         <Button
-                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                history.push(`/studentprofiles/${record.id}/details`, { student: record })
-                                // history.push(`/studentlist/studentDetail/${record.id}`)
-                            }}>
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}>
                             <p style={{ width: "50%", textAlign: "left" }}>
                                 {(record.firstName + " " + record.lastName).length <= 20 ?
                                     record.firstName + " " + record.lastName :
-                                    (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                                    (record.firstName + " " + record.lastName).substring(0, 19) + '...'}
                             </p>
                         </Button>
                     </Tooltip>
@@ -80,15 +70,15 @@ function StudentProfile() {
             fixed: 'left',
         },
         {
-            title: <div><span>Registration Date </span>
-                {sortingName === "registrationDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "registrationDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "registrationDate" && sortingType === "" && ""}
+            title: <div><span>Activation Date </span>
+                {sortingName === "activationDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "activationDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "activationDate" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("registrationDate");
+                        setSortingName("activationDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -99,61 +89,12 @@ function StudentProfile() {
                 <div>
                     {
                         <Moment format="D MMM YYYY HH:MM" withTitle>
-                            {record.registrationDate}
+                            {record.activationDate}
                         </Moment>
                     }
                 </div>
             ),
-            key: 'registrationDate',
-        },
-        {
-            title: <div><span>Email </span>
-                {sortingName === "email" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "email" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "email" && sortingType === "" && ""}
-            </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("email");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
-                    }
-                };
-            },
-            render: (record) => {
-                return (
-                    <div>
-                        {record.email}
-                    </div>
-                )
-            },
-            key: 'email',
-        }
-        ,
-        {
-            title: <div><span>Grade </span>
-                {sortingName === "grade" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "grade" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "grade" && sortingType === "" && ""}
-            </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("grade");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
-                    }
-                };
-            },
-            render: (record) => {
-                return (
-                    <span>{record.grade}</span>
-                )
-            },
-            key: 'grade',
+            key: 'activationDate',
         }
 
     ];
@@ -198,7 +139,7 @@ function StudentProfile() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-            getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -228,7 +169,7 @@ function StudentProfile() {
             })
         }
         else {
-            findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            findParentProfileByEmail(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -291,10 +232,10 @@ function StudentProfile() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student profiles</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Parent profiles</p>}
                 extra={[
                     <div style={{ display: 'flex' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('studentprofiles/add')}>
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('parentProfiles/add')}>
                             <PlusOutlined />
                         </Button>
                     </div>
@@ -328,4 +269,4 @@ function StudentProfile() {
         </div>
     )
 }
-export default StudentProfile
+export default ParentProfile

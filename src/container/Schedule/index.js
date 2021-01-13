@@ -7,9 +7,7 @@ import '../../Assets/container/StudentList.css'
 import { findScheduleByGrade, getScheduleByDate } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
 
 function Schedule() {
     const history = useHistory();
@@ -82,7 +80,7 @@ function Schedule() {
                 return (
                     <div>
                         {record.subject}
-                </div>
+                    </div>
                 )
             },
             key: 'subject',
@@ -115,7 +113,7 @@ function Schedule() {
             },
             key: 'endDate',
         }
-        
+
     ];
 
     useEffect(() => {
@@ -227,11 +225,11 @@ function Schedule() {
             }
         }
 
-        if(e.target.name === "gradeMin") {
+        if (e.target.name === "gradeMin") {
             setGradeMin(value)
         }
 
-        if(e.target.name === "gradeMax") {
+        if (e.target.name === "gradeMax") {
             setGradeMax(value)
         }
     };
@@ -258,8 +256,8 @@ function Schedule() {
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Schedules</p>}
                 extra={[
                     <div style={{ display: 'flex' }}>
-                        <Button key='3' type="primary" size="large" onClick={() => history.push('schedules/add')}>
-                            Create schedule
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('schedules/add')}>
+                            <PlusOutlined />
                         </Button>
                     </div>
                 ]}

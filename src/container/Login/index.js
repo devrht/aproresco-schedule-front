@@ -25,6 +25,7 @@ function Login() {
               localStorage.removeItem('tenant');
             }
             localStorage.setItem('email', JSON.stringify(data.externalEmail));
+            localStorage.setItem('id', JSON.stringify(data.id));
             history.push(`/studentprofiles`);
           });
         } else {

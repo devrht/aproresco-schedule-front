@@ -7,7 +7,7 @@ import '../../Assets/container/StudentList.css'
 import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -127,7 +127,7 @@ function TeacherProfile() {
                 return (
                     <div>
                         {record.internalEmail}
-                </div>
+                    </div>
                 )
             },
             key: 'internalEmail',
@@ -156,7 +156,7 @@ function TeacherProfile() {
             },
             key: 'phoneNumber',
         }
-        
+
     ];
 
     useEffect(() => {
@@ -295,8 +295,8 @@ function TeacherProfile() {
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Teacher profiles</p>}
                 extra={[
                     <div style={{ display: 'flex' }}>
-                        <Button key='3' type="primary" size="large" onClick={() => history.push('teacherprofiles/add')}>
-                            Create teacher
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('teacherprofiles/add')}>
+                            <PlusOutlined />
                         </Button>
                     </div>
                 ]}

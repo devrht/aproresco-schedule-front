@@ -9,14 +9,13 @@ import { findTeacherListByFirstNameAndLastName } from '../../services/Teacher'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     VideoCameraOutlined,
-    EditOutlined,
-
+    EditOutlined
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -534,8 +533,8 @@ function StudentList() {
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student bookings</p>}
                 extra={[
                     <div style={{ display: 'flex' }}>
-                        <Button key='3' type="primary" size="large" onClick={() => history.push('studentlist/add')}>
-                            Create booking
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('studentlist/add')}>
+                            <PlusOutlined />
                         </Button>
                     </div>
                 ]}
