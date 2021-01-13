@@ -259,7 +259,7 @@ function StudentList() {
             title: 'Action',
             key: 'operation',
             render: (record) =>
-                <div style={{ display: 'flex', flexDirection: 'row', width: '200px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
                     {
                         !editTeacher.includes(record) ?
                             <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl : "Link Not Found" : "Student Not Found"}>

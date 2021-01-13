@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import 'antd/dist/antd.css';
 import '../../Assets/Layout.css'
 import { useHistory } from 'react-router-dom'
-import background from '../../container/Login/assets/images/bg.jpg';
 import { Layout, Menu } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -14,29 +13,18 @@ import {
   CalendarOutlined,
   BookOutlined
 } from '@ant-design/icons';
-import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
-import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
 
 const { Sider, Content } = Layout;
+const { SubMenu } = Menu;
+
+const rootSubmenuKeys = ['teachers', 'students'];
 
 function LayoutOfApp({ children }, props) {
 
-
-  const dispatch = useDispatch();
   const history = useHistory();
   const [pathName, setPathName] = useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [assigning, setAssigning] = useState(false);
-  const [bridge, setBridge] = useState(false);
-  const [persist, setPersist] = useState(false);
-  const deletingStatus = useSelector((state) => {
-    return state.Student.enableDeleting;
-  })
-  const assigningStatus = useSelector((state) => {
-    return state.Student.enableAssigning;
-  })
+  const [openKeys, setOpenKeys] = React.useState(['sub1']);
 
   useEffect(() => {
 
@@ -98,11 +86,22 @@ function LayoutOfApp({ children }, props) {
   const logout = () => {
     setLogged(false);
     localStorage.removeItem("token");
-    // localStorage.removeItem("email");
     localStorage.removeItem("expireAt");
-    // localStorage.removeItem("tenant");
     window.location.reload();
   }
+
+  const handleClick = e => {
+    setPathName(e.key);
+  };
+
+  const onOpenChange = keys => {
+    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeys(keys);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    }
+  };
 
   return (
     <Layout>
@@ -110,50 +109,37 @@ function LayoutOfApp({ children }, props) {
         logged ?
           <Sider className="sider">
             <h1>Appui Scolaire</h1>
-            <Menu theme="dark" mode="inline" selectedKeys={[pathName]} style={{ width: '900px' }}>
-              <Menu.Item key="/studentprofiles" icon={<UserOutlined />} onClick={() => { history.push('/studentprofiles') }}>
-                Student profiles
-              </Menu.Item>
-              <Menu.Item key="/studentlist" icon={<BookOutlined />} onClick={() => { history.push('/studentlist') }}>
-                Student bookings
-              </Menu.Item>
-              <Menu.Item key="/teacherlist" icon={<VideoCameraOutlined />} onClick={() => { history.push('/teacherlist') }}>
-                Teachers availabilities
-              </Menu.Item>
-              <Menu.Item key="/teacherprofiles" icon={<UserOutlined />} onClick={() => { history.push('/teacherprofiles') }}>
-                Teachers profiles
-              </Menu.Item>
-              <Menu.Item key="/shortmessages" icon={<MessageOutlined />} onClick={() => { history.push('/short-messages') }}>
-                Short Messages
-              </Menu.Item>
-              <Menu.Item key="/schedules" icon={<CalendarOutlined />} onClick={() => { history.push('/schedules') }}>
+            <Menu theme="dark" onClick={handleClick} selectedKeys={[pathName]} openKeys={openKeys} onOpenChange={onOpenChange} defaultSelectedKeys={['1']} mode="inline" style={{ width: '900px' }}>
+              <SubMenu key="teachers" icon={<BookOutlined />} title="Teachers">
+                <Menu.Item key="1" onClick={() => { history.push('/teacherprofiles') }}>Profiles</Menu.Item>
+                <Menu.Item key="2" onClick={() => { history.push('/teacherlist') }}>Availabilities</Menu.Item>
+                <Menu.Item key="3" onClick={() => { history.push('/short-messages') }}>Messages</Menu.Item>
+              </SubMenu>
+              <SubMenu key="students" icon={<UserOutlined />} title="Students">
+                <Menu.Item key="4" onClick={() => { history.push('/studentprofiles') }}>Profiles</Menu.Item>
+                <Menu.Item key="5" onClick={() => { history.push('/studentlist') }}>Bookings</Menu.Item>
+                <Menu.Item key="6" onClick={() => { history.push('/short-messages') }}>Messages</Menu.Item>
+                <Menu.Item key="7">Parents</Menu.Item>
+              </SubMenu>
+              <Menu.Item key="schedules" icon={<CalendarOutlined />} onClick={() => { history.push('/schedules') }}>
                 Schedules
               </Menu.Item>
-              <Menu.Item key="/settings" icon={<SettingOutlined />} onClick={() => { history.push('/settings') }}>
-                Settings
-              </Menu.Item>
-              <Menu.Item key="/login" icon={<LogoutOutlined />} onClick={() => { logout(); }}>
-                Log out
-              </Menu.Item>
-              {/* <div style={{ marginLeft: '40px', lineHeight: '30px', display: showSettings ? 'block' : 'none'}}>
-              <p onClick={() => { onEnableDeleting() }} style={{ cursor: "pointer" }}>
-                { deletingStatus ? 'Disable' : 'Enable' } deleting
-              </p>
-              <p onClick={() => { onEnableAssigning() }} style={{ cursor: "pointer" }}>
-                { assigningStatus ? 'Disable' : 'Enable' } reassigning
-              </p>
-              <p onClick={() => { onBridgeAction(!bridge) }} style={{ cursor: "pointer" }}>
-                { !bridge ? 'Open' : 'Close' } the bridge
-              </p>
-              <p onClick={() => { onPersistAction(!persist) }} style={{ cursor: "pointer" }}>
-                { !persist ? 'Enable' : 'Disable' } Persistence
-              </p>
-            </div> */}
             </Menu>
           </Sider> : null
       }
       <Layout className="childLayout" style={{ marginLeft: !logged ? 0 : '200px' }}>
         <Content className="content">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            padding: '15px',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
+            paddingRight: '50px'
+          }}>
+            <SettingOutlined style={{ fontSize: '30px', marginRight: '20px'}} onClick={() => { history.push('/settings') }}/>
+            <LogoutOutlined style={{ fontSize: '30px'}} onClick={() => { logout(); }} />
+          </div>
           <div className="content-div" style={{ padding: 0 }}>{children}</div>
         </Content>
       </Layout>
