@@ -26,6 +26,8 @@ function AddMessage(props) {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [asTemplate, setAsTemplate] = useState(false);
+    const [isSMS, setIsSMS] = useState(false);
+    const [isEmail, setIsEmail] = useState(false);
     const [async, setAsync] = useState(false);
     const [body, setBody] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
@@ -148,6 +150,12 @@ function AddMessage(props) {
                     </Form.Item>
                     <Form.Item label="Save as template" required>
                         <Checkbox onChange={(e) => setAsTemplate(e.target.checked)} />
+                    </Form.Item>
+                    <Form.Item label="is SMS" required>
+                        <Checkbox onChange={(e) => setIsSMS(e.target.checked)} />
+                    </Form.Item>
+                    <Form.Item label="is Email" required>
+                        <Checkbox onChange={(e) => setIsEmail(e.target.checked)} />
                     </Form.Item>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">Submit</Button>
