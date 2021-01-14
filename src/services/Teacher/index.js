@@ -250,15 +250,15 @@ export const createParent = (phoneNumber, countryCode, email, tenant) => {
 
 export const createMessage = (type, startDate, endDate, message, subject, async, template) => {
     let data = {
-        startDate,
-        endDate,
+        // startDate,
+        // endDate,
         message,
         subject,
         async,
-        template
+        saveAstemplate: template
     }
-    let url = type == 'StudentProfile' ? '/reminder/students' : '/reminder/teachers';
-    return axios.post(`${routes.SERVER_ADDRESS}/${url}`, data).then(res => {
+    let url = type == 'StudentProfile' ? 'reminder/students' : 'reminder/teachers';
+    return axios.get(`${routes.SERVER_ADDRESS}/${url}?message=${message}&subject=${subject}&async=${async}&saveAstemplate=${template}`).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

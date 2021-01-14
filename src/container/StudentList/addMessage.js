@@ -44,6 +44,12 @@ function AddMessage(props) {
         });
     }
 
+    const changeTemplate = (temp) => {
+        setTemplate(temp);
+        setSubject(temp.subject);
+        setBody(temp.body);
+    }
+
     // const changeTemplate = (id) => {
     //     setTemplate()
     // }
@@ -53,7 +59,7 @@ function AddMessage(props) {
         // if (comment == null || s == null || children == null)
         //     alert('Fill the form');
         createMessage(params.id, startDate, endDate, body, subject, async, asTemplate).then(data => {
-            history.push(`/studentlist`)
+            history.push(`/short-messages/${params.id}`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
@@ -88,13 +94,13 @@ function AddMessage(props) {
                 >
 
 
-                    <Form.Item label="Start Date" required>
+                    {/* <Form.Item label="Start Date" required>
                         <Input type="date" name="startDate" onChange={(e) => setStartDate(e.target.value)} />
                     </Form.Item>
 
                     <Form.Item label="End Date" required>
                         <Input type="date" name="endDate" onChange={(e) => setEndDate(e.target.value)} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item label="Message Template" required>
                         <Autocomplete
                             id="asynchronous-search"
@@ -106,7 +112,7 @@ function AddMessage(props) {
                                 setTemplate(newInputValue);
                             }}
                             onChange={(__, newValue) => {
-                                //changeChildren(newValue.id);
+                                changeTemplate(newValue);
                             }}
                             open={open}
                             onOpen={() => {
@@ -116,7 +122,7 @@ function AddMessage(props) {
                                 setOpen(false);
                             }}
                             loading={loadingS}
-                            getOptionLabel={(record) => record.firstName + " " + record.lastName}
+                            getOptionLabel={(record) => record.id}
                             // style={{ minWidth: 450, marginLeft: -250 }}
                             renderInput={(params) =>
                                 <TextField {...params}
@@ -135,10 +141,10 @@ function AddMessage(props) {
                         />
                     </Form.Item>
                     <Form.Item label="Subject" required>
-                        <Input type="text" name="subject" onChange={(e) => setSubject(e.target.value)} />
+                        <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
                     </Form.Item>
                     <Form.Item label="Body" required>
-                        <Input type="text" name="body" onChange={(e) => setBody(e.target.value)} />
+                        <Input type="text" name="body" value={body} onChange={(e) => setBody(e.target.value)} />
                     </Form.Item>
                     <Form.Item label="Save as template" required>
                         <Checkbox onChange={(e) => setAsTemplate(e.target.checked)} />

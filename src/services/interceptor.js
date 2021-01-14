@@ -13,7 +13,7 @@ const addToken = () => {
                     config.headers['Authorization'] = 'Bearer ' + accessToken;
                 }
 
-                if (!config.url.toString().includes('teacher-profile/email') && !(config.url.toString().includes('teacher-profile') && config.method== 'PATCH')) {
+                if (!config.url.toString().includes('teacher-profile/email') && !(config.url.toString().includes('teacher-profile') && config.method== 'patch')) {
                     if (tenant) {
                         config.headers['TenantKey'] = tenant;
                     }

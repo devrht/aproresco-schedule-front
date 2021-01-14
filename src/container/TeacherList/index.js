@@ -370,7 +370,7 @@ function TeacherList() {
         }
         ,
         {
-            title: <div><span>Student Count </span>
+            title: <div><span>Students </span>
                 {sortingName === "studentCount" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
                 {sortingName === "studentCount" && sortingType === "desc" && <VerticalAlignTopOutlined />}
                 {sortingName === "studentCount" && sortingType === "" && ""}
@@ -387,7 +387,7 @@ function TeacherList() {
             },
             render: (studentCount) => (
                 <div>
-                    {studentCount}
+                    <p style={{ textAlign: 'left', paddingLeft: '20px' }}>{studentCount}</p>
                 </div>
             ),
             dataIndex: 'studentCount',

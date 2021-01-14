@@ -34,6 +34,45 @@ const columns = [
         fixed: 'left',
     },
     {
+        title: <div><span>Start Date </span>
+        </div>,
+        render: (record) => (
+            <div>
+                {
+                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                        {record.schedule.startDate}
+                    </Moment>
+                }
+            </div>
+        ),
+        key: 'startDate',
+    },
+    {
+        title: <div><span>End Date </span>
+        </div>,
+        render: (record) => {
+            return (
+            <div>
+                {
+                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                        {record.schedule.endDate}
+                    </Moment>
+                }
+            </div>
+        )},
+        key: 'endDate',
+    },
+    {
+        title: <div><span>Subject</span>
+        </div>,
+        render: (record) => (
+            <div>
+                {record.schedule.subject}
+            </div>
+        ),
+        key: 'subject',
+    },
+    {
         title: 'Grade',
         dataIndex: 'grade',
         key: 'grade',
@@ -49,6 +88,7 @@ function StudentDetail(props) {
     const [studentDetail, setStudentDetail] = useState(location.state.student);
 
     useEffect(() => {
+        console.log(studentDetail)
         getDetailView();
     }, []);
 
@@ -64,11 +104,12 @@ function StudentDetail(props) {
                 elt.studentProfile.onlineStatus = student.studentProfile.onlineStatus;
                 // elt.studentProfile.subject = student.subject;
                 elt.studentProfile.id = student.studentProfile.id;
+                elt.studentProfile.schedule = student.schedule;
                 // elt.studentProfile.startDate = student.startDate
                 setBookings([...bookings, elt.studentProfile]);
             });
-        }).catch((err) => { console.log(err); setBookings([])} )
-        .finally(() => setBookingsLoading(false))
+        }).catch((err) => { console.log(err); setBookings([]) })
+            .finally(() => setBookingsLoading(false))
     }
 
     return (

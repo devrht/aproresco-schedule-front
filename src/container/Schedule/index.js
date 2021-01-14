@@ -61,7 +61,7 @@ function Schedule() {
             key: 'startDate',
         },
         {
-            title: <div><span>Email </span>
+            title: <div><span>Subject </span>
                 {sortingName === "subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
                 {sortingName === "subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
                 {sortingName === "subject" && sortingType === "" && ""}
@@ -112,9 +112,48 @@ function Schedule() {
                 )
             },
             key: 'endDate',
+        },
+        {
+            title: 'Grades',
+            key: 'grades',
+            render: (record) => {
+                return (
+                    <div>
+                        {gradesToPrint(record)}
+                    </div>
+                )
+            }
         }
 
     ];
+
+    const gradesToPrint = (profile) => {
+        let i = 0;
+        let result = '';
+        if (profile == null) {
+            return '';
+        }
+
+        for (i = 0; i < profile.grades.length; i++) {
+            if (i == 0) {
+                result += profile.grades[i];
+            } else {
+                if (i == (profile.grades.length - 1))
+                    if (Number(profile.grades[i - 1]) !== Number(profile.grades[i]) - 1)
+                        result = result + ', ' + profile.grades[i];
+                    else
+                        result = result + '-' + profile.grades[i];
+                else
+                    if (Number(profile.grades[i - 1]) !== Number(profile.grades[i]) - 1)
+                        if (Number(profile.grades[i]) !== Number(profile.grades[i + 1]) - 1)
+                            result = result + ',' + profile.grades[i] + ', ' + profile.grades[i + 1];
+                        else
+                            result = result + ',' + profile.grades[i];
+            }
+        }
+
+        return result;
+    }
 
     useEffect(() => {
         getListView();

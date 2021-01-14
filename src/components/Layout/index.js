@@ -24,7 +24,8 @@ function LayoutOfApp({ children }, props) {
   const history = useHistory();
   const [pathName, setPathName] = useState(window.location.pathname);
   const [logged, setLogged] = useState(true);
-  const [openKeys, setOpenKeys] = React.useState(['sub1']);
+  const [key, setKey] = useState('1');
+  const [openKeys, setOpenKeys] = React.useState(['teachers']);
 
   useEffect(() => {
 
@@ -92,6 +93,7 @@ function LayoutOfApp({ children }, props) {
 
   const handleClick = e => {
     setPathName(e.key);
+    setKey(e.key);
   };
 
   const onOpenChange = keys => {
@@ -109,15 +111,15 @@ function LayoutOfApp({ children }, props) {
         logged ?
           <Sider className="sider">
             <h1>Appui Scolaire</h1>
-            <Menu theme="dark" onClick={handleClick} selectedKeys={[pathName]} openKeys={openKeys} onOpenChange={onOpenChange} defaultSelectedKeys={['1']} mode="inline" style={{ width: '900px' }}>
+            <Menu theme="dark" onClick={handleClick} selectedKeys={[key]} openKeys={openKeys} onOpenChange={onOpenChange} mode="inline">
               <SubMenu key="teachers" icon={<BookOutlined />} title="Teachers">
-                <Menu.Item key="1" onClick={() => { history.push('/teacherprofiles') }}>Profiles</Menu.Item>
-                <Menu.Item key="2" onClick={() => { history.push('/teacherlist') }}>Availabilities</Menu.Item>
+                <Menu.Item key="1" onClick={() => { history.push('/teacherlist') }}>Availabilities</Menu.Item>
+                <Menu.Item key="2" onClick={() => { history.push('/teacherprofiles') }}>Profiles</Menu.Item>
                 <Menu.Item key="3" onClick={() => { history.push('/short-messages/TeacherProfile') }}>Messages</Menu.Item>
               </SubMenu>
               <SubMenu key="students" icon={<UserOutlined />} title="Students">
-                <Menu.Item key="4" onClick={() => { history.push('/studentprofiles') }}>Profiles</Menu.Item>
                 <Menu.Item key="5" onClick={() => { history.push('/studentlist') }}>Bookings</Menu.Item>
+                <Menu.Item key="4" onClick={() => { history.push('/studentprofiles') }}>Profiles</Menu.Item>
                 <Menu.Item key="6" onClick={() => { history.push('/short-messages/StudentProfile') }}>Messages</Menu.Item>
                 <Menu.Item key="7" onClick={() => { history.push('/parentProfiles') }}>Parents</Menu.Item>
               </SubMenu>

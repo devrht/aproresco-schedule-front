@@ -57,7 +57,11 @@ function ParentProfile() {
                 >
                     <Tooltip title={(record.firstName + " " + record.lastName)}>
                         <Button
-                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}>
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                history.push(`/parentProfiles/${record.id}`, { parent: record })
+                            }}>
                             <p style={{ width: "50%", textAlign: "left" }}>
                                 {(record.firstName + " " + record.lastName).length <= 20 ?
                                     record.firstName + " " + record.lastName :
@@ -68,6 +72,11 @@ function ParentProfile() {
                 </div>,
             key: 'name',
             fixed: 'left',
+        },
+        {
+            title: 'email',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
             title: <div><span>Activation Date </span>

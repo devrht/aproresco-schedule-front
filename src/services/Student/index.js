@@ -187,6 +187,13 @@ export const getShortMessages = (type, firstName, start, end, page, size, sortNa
         })
 }
 
+export const getChild = (id) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/student-parent/${id}/student-profiles`)
+        .then(res => {
+            return res.data;
+        })
+}
+
 export const getShortMessagesTemplates = (type, page, size, sortName, sortType) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
     return axios.get(`${routes.SERVER_ADDRESS}/search/customer-message-templates?category=${type}&page=${page}&size=${size}`)
