@@ -15,6 +15,7 @@ const formReducer = (state, event) => {
 function CreateSchedule() {
 
     const [loading, setLoading] = useState(false);
+    const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
     const [subject, setSubject] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
@@ -31,7 +32,7 @@ function CreateSchedule() {
         });
     }
 
-   const getSubjects = () => {
+    const getSubjects = () => {
         getSchedule(1).then(data => {
             console.log(data)
             var obj = {};
@@ -48,7 +49,7 @@ function CreateSchedule() {
     const handleSubmit = () => {
 
         if (subject && formData.startDate && formData.description) {
-            if (formData.subject.toString().length <= 0
+            if (subject.length <= 0
                 || formData.startDate.toString().length <= 0
                 || formData.description.toString().length <= 0
             ) {
@@ -61,16 +62,12 @@ function CreateSchedule() {
         }
 
         let date = new Date(formData.startDate);
-        let day = date.getDate() < 10 ? '0'+(date.getDate()) : (date.getDate())
-        let month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : (date.getMonth()+1);
+        let day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
+        let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         let year = date.getFullYear();
-        let d = year+'-'+month+'-'+day+'T00:00:00.900Z'
+        let d = month + '/' + day + '/' + year + ' 00:00:00 -0500';
 
-        console.log('Subject => ', formData.subject);
-        console.log('startDate => ', formData.startDate);
-        console.log('description => ', formData.description);
-
-        createSchedule(formData.subject, d, formData.description).then(data => {
+        createSchedule(subject, d, formData.description).then(data => {
             console.log(data);
         })
     }
@@ -90,22 +87,29 @@ function CreateSchedule() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <Form.Item label="Existing subjects" required>
-                        <Select onChange={(e) => setSubject(e)}>
-                            <option value={null}></option>
-                            {
-                                subjects.map(subject => {
-                                    return (
-                                        <option value={subject.subject} key={subject.id}>{subject.subject}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item label="Subject" required>
-                        <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e)} />
-                    </Form.Item>
+                    {
+                        !isCreation ?
+                            <Form.Item label="Subjects" required>
+                                <Select onChange={(e) => { e == null ? setIsCreation(true) : setSubject(e) }}>
+                                    <Select.Option value={null}>Create a new subject</Select.Option>
+                                    {
+                                        subjects.map(subject => {
+                                            return (
+                                                <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                            :
+                            <Form.Item label="Subject (press Escape to view existing subject)" required>
+                                <Input type="text" name="subject" value={subject} onKeyUp={(e) => {
+                                    if (e.key === 'Escape') {
+                                        setIsCreation(false);
+                                    }
+                                }} onChange={(e) => setSubject(e.target.value)} />
+                            </Form.Item>
+                    }
                     <Form.Item label="Start date" required>
                         <Input type="date" name="startDate" onChange={handleChange} />
                     </Form.Item>

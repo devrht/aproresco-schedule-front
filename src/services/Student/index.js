@@ -52,8 +52,7 @@ export const getParentProfile = (start, end, page, size, sortName, sortType) => 
 }
 
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
-    let tenant = JSON.parse(localStorage.getItem("tenant"));
-    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&tenantKey=${tenant}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -68,7 +67,7 @@ export const getSchedule = (grade) => {
     let filter = 'startDate';
     let sort = 'asc';
     let tenant = JSON.parse(localStorage.getItem("tenant"));
-    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${0}&gradeMax=${100}&tenantKey=${tenant}&page=${page}&size=${size}&sort=${filter},${sort}`)
+    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
         .then(res => {
             return res.data;
         })
@@ -145,8 +144,7 @@ export const findParentProfileByEmail = (email, start, end, page, size, sortName
 }
 
 export const findScheduleByGrade = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
-    let tenant = JSON.parse(localStorage.getItem("tenant"));
-    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&tenantKey=${tenant}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -188,7 +186,7 @@ export const getShortMessages = (type, firstName, start, end, page, size, sortNa
 }
 
 export const getChild = (id) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/student-parent/${id}/student-profiles`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-profiles?parentId=${id}`)
         .then(res => {
             return res.data;
         })
@@ -206,7 +204,6 @@ export const getShortMessagesTemplates = (type, page, size, sortName, sortType) 
 }
 
 export const assignStudentlistToTeacher = (teacherId, studentIds) => {
-    console.log(`${routes.SERVER_ADDRESS}/schedule/${teacherId}/${studentIds}`);
     return axios.get(`${routes.SERVER_ADDRESS}/schedule/${teacherId}/${studentIds}`)
         .then(res => {
             return res.data;

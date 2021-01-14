@@ -67,6 +67,7 @@ function Settings(props) {
     }
 
     newTenant(formData.tenant).then(data => {
+      setTenant(formData.tenant); localStorage.setItem("tenant", JSON.stringify(formData.tenant))
       history.push(`/studentprofiles`)
     }).catch(err => {
       alert("Error occured when saving data, please retry!")

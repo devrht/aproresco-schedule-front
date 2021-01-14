@@ -137,7 +137,6 @@ function LayoutOfApp({ children }, props) {
             padding: '15px',
             alignItems: 'flex-end',
             justifyContent: 'flex-end',
-            paddingRight: '50px'
           }}>
             <SettingOutlined style={{ fontSize: '30px', marginRight: '20px'}} onClick={() => { history.push('/settings') }}/>
             <LogoutOutlined style={{ fontSize: '30px'}} onClick={() => { logout(); }} />

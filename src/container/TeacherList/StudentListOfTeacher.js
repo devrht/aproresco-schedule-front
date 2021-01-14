@@ -344,20 +344,15 @@ function StudentListOfTeacher(props) {
                 </Row>
 
                 {!studentList || !students ? <Spin /> :
-                    <Table
-                        columns={columns}
-                        dataSource={students}
-                        rowSelection={rowSelection}
-                        rowKey="id"
-                    // onRow={(teacher) => ({
-                    //     onClick: (e) => {
-                    //         console.log('to go', record)
-                    //         e.stopPropagation();
-                    //         history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
-                    //     }
-
-                    // })}
-                    />
+                    <>
+                        <h2>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}'s students </h2>
+                        <Table
+                            columns={columns}
+                            dataSource={students}
+                            rowSelection={rowSelection}
+                            rowKey="id"
+                        />
+                    </>
                 }
             </PageHeader>
         </div>

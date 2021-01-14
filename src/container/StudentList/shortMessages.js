@@ -235,8 +235,8 @@ function ShortMessageList(props) {
                         />
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('/messages/add/' + params.id)}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                        <Button key='3' size="medium" type="primary" onClick={() => history.push('/messages/add/' + params.id)}>
                             <PlusOutlined />
                         </Button>
                     </div>

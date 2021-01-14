@@ -543,8 +543,8 @@ function StudentList() {
                         <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('studentlist/add')}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end'}}>
+                        <Button key='3' size="medium" type="primary" onClick={() => history.push('studentlist/add')}>
                             <PlusOutlined />
                         </Button>
                     </div>

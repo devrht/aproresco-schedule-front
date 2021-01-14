@@ -48,10 +48,11 @@ const columns = [
         </div>,
         render: (record) => {
             return (
-            <div>
-                {record.grade}
-            </div>
-        )},
+                <div>
+                    {record.grade}
+                </div>
+            )
+        },
         key: 'grade',
     },
     {
@@ -82,7 +83,7 @@ function ShowParent(props) {
     const getDetailView = () => {
         setBookingsLoading(true);
         getChild(location.state.parent.id).then(data => {
-            setBookings(data);
+            setBookings(data.content);
         }).catch((err) => { console.log(err); setBookings([]) })
             .finally(() => setBookingsLoading(false))
     }
@@ -136,11 +137,15 @@ function ShowParent(props) {
                         </Card>
                     </Row>
                     {bookingsLoading ? <Spin /> :
-                        <Table
-                            columns={columns}
-                            dataSource={bookings}
-                            rowKey="id"
-                        />
+
+                        <>
+                            <h2>{parentDetail.firstName} {parentDetail.lastName}'s child </h2>
+                            <Table
+                                columns={columns}
+                                dataSource={bookings}
+                                rowKey="id"
+                            />
+                        </>
                     }
                 </PageHeader> : null}
         </div>
