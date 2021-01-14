@@ -51,7 +51,7 @@ export const newTenant = (value) => {
     let data = {
         tenants: [
             {
-              "key": value
+                "key": value
             }
         ]
     }
@@ -167,11 +167,16 @@ export const googleSignUp = (user) => {
     })
 }
 
-export const createSchedule = (subject, startDate, description) => {
+export const createSchedule = (subject, startDate, endDate, description) => {
+    let tenant = JSON.parse(localStorage.getItem("tenant"));
     let data = {
         subject,
         startDate,
-        description
+        endDate,
+        description,
+        tenant: {
+            "key": tenant
+        }
     }
     return axios.post(`${routes.SERVER_ADDRESS}/schedule`, data).then(res => {
         return res;
@@ -186,7 +191,7 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
         schoolName,
         schoolBoard,
         grade,
-        parent: {email: parent}
+        parent: { email: parent }
     }
     return axios.post(`${routes.SERVER_ADDRESS}/student-profile`, data).then(res => {
         return res;
@@ -239,7 +244,7 @@ export const createParent = (phoneNumber, countryCode, email, tenant) => {
         email,
         tenants: [
             {
-              "key": tenant
+                "key": tenant
             }
         ]
     }

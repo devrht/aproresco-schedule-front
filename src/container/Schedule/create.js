@@ -4,6 +4,7 @@ import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { createSchedule } from '../../services/Teacher'
 import { getSchedule } from '../../services/Student'
+import { useHistory } from 'react-router-dom'
 
 const formReducer = (state, event) => {
     return {
@@ -14,6 +15,7 @@ const formReducer = (state, event) => {
 
 function CreateSchedule() {
 
+    const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
@@ -48,8 +50,9 @@ function CreateSchedule() {
 
     const handleSubmit = () => {
 
-        if (subject && formData.startDate && formData.description) {
+        if (subject && formData.startDate && formData.endDate && formData.description) {
             if (subject.length <= 0
+                || formData.endDate.toString().length <= 0
                 || formData.startDate.toString().length <= 0
                 || formData.description.toString().length <= 0
             ) {
@@ -67,8 +70,15 @@ function CreateSchedule() {
         let year = date.getFullYear();
         let d = month + '/' + day + '/' + year + ' 00:00:00 -0500';
 
-        createSchedule(subject, d, formData.description).then(data => {
-            console.log(data);
+        date = new Date(formData.endDate);
+        day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
+        month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+        year = date.getFullYear();
+        let f = month + '/' + day + '/' + year + ' 00:00:00 -0500';
+
+        createSchedule(subject, d, f, formData.description).then(data => {
+            history.push(`/schedules`)
+
         })
     }
 
@@ -112,6 +122,9 @@ function CreateSchedule() {
                     }
                     <Form.Item label="Start date" required>
                         <Input type="date" name="startDate" onChange={handleChange} />
+                    </Form.Item>
+                    <Form.Item label="End date" required>
+                        <Input type="date" name="endDate" onChange={handleChange} />
                     </Form.Item>
                     <Form.Item label="Description" required>
                         <Input type="text" name="description" onChange={handleChange} />
