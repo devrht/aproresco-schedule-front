@@ -60,7 +60,7 @@ function ParentProfile() {
                             style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                history.push(`/parentProfiles/${record.id}`, { parent: record })
+                                history.push(`/parentProfiles/${record.id}/details`, { parent: record })
                             }}>
                             <p style={{ width: "50%", textAlign: "left" }}>
                                 {(record.firstName + " " + record.lastName).length <= 20 ?
@@ -243,11 +243,6 @@ function ParentProfile() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Parent profiles</p>}
                 extra={[
-                    <div style={{ display: 'flex' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('parentProfiles/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -256,6 +251,12 @@ function ParentProfile() {
                             changeInput={changeSearch}
                             searchList={searchList}
                         />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('/parentProfiles/add')}>
+                            <PlusOutlined />
+                        </Button>
                     </div>
                 </div>
 

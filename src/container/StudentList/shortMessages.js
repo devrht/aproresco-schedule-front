@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip} from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
@@ -20,7 +20,7 @@ function ShortMessageList(props) {
     const [sortingName, setSortingName] = useState("firstName");
     const [sortingType, setSortingType] = useState("asc");
     const deletingStatus = useSelector((state) => {
-      return state.Student.enableDeleting;
+        return state.Student.enableDeleting;
     })
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
@@ -73,7 +73,7 @@ function ShortMessageList(props) {
             },
             render: (record) => <Tooltip title={"Consulter les details de l'étudiant"}>
                 <Button
-                    style={{backgroundColor:"transparent",border:"0px", cursor: 'pointer'}}
+                    style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer' }}
                     onClick={(e) => {
                         e.stopPropagation();
                         history.push(`/studentlist/studentDetail/${record.id}`)
@@ -133,9 +133,9 @@ function ShortMessageList(props) {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                getShortMessagesByDate(params.id, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                if(data) {
-                    if(data.content) {
+            getShortMessagesByDate(params.id, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                if (data) {
+                    if (data.content) {
                         setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
@@ -163,8 +163,8 @@ function ShortMessageList(props) {
         }
         else {
             getShortMessages(params.id, search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                if(data) {
-                    if(data.content) {
+                if (data) {
+                    if (data.content) {
                         setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
@@ -211,7 +211,7 @@ function ShortMessageList(props) {
     const handleTableChange = (pagination, filters, sorter) => {
         setTableProps({
             ...tableProps,
-            pageIndex: pagination.current-1,
+            pageIndex: pagination.current - 1,
             pageSize: pagination.pageSize,
         });
         setLoading(true);
@@ -219,42 +219,45 @@ function ShortMessageList(props) {
     };
     return (
         <React.Fragment>
-            
-        {/* <LayoutOfApp> */}
-        <PageHeader
-            ghost={false}
-            title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>Short Messages</p>}
-            extra={[
-                <Button key='3' size="large" type="primary" onClick={() => history.push('/messages/add/'+params.id)}>
-                    <PlusOutlined />
-                </Button>
-            ]}
-        >
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div style={{ display: 'flex', flex: 1 }}>
-                    <SearchFilter
-                        changeInput={changeSearch}
-                        searchList={searchList}
-                    />
-                </div>
-            </div>
-            
-            {!studentList ? <Spin className="loading-table" /> :
-                <Table
-                    className="table-padding"
-                    columns={columns}
-                    loading={loading}
-                    dataSource={studentList}
-                    onChange={handleTableChange}
-                    pagination={{
-                        total: tableProps.totalCount,
-                        pageSize: tableProps.pageSize,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
-                    }}
-                />}
 
-        </PageHeader>
-        {/* </LayoutOfApp> */}
+            {/* <LayoutOfApp> */}
+            <PageHeader
+                ghost={false}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Short Messages</p>}
+                extra={[
+                ]}
+            >
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ display: 'flex', flex: 1 }}>
+                        <SearchFilter
+                            changeInput={changeSearch}
+                            searchList={searchList}
+                        />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('/messages/add/' + params.id)}>
+                            <PlusOutlined />
+                        </Button>
+                    </div>
+                </div>
+
+                {!studentList ? <Spin className="loading-table" /> :
+                    <Table
+                        className="table-padding"
+                        columns={columns}
+                        loading={loading}
+                        dataSource={studentList}
+                        onChange={handleTableChange}
+                        pagination={{
+                            total: tableProps.totalCount,
+                            pageSize: tableProps.pageSize,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
+                        }}
+                    />}
+
+            </PageHeader>
+            {/* </LayoutOfApp> */}
         </React.Fragment>
     )
 }

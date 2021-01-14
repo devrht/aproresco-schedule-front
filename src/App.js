@@ -51,7 +51,7 @@ function App() {
             <Route exact path="/studentlist/teacher/:id" name="StudentOfTeacher Page" render={props => <StudentsOfTeacher {...props} />} />
             <Route exact path="/teacherlist" name="Teacher Page" render={props => <TeacherList {...props} />} />
             <Route exact path="/teacherlist/add" name="Create Parent Page" render={props => <CreateAvailibility {...props} />} />
-            <Route exact path="/parentProfiles/:id" name="Show parent Page" render={props => <ShowParent {...props} />} />
+            <Route exact path="/parentProfiles/:id/details" name="Show parent Page" render={props => <ShowParent {...props} />} />
             <Route exact path="/schedules" name="Schedules Page" render={props => <Schedules {...props} />} />
             <Route exact path="/schedules/add" name="Create Schedule Page" render={props => <CreateSchedule {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />

@@ -294,11 +294,6 @@ function Schedule() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Schedules</p>}
                 extra={[
-                    <div style={{ display: 'flex' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('schedules/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -308,6 +303,12 @@ function Schedule() {
                             searchList={searchList}
                             type='schedule'
                         />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('/schedules/add')}>
+                            <PlusOutlined />
+                        </Button>
                     </div>
                 </div>
 

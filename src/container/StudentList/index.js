@@ -532,11 +532,6 @@ function StudentList() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student bookings</p>}
                 extra={[
-                    <div style={{ display: 'flex' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('studentlist/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -546,6 +541,12 @@ function StudentList() {
                             searchList={searchList}
                         />
                         <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('studentlist/add')}>
+                            <PlusOutlined />
+                        </Button>
                     </div>
                 </div>
 

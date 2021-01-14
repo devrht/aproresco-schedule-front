@@ -293,11 +293,6 @@ function StudentProfile() {
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student profiles</p>}
                 extra={[
-                    <div style={{ display: 'flex' }}>
-                        <Button key='3' size="large" type="primary" onClick={() => history.push('studentprofiles/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
                 ]}
             >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -306,6 +301,12 @@ function StudentProfile() {
                             changeInput={changeSearch}
                             searchList={searchList}
                         />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: '10%' }}>
+                        <Button key='3' size="large" type="primary" onClick={() => history.push('/studentprofiles/add')}>
+                            <PlusOutlined />
+                        </Button>
                     </div>
                 </div>
 
