@@ -30,6 +30,7 @@ function AddMessage(props) {
     const [isEmail, setIsEmail] = useState(false);
     const [async, setAsync] = useState(false);
     const [body, setBody] = useState('');
+    const [name, setName] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [templates, setTemplates] = useState([]);
     const [template, setTemplate] = useState(null);
@@ -60,7 +61,7 @@ function AddMessage(props) {
         // let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
         // if (comment == null || s == null || children == null)
         //     alert('Fill the form');
-        createMessage(params.id, startDate, endDate, body, subject, async, asTemplate).then(data => {
+        createMessage(params.id, startDate, endDate, body, subject, async, asTemplate, name).then(data => {
             history.push(`/short-messages/${params.id}`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -124,7 +125,7 @@ function AddMessage(props) {
                                 setOpen(false);
                             }}
                             loading={loadingS}
-                            getOptionLabel={(record) => record.id}
+                            getOptionLabel={(record) => record.name}
                             // style={{ minWidth: 450, marginLeft: -250 }}
                             renderInput={(params) =>
                                 <TextField {...params}
@@ -151,6 +152,12 @@ function AddMessage(props) {
                     <Form.Item label="Save as template" required>
                         <Checkbox onChange={(e) => setAsTemplate(e.target.checked)} />
                     </Form.Item>
+                    {/* {
+                        asTemplate ?
+                            <Form.Item label="Template name" required>
+                                <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
+                            </Form.Item> : null
+                    } */}
                     <Form.Item label="is SMS" required>
                         <Checkbox onChange={(e) => setIsSMS(e.target.checked)} />
                     </Form.Item>

@@ -63,7 +63,9 @@ function CreateTeacher() {
         setLoading(true);
 
         createTeacher(formData.firstName, formData.lastName, formData.email, formData.iemail, formData.schoolName, formData.schoolBoard, formData.grade, formData.subjects, formData.phone).then(data => {
-            // history.push(`/studentprofiles`)
+            // console.log(data)
+            history.push(`/teacherprofiles`);
+            // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
