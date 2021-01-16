@@ -37,7 +37,7 @@ function StudentDetail(props) {
             { studentDetail ?
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px'}}>{studentDetail.studentProfile.firstName} {studentDetail.studentProfile.lastName}</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>{studentDetail.studentProfile.firstName} {studentDetail.studentProfile.lastName}</p>}
                 extra={[
                     <Button key='4' type="primary"
                         style={{ display: studentDetail.teacherAvailability ? 'block' : 'none' }}

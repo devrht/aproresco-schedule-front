@@ -210,7 +210,7 @@ const columns = [
                 ghost={false}
                 title={
                     <div style={{ display: "flex", flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
-                        <p style={{ fontSize: '3em', textAlign: 'center', margin: '20px' }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>
+                        <p style={{ fontSize: '3em', textAlign: 'center', margin: '20px', marginBottom: '20px'  }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>
                         <Tooltip title={admin ? "Administrator" : "Not An Administrator"}>
                             <FontAwesomeIcon onClick={() => markTeacherAsAdmin()} icon={faCrown} color={admin ? "gold" : "gray"} size={"2x"} style={{ marginLeft: 20 }} />
                         </Tooltip>

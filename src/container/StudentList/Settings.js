@@ -104,7 +104,7 @@ function Settings(props) {
     <div>
       <PageHeader
         ghost={false}
-        title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Settings</p>}
+        title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Settings</p>}
         extra={[
         ]}
       >

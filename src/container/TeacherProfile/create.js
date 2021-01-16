@@ -78,7 +78,7 @@ function CreateTeacher() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Create Teacher</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Teacher</p>}
                 extra={[
                 ]}
             >

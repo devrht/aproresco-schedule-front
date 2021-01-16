@@ -223,7 +223,7 @@ function ShortMessageList(props) {
             {/* <LayoutOfApp> */}
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Short Messages</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Short Messages</p>}
                 extra={[
                 ]}
             >

@@ -87,7 +87,7 @@ function CreateSchedule() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Create Schedule</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Schedule</p>}
                 extra={[
                 ]}
             >

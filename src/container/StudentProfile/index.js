@@ -291,7 +291,7 @@ function StudentProfile() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Student Profiles</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Student Profiles</p>}
                 extra={[
                 ]}
             >

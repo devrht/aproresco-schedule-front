@@ -124,7 +124,7 @@ function StudentDetail(props) {
             {studentDetail ?
                 <PageHeader
                     ghost={false}
-                    title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>{studentDetail.firstName} {studentDetail.lastName}</p>}
+                    title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>{studentDetail.firstName} {studentDetail.lastName}</p>}
                 >
 
                     <Row gutter={24} style={{ marginBottom: '3%' }}>

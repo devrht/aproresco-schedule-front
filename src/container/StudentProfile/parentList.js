@@ -246,7 +246,7 @@ function ParentProfile() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Parent Profiles</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Parent Profiles</p>}
                 extra={[
                 ]}
             >
