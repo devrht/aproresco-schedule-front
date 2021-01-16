@@ -60,7 +60,7 @@ function CreateParent() {
         setLoading(true);
 
         createParent(formData.firstName, formData.lastName, phone, code, formData.email).then(data => {
-            // history.push(`/parentProfiles`)
+            history.push(`/parentProfiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
