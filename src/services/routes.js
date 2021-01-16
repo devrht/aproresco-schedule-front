@@ -1,5 +1,5 @@
-export const SERVER_ADDRESS = 'https://tower.watu.fi:8443';
-// export const SERVER_ADDRESS = 'https://meet.appui.io:8443';
+// export const SERVER_ADDRESS = 'https://tower.watu.fi:8443';
+export const SERVER_ADDRESS = 'https://meet.appui.io:8443';
 
 export const OAUTH = {
     GRANT_TYPE: 'password',
