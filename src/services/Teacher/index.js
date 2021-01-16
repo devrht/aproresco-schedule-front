@@ -237,14 +237,16 @@ export const createAvailibility = (teacherProfile, schedule) => {
     }).catch(err => console.log(err));
 }
 
-export const createParent = (phoneNumber, countryCode, email, tenant) => {
+export const createParent = (firstName, lastName, phoneNumber, countryCode, email) => {
     let data = {
         phoneNumber,
         countryCode,
+        firstName,
+        lastName,
         email,
         tenants: [
             {
-                "key": tenant
+                "key": JSON.parse(localStorage.getItem("tenant"))
             }
         ]
     }

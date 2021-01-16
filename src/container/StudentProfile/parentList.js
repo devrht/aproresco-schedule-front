@@ -85,20 +85,7 @@ function ParentProfile() {
         },
         {
             title: <div><span>Activation Date </span>
-                {sortingName === "activationDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "activationDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "activationDate" && sortingType === "" && ""}
             </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("activationDate");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
-                    }
-                };
-            },
             render: (record) => (
                 <div>
                     {

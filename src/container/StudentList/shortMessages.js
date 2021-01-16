@@ -83,21 +83,7 @@ function ShortMessageList(props) {
             fixed: 'left',
         },
         {
-            title: <div><span>Message Content </span>
-                {sortingName === "body" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "body" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "body" && sortingType === "" && ""}
-            </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("body");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
-                    }
-                };
-            },
+            title: <div><span>Message Content </span></div>,
             dataIndex: 'body',
             key: 'body',
         },

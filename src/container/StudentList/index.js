@@ -142,14 +142,14 @@ function StudentList() {
         },
         {
             title: <div><span>Subject </span>
-                {sortingName === "studentProfile.subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "studentProfile.subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "studentProfile.subject" && sortingType === "" && ""}
+                {sortingName === "subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "subject" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("studentProfile.subject");
+                        setSortingName("subject");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -189,14 +189,14 @@ function StudentList() {
         ,
         {
             title: <div><span>Grade </span>
-                {sortingName === "studentProfile.grade" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "studentProfile.grade" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "studentProfile.grade" && sortingType === "" && ""}
+                {sortingName === "grade" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "grade" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "grade" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("studentProfile.grade");
+                        setSortingName("grade");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -215,20 +215,7 @@ function StudentList() {
         {
             title: 'Teacher Name',
             title: <div><span>Teacher Name </span>
-                {sortingName === "teacherAvailability.teacherProfile.firstName" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "teacherAvailability.teacherProfile.firstName" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "teacherAvailability.teacherProfile.firstName" && sortingType === "" && ""}
             </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("teacherAvailability.teacherProfile.firstName");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
-                    }
-                };
-            },
             render: (record) => {
                 var isSubjectContains = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.includes(record.subject) : false : false;
                 const text = <div className="grade-coloumn-tooltip">

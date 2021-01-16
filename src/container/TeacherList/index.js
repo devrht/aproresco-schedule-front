@@ -9,7 +9,7 @@ import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined , PlusOutlined} from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined, PlusOutlined } from "@ant-design/icons"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -227,14 +227,14 @@ function TeacherList() {
     const columns = [
         {
             title: <div><span>Name </span>
-                {sortingName === "teacherProfile.firstName" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "teacherProfile.firstName" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "teacherProfile.firstName" && sortingType === "" && ""}
+                {sortingName === "firstName" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "firstName" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "firstName" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("teacherProfile.firstName");
+                        setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
                         else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
@@ -295,7 +295,8 @@ function TeacherList() {
             key: 'startDate',
         },
         {
-            title: 'Subjects',
+            title: <div><span>Subjects </span>
+            </div>,
             key: 'subjects',
             render: (record) => {
                 return (
@@ -334,10 +335,10 @@ function TeacherList() {
                     </div>
                 )
             }
-        }
-        ,
+        },
         {
-            title: 'Grades',
+            title: <div><span>Grades </span>
+            </div>,
             key: 'grades',
             render: (record) => {
                 return (

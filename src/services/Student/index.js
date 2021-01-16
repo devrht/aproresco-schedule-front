@@ -73,6 +73,14 @@ export const getSchedule = (grade) => {
         })
 }
 
+
+export const getCountry = () => {
+    return axios.get(`http://ip-api.com/json`)
+        .then(res => {
+            return res.data;
+        })
+}
+
 export const getStudentProfileByDate = (start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/student-profiles?page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
