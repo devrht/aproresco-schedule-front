@@ -122,9 +122,9 @@ function Settings(props) {
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
             onClick={() => onBridgeAction(bridge ? 0 : 1)}> {!bridge ? 'Open' : 'Close'} the bridge </Button>
 
-          <Button
+          {/* <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
-            onClick={() => onPersistAction(!persist)}> {!persist ? 'Enable' : 'Disable'} Persistence </Button>
+            onClick={() => onPersistAction(!persist)}> {!persist ? 'Enable' : 'Disable'} Persistence </Button> */}
 
         </div>
 
@@ -134,7 +134,7 @@ function Settings(props) {
           layout="vertical"
           style={{ width: '100%', marginTop: '2%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
         >
-          <Form.Item label="New tenant" size={'large'} style={{ width: '80%' }}>
+          <Form.Item label="Enter the key of the organization you want to join" size={'large'} style={{ width: '80%' }}>
             <Input type="tenant" name="tenant" onChange={handleChange} style={{ height: '50px' }} />
           </Form.Item>
 
@@ -145,7 +145,7 @@ function Settings(props) {
         {
           teacher != null ?
             <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>
-              <h1>Tenants</h1>
+              <h1>My Organizations</h1>
               <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
                 <Select defaultValue={tenant} size={'large'} style={{ width: '100%' }} onChange={(e) => { setTenant(e); localStorage.setItem("tenant", JSON.stringify(e)) }}>
                   {teacher.tenants ? teacher.tenants.map(tenant => {

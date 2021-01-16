@@ -14,56 +14,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCrown, faShieldAlt } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-const columns = [
-    {
-        title: <div><span>Name </span>
-        </div>,
-        render: (record) =>
-            <div
-                style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
-            >
-                <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
-                    <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
-                    <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
-                    <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
-                </Tooltip>
-                <Tooltip title={(record.firstName + " " + record.lastName)}>
-                    <Button
-                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}>
-                        <p style={{ width: "50%", textAlign: "left" }}>
-                            {(record.firstName + " " + record.lastName).length <= 20 ?
-                                record.firstName + " " + record.lastName :
-                                (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
-                        </p>
-                    </Button>
-                </Tooltip>
-            </div>,
-        key: 'name',
-        fixed: 'left',
-    },
-    // {
-    //     title: 'Start Date',
-    //     dataIndex: 'startDate',
-    //     key: 'startDate',
-    //     fixed: 'left',
-    // },
-    // {
-    //     title: 'Subject',
-    //     dataIndex: 'subject',
-    //     key: 'subjects',
-    // },
-    {
-        title: 'Grade',
-        dataIndex: 'grade',
-        key: 'grade',
-    },
-    // {
-    //     title: 'Action',
-    //     key: 'operation',
-    //     fixed: 'right',
-    //     render: () => <Button>Edit</Button>,
-    // },
-];
 function StudentListOfTeacher(props) {
 
     const dispatch = useDispatch();
@@ -108,6 +58,63 @@ function StudentListOfTeacher(props) {
         getListView();
     }, []);
 
+
+const columns = [
+    {
+        title: <div><span>Name </span>
+        </div>,
+        render: (record) =>
+            <div
+                style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+            >
+                <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
+                    <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
+                    <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
+                    <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
+                </Tooltip>
+                <Tooltip title={(record.firstName + " " + record.lastName)}>
+                    <Button
+                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            history.push(`/studentprofiles/${record.id}/details`, { student: record })
+                            // history.push(`/studentlist/studentDetail/${record.id}`)
+                        }}>
+                        <p style={{ width: "50%", textAlign: "left" }}>
+                            {(record.firstName + " " + record.lastName).length <= 20 ?
+                                record.firstName + " " + record.lastName :
+                                (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                        </p>
+                    </Button>
+                </Tooltip>
+            </div>,
+        key: 'name',
+        fixed: 'left',
+    },
+    // {
+    //     title: 'Start Date',
+    //     dataIndex: 'startDate',
+    //     key: 'startDate',
+    //     fixed: 'left',
+    // },
+    // {
+    //     title: 'Subject',
+    //     dataIndex: 'subject',
+    //     key: 'subjects',
+    // },
+    {
+        title: 'Grade',
+        dataIndex: 'grade',
+        key: 'grade',
+    },
+    // {
+    //     title: 'Action',
+    //     key: 'operation',
+    //     fixed: 'right',
+    //     render: () => <Button>Edit</Button>,
+    // },
+];
+
     const getListView = () => {
         setStudents(null);
         setStudentList(null);
@@ -125,7 +132,7 @@ function StudentListOfTeacher(props) {
                     // elt.studentProfile.subject = student.subject;
                     elt.studentProfile.id = student.studentProfile.id;
                     elt.studentProfile.onlineStatus = student.studentProfile.onlineStatus;
-                    // elt.studentProfile.startDate = student.startDate
+                    elt.studentProfile.studentProfile = student.studentProfile
                     datas.push(elt.studentProfile);
                     setStudentsTmp(datas);
                 });

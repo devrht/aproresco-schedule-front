@@ -3,8 +3,32 @@ import { Row, Col, PageHeader, Card, Table, Spin, Tooltip, Button } from 'antd';
 import { useLocation } from "react-router-dom";
 import { getChild } from '../../services/Student'
 import Moment from 'react-moment';
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
+
+function ShowParent(props) {
+
+    const location = useLocation();
+    const { params } = props.match;
+    const history = useHistory();
+    const [bookings, setBookings] = useState([]);
+    const [bookingsLoading, setBookingsLoading] = useState(true);
+    const [parentDetail, setParentDetail] = useState(location.state.parent);
+
+    useEffect(() => {
+        console.log(parentDetail)
+        getDetailView();
+    }, []);
+
+    const getDetailView = () => {
+        setBookingsLoading(true);
+        getChild(location.state.parent.id).then(data => {
+            setBookings(data.content);
+        }).catch((err) => { console.log(err); setBookings([]) })
+            .finally(() => setBookingsLoading(false))
+    }
+
 
 const columns = [
     {
@@ -21,7 +45,12 @@ const columns = [
                 </Tooltip>
                 <Tooltip title={(record.firstName + " " + record.lastName)}>
                     <Button
-                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}>
+                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            history.push(`/studentprofiles/${record.id}/details`, { student: record })
+                            // history.push(`/studentlist/studentDetail/${record.id}`)
+                        }}>
                         <p style={{ width: "50%", textAlign: "left" }}>
                             {(record.firstName + " " + record.lastName).length <= 20 ?
                                 record.firstName + " " + record.lastName :
@@ -66,27 +95,6 @@ const columns = [
         key: 'schoolName',
     }
 ];
-
-function ShowParent(props) {
-
-    const location = useLocation();
-    const { params } = props.match;
-    const [bookings, setBookings] = useState([]);
-    const [bookingsLoading, setBookingsLoading] = useState(true);
-    const [parentDetail, setParentDetail] = useState(location.state.parent);
-
-    useEffect(() => {
-        console.log(parentDetail)
-        getDetailView();
-    }, []);
-
-    const getDetailView = () => {
-        setBookingsLoading(true);
-        getChild(location.state.parent.id).then(data => {
-            setBookings(data.content);
-        }).catch((err) => { console.log(err); setBookings([]) })
-            .finally(() => setBookingsLoading(false))
-    }
 
     return (
         <div>

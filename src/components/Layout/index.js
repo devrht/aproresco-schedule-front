@@ -87,6 +87,7 @@ function LayoutOfApp({ children }, props) {
   const logout = () => {
     setLogged(false);
     localStorage.removeItem("token");
+    localStorage.removeItem("tenant");
     localStorage.removeItem("expireAt");
     window.location.reload();
   }
@@ -131,16 +132,18 @@ function LayoutOfApp({ children }, props) {
       }
       <Layout className="childLayout" style={{ marginLeft: !logged ? 0 : '200px' }}>
         <Content className="content">
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            padding: '15px',
-            alignItems: 'flex-end',
-            justifyContent: 'flex-end',
-          }}>
-            <SettingOutlined style={{ fontSize: '30px', marginRight: '20px'}} onClick={() => { history.push('/settings') }}/>
-            <LogoutOutlined style={{ fontSize: '30px'}} onClick={() => { logout(); }} />
-          </div>
+          {
+            logged ?
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                padding: '15px',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+              }}>
+                <SettingOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/settings') }} />
+                <LogoutOutlined style={{ fontSize: '30px' }} onClick={() => { logout(); }} />
+              </div> : null}
           <div className="content-div" style={{ padding: 0 }}>{children}</div>
         </Content>
       </Layout>

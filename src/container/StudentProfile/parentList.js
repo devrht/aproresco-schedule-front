@@ -74,9 +74,14 @@ function ParentProfile() {
             fixed: 'left',
         },
         {
-            title: 'email',
+            title: 'Email',
             dataIndex: 'email',
             key: 'email',
+        },
+        {
+            title: 'Phone Number',
+            dataIndex: 'phoneNumber',
+            key: 'phoneNumber',
         },
         {
             title: <div><span>Activation Date </span>
@@ -241,7 +246,7 @@ function ParentProfile() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Parent profiles</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px' }}>Parent Profiles</p>}
                 extra={[
                 ]}
             >

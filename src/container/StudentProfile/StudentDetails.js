@@ -3,86 +3,14 @@ import { Row, Col, PageHeader, Card, Table, Spin, Tooltip, Button } from 'antd';
 import { useLocation } from "react-router-dom";
 import { getStudentListById } from '../../services/Student'
 import Moment from 'react-moment';
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
-
-const columns = [
-    {
-        title: <div><span>Name </span>
-        </div>,
-        render: (record) =>
-            <div
-                style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
-            >
-                <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
-                    <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
-                    <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
-                    <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
-                </Tooltip>
-                <Tooltip title={(record.firstName + " " + record.lastName)}>
-                    <Button
-                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}>
-                        <p style={{ width: "50%", textAlign: "left" }}>
-                            {(record.firstName + " " + record.lastName).length <= 20 ?
-                                record.firstName + " " + record.lastName :
-                                (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
-                        </p>
-                    </Button>
-                </Tooltip>
-            </div>,
-        key: 'name',
-        fixed: 'left',
-    },
-    {
-        title: <div><span>Start Date </span>
-        </div>,
-        render: (record) => (
-            <div>
-                {
-                    <Moment format="D MMM YYYY HH:MM" withTitle>
-                        {record.schedule.startDate}
-                    </Moment>
-                }
-            </div>
-        ),
-        key: 'startDate',
-    },
-    {
-        title: <div><span>End Date </span>
-        </div>,
-        render: (record) => {
-            return (
-                <div>
-                    {
-                        <Moment format="D MMM YYYY HH:MM" withTitle>
-                            {record.schedule.endDate}
-                        </Moment>
-                    }
-                </div>
-            )
-        },
-        key: 'endDate',
-    },
-    {
-        title: <div><span>Subject</span>
-        </div>,
-        render: (record) => (
-            <div>
-                {record.schedule.subject}
-            </div>
-        ),
-        key: 'subject',
-    },
-    {
-        title: 'Grade',
-        dataIndex: 'grade',
-        key: 'grade',
-    },
-];
 
 function StudentDetail(props) {
 
     const location = useLocation();
+    const history = useHistory();
     const { params } = props.match;
     const [bookings, setBookings] = useState([]);
     const [bookingsLoading, setBookingsLoading] = useState(true);
@@ -106,12 +34,90 @@ function StudentDetail(props) {
                 // elt.studentProfile.subject = student.subject;
                 elt.studentProfile.id = student.studentProfile.id;
                 elt.studentProfile.schedule = student.schedule;
-                // elt.studentProfile.startDate = student.startDate
+                elt.studentProfile.studentProfile = student.studentProfile
                 setBookings([...bookings, elt.studentProfile]);
             });
         }).catch((err) => { console.log(err); setBookings([]) })
             .finally(() => setBookingsLoading(false))
     }
+
+    const columns = [
+        {
+            title: <div><span>Name </span>
+            </div>,
+            render: (record) =>
+                <div
+                    style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+                >
+                    <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
+                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
+                    </Tooltip>
+                    <Tooltip title={(record.firstName + " " + record.lastName)}>
+                        <Button
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                history.push(`/studentlist/studentDetail/${record.id}`, { student: record })
+                            }}>
+                            <p style={{ width: "50%", textAlign: "left" }}>
+                                {(record.firstName + " " + record.lastName).length <= 20 ?
+                                    record.firstName + " " + record.lastName :
+                                    (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                            </p>
+                        </Button>
+                    </Tooltip>
+                </div>,
+            key: 'name',
+            fixed: 'left',
+        },
+        {
+            title: <div><span>Start Date </span>
+            </div>,
+            render: (record) => (
+                <div>
+                    {
+                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                            {record.schedule.startDate}
+                        </Moment>
+                    }
+                </div>
+            ),
+            key: 'startDate',
+        },
+        {
+            title: <div><span>End Date </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div>
+                        {
+                            <Moment format="D MMM YYYY HH:MM" withTitle>
+                                {record.schedule.endDate}
+                            </Moment>
+                        }
+                    </div>
+                )
+            },
+            key: 'endDate',
+        },
+        {
+            title: <div><span>Subject</span>
+            </div>,
+            render: (record) => (
+                <div>
+                    {record.schedule.subject}
+                </div>
+            ),
+            key: 'subject',
+        },
+        {
+            title: 'Grade',
+            dataIndex: 'grade',
+            key: 'grade',
+        },
+    ];
 
     return (
         <div>

@@ -8,6 +8,7 @@ import { getShortMessagesTemplates } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import TextArea from 'antd/lib/input/TextArea';
 
 const formReducer = (state, event) => {
     return {
@@ -147,23 +148,24 @@ function AddMessage(props) {
                         <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
                     </Form.Item>
                     <Form.Item label="Body" required>
-                        <Input type="text" name="body" value={body} onChange={(e) => setBody(e.target.value)} />
+                        <TextArea type="text" name="body" value={body} onChange={(e) => setBody(e.target.value)} />
                     </Form.Item>
-                    <Form.Item label="Save as template" required>
-                        <Checkbox onChange={(e) => setAsTemplate(e.target.checked)} />
-                    </Form.Item>
-                    {/* {
-                        asTemplate ?
-                            <Form.Item label="Template name" required>
-                                <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
-                            </Form.Item> : null
-                    } */}
-                    <Form.Item label="is SMS" required>
-                        <Checkbox onChange={(e) => setIsSMS(e.target.checked)} />
-                    </Form.Item>
-                    <Form.Item label="is Email" required>
-                        <Checkbox onChange={(e) => setIsEmail(e.target.checked)} />
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row', 
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Form.Item label="Save as template" required>
+                            <Checkbox onChange={(e) => setAsTemplate(e.target.checked)} />
+                        </Form.Item>
+                        <Form.Item label="send as SMS" required>
+                            <Checkbox onChange={(e) => setIsSMS(e.target.checked)} />
+                        </Form.Item>
+                        <Form.Item label="send as Email" required>
+                            <Checkbox onChange={(e) => setIsEmail(e.target.checked)} />
+                        </Form.Item>
+                    </div>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">Submit</Button>
                     </Form.Item>

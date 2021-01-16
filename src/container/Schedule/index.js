@@ -11,7 +11,7 @@ import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } f
 
 function Schedule() {
     const history = useHistory();
-    const [schedules, setSchedules] = useState();
+    const [schedules, setSchedules] = useState([]);
     const [sortingName, setSortingName] = useState("startDate");
     const [sortingType, setSortingType] = useState("asc");
     const [gradeMin, setGradeMin] = useState("0");
@@ -192,10 +192,11 @@ function Schedule() {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             getScheduleByDate(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
+                        console.log('DATA ==> ', data.content)
                         setSchedules(data.content)
+                        console.log("NEW ==> ", schedules);
                         setTableProps({
                             ...tableProps,
                             totalCount: data.totalCount,
@@ -222,9 +223,9 @@ function Schedule() {
         }
         else {
             findScheduleByGrade(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
+                        console.log('DATA ==> ', data.content)
                         setSchedules(data.content)
                         setTableProps({
                             ...tableProps,
