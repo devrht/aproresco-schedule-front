@@ -542,6 +542,10 @@ function TeacherList() {
             return '';
         }
 
+        if (!profile.gardes) {
+            return '';
+        }
+
         for (i = 0; i < profile.grades.length; i++) {
             if (i == 0) {
                 result += profile.grades[i];
