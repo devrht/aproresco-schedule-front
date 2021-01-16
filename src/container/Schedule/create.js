@@ -19,6 +19,7 @@ function CreateSchedule() {
     const [loading, setLoading] = useState(false);
     const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
+    const [grades, setGrades] = useState([]);
     const [subject, setSubject] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
@@ -36,7 +37,6 @@ function CreateSchedule() {
 
     const getSubjects = () => {
         getSchedule(1).then(data => {
-            console.log(data)
             var obj = {};
             for (var i = 0, len = data.content.length; i < len; i++)
                 obj[data.content[i]['subject']] = data.content[i];
@@ -47,6 +47,10 @@ function CreateSchedule() {
             setSubjects(data.content)
         });
     }
+
+    const handleChangeSelect = (value) => {
+        setGrades(value.toString().split(',').map(i=>Number(i)));
+      }
 
     const handleSubmit = () => {
 
@@ -76,7 +80,7 @@ function CreateSchedule() {
         year = date.getFullYear();
         let f = month + '/' + day + '/' + year + ' 00:00:00 -0500';
 
-        createSchedule(subject, d, f, formData.description).then(data => {
+        createSchedule(subject, d, f, formData.description, grades).then(data => {
             history.push(`/schedules`)
 
         })
@@ -87,7 +91,7 @@ function CreateSchedule() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Schedule</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Schedule</p>}
                 extra={[
                 ]}
             >
@@ -128,6 +132,28 @@ function CreateSchedule() {
                     </Form.Item>
                     <Form.Item label="Description" required>
                         <Input type="text" name="description" onChange={handleChange} />
+                    </Form.Item>
+                    <Form.Item label="Grades" required>
+                        <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: '100%' }}
+                            placeholder="Please select grades"
+                            onChange={handleChangeSelect}
+                        >
+                            <Select.Option value={1}>1</Select.Option>
+                            <Select.Option value={2}>2</Select.Option>
+                            <Select.Option value={3}>3</Select.Option>
+                            <Select.Option value={4}>4</Select.Option>
+                            <Select.Option value={5}>5</Select.Option>
+                            <Select.Option value={6}>6</Select.Option>
+                            <Select.Option value={7}>7</Select.Option>
+                            <Select.Option value={8}>8</Select.Option>
+                            <Select.Option value={9}>9</Select.Option>
+                            <Select.Option value={10}>10</Select.Option>
+                            <Select.Option value={11}>11</Select.Option>
+                            <Select.Option value={12}>12</Select.Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" size="large" htmlType="submit">Submit</Button>
