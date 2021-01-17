@@ -21,16 +21,28 @@ function Login() {
         if (user) {
           getTeacherProfile(data.profileObj.email).then(data => {
             if (localStorage.getItem("email")) {
-              console.log(localStorage.getItem("email"))
               let mail = JSON.parse(localStorage.getItem("email"));
               if (mail)
                 if (mail != data.externalEmail) {
                   localStorage.removeItem('tenant');
                 }
             }
+            if (data.tenants.length > 0) {
+              if (localStorage.getItem("tenant")) {
+                if (data.tenants.filter(t => t.key == localStorage.getItem("tenant")).length == 0) {
+                  localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+                } else {
+                  localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+                }
+              } else {
+                localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+              }
+            } else {
+              localStorage.removeItem('tenant');
+            }
             localStorage.setItem('email', JSON.stringify(data.externalEmail));
             localStorage.setItem('id', JSON.stringify(data.id));
-            history.push(`/studentprofiles`);
+            history.push(`/teacherlist`);
           });
         } else {
           alert('your account is not registered in the system');
