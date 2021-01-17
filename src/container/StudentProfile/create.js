@@ -15,7 +15,7 @@ const formReducer = (state, event) => {
 function CreateStudent() {
 
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
 
@@ -49,15 +49,7 @@ function CreateStudent() {
             return
         }
 
-        console.log('Firs => ', formData.firstName);
-        console.log('last => ', formData.lastName);
-        console.log('email => ', formData.email);
-        console.log('schoolname => ', formData.schoolName);
-        console.log('schoolboard => ', formData.schoolBoard);
-        console.log('parent => ', formData.parentEmail);
-        console.log('grade => ', formData.grade);
-
-        setLoading(true);
+        setSubmitting(true);
 
         createStudent(formData.firstName, formData.lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, formData.parentEmail).then(data => {
             history.push(`/studentprofiles`)
@@ -65,7 +57,7 @@ function CreateStudent() {
             alert("Error occured when saving data, please retry!")
             console.log(err)
         })
-        .finally(() => setLoading(false));
+        .finally(() => setSubmitting(false));
     }
 
     return (
@@ -105,7 +97,11 @@ function CreateStudent() {
                         <Input type="email" name="parentEmail" onChange={handleChange} />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Student Profile'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>

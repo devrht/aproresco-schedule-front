@@ -25,6 +25,7 @@ function CreateParent() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         getCountry().then(data => {
@@ -57,7 +58,7 @@ function CreateParent() {
             return
         }
 
-        setLoading(true);
+        setSubmitting(true);
 
         createParent(formData.firstName, formData.lastName, phone, code, formData.email).then(data => {
             history.push(`/parentProfiles`)
@@ -65,7 +66,7 @@ function CreateParent() {
             alert("Error occured when saving data, please retry!")
             console.log(err)
         })
-            .finally(() => setLoading(false));
+            .finally(() => setSubmitting(false));
     }
 
     return (
@@ -83,13 +84,13 @@ function CreateParent() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <Form.Item label="Parent First Name" required>
+                    <Form.Item label="First Name" required>
                         <Input type="text" name="firstName" onChange={handleChange} />
                     </Form.Item>
-                    <Form.Item label="Parent Last Name" required>
+                    <Form.Item label="Last Name" required>
                         <Input type="text" name="lastName" onChange={handleChange} />
                     </Form.Item>
-                    <Form.Item label="Parent Email" required>
+                    <Form.Item label="Email" required>
                         <Input type="email" name="email" onChange={handleChange} />
                     </Form.Item>
                     <Form.Item label="Phone Number" required>
@@ -119,7 +120,11 @@ function CreateParent() {
                         />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Parent'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>

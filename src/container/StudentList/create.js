@@ -33,6 +33,7 @@ function CreateBooking() {
     const [loading, setLoading] = useState(true);
     const [dat, setDat] = useState(null);
     const [subjec, setSubjec] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         getStudents();
@@ -79,14 +80,13 @@ function CreateBooking() {
         let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
         if (comment == null || s == null || children == null)
             alert('Fill the form');
-        setLoading(true);
+        setSubmitting(true);
         createBooking(children, s, comment).then(data => {
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
-        })
-            .finally(() => setLoading(false));
+        }).finally(() => setSubmitting(false));
     }
 
     const getStudents = () => {
@@ -105,7 +105,7 @@ function CreateBooking() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Booking</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Booking</p>}
                 extra={[
                 ]}
             >
@@ -183,7 +183,11 @@ function CreateBooking() {
                         <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} />
                     </Form.Item>
                     <Form.Item>
-                        <Button onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Student booking'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>

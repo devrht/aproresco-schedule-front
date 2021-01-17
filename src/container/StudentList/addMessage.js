@@ -23,19 +23,20 @@ function AddMessage(props) {
     const { params } = props.match;
     const [open, setOpen] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
-    const [subject, setSubject] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [subject, setSubject] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [asTemplate, setAsTemplate] = useState(false);
     const [isSMS, setIsSMS] = useState(false);
     const [isEmail, setIsEmail] = useState(false);
     const [async, setAsync] = useState(false);
-    const [body, setBody] = useState('');
+    const [body, setBody] = useState(null);
     const [name, setName] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [templates, setTemplates] = useState([]);
     const [template, setTemplate] = useState(null);
     const [form] = Form.useForm();
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         getTemplates();
@@ -59,15 +60,17 @@ function AddMessage(props) {
     // }
 
     const handleSubmit = () => {
-        // let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
-        // if (comment == null || s == null || children == null)
-        //     alert('Fill the form');
+        if ( template == null || body == null || subject == null) {
+            alert('Fill the form');
+            return;
+        }
+        setSubmitting(true)
         createMessage(params.id, startDate, endDate, body, subject, async, asTemplate, name).then(data => {
             history.push(`/short-messages/${params.id}`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
-        })
+        }).finally(() => setSubmitting(false))
     }
 
     const getTemplates = () => {
@@ -86,7 +89,7 @@ function AddMessage(props) {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Message</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Message</p>}
                 extra={[
                 ]}
             >
@@ -152,7 +155,7 @@ function AddMessage(props) {
                     </Form.Item>
                     <div style={{
                         display: 'flex',
-                        flexDirection: 'row', 
+                        flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
@@ -167,7 +170,11 @@ function AddMessage(props) {
                         </Form.Item>
                     </div>
                     <Form.Item>
-                        <Button onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Message'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>

@@ -1,13 +1,13 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button } from 'antd';
+import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
 import { createSchedule, createTeacher } from '../../services/Teacher';
 import React, { useEffect, useState, useReducer } from 'react'
-import { getCountry } from '../../services/Student';
+import { getCountry, getSchedule } from '../../services/Student';
 
 const formReducer = (state, event) => {
     return {
@@ -19,13 +19,18 @@ const formReducer = (state, event) => {
 function CreateTeacher() {
 
     const history = useHistory();
-    const [country, setCountry] = useState(null)
-    const [phone, setPhone] = useState('')
+    const [country, setCountry] = useState(null);
+    const [grades, setGrades] = useState([]);
+    const [subjects, setSubjects] = useState([]);
+    const [subjectsList, setSubjectsList] = useState([]);
+    const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        getSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
         })
@@ -39,18 +44,38 @@ function CreateTeacher() {
         });
     }
 
+    const handleChangeSelect = (value) => {
+        setGrades(value.toString().split(',').map(i => Number(i)));
+    }
+
+    const handleChangeSubjects = (value) => {
+        setSubjects(value);
+    }
+
+    const getSubjects = () => {
+        getSchedule(1).then(data => {
+            var obj = {};
+            for (var i = 0, len = data.content.length; i < len; i++)
+                obj[data.content[i]['subject']] = data.content[i];
+
+            data.content = new Array();
+            for (var key in obj)
+                data.content.push(obj[key]);
+            console.log(data.content)
+            setSubjectsList(data.content)
+        });
+    }
+
+
     const handleSubmit = () => {
 
-        if (formData.firstName && formData.lastName && formData.email && formData.iemail && formData.grade && formData.subjects && formData.schoolName && formData.schoolBoard && phone) {
+        if (formData.firstName && formData.lastName && formData.iemail && formData.schoolName && formData.schoolBoard && phone) {
             if (formData.firstName.toString().length <= 0
                 || formData.lastName.toString().length <= 0
-                || formData.email.toString().length <= 0
                 || formData.schoolName.toString().length <= 0
                 || formData.schoolBoard.toString().length <= 0
                 || phone.toString().length <= 0
-                || formData.subjects.toString().length <= 0
                 || formData.iemail.toString().length <= 0
-                || formData.grade.toString().length <= 0
             ) {
                 alert("Please, fill the form!");
                 // return
@@ -60,9 +85,9 @@ function CreateTeacher() {
             // return
         }
 
-        setLoading(true);
+        setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.email, formData.iemail, formData.schoolName, formData.schoolBoard, formData.grade, formData.subjects, phone).then(data => {
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone).then(data => {
             // console.log(data)
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
@@ -70,7 +95,7 @@ function CreateTeacher() {
             alert("Error occured when saving data, please retry!")
             console.log(err)
         })
-        .finally(() => setLoading(false));
+            .finally(() => setSubmitting(false));
     }
 
     return (
@@ -78,7 +103,7 @@ function CreateTeacher() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Teacher</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Teacher</p>}
                 extra={[
                 ]}
             >
@@ -94,18 +119,48 @@ function CreateTeacher() {
                     <Form.Item label="Last Name" required>
                         <Input type="text" name="lastName" onChange={handleChange} />
                     </Form.Item>
-                    <Form.Item label="Internal Email" required>
-                        <Input type="email" name="email" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="External Email" required>
+                    <Form.Item label="Email" required>
                         <Input type="email" name="iemail" onChange={handleChange} />
                     </Form.Item>
-                    <Form.Item label="Teacher grade" required>
-                        <Input type="text" name="grade" onChange={handleChange} />
+                    <Form.Item label="Grades" required>
+                        <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: '100%' }}
+                            placeholder="Please select grades"
+                            onChange={handleChangeSelect}
+                        >
+                            <Select.Option value={1}>1</Select.Option>
+                            <Select.Option value={2}>2</Select.Option>
+                            <Select.Option value={3}>3</Select.Option>
+                            <Select.Option value={4}>4</Select.Option>
+                            <Select.Option value={5}>5</Select.Option>
+                            <Select.Option value={6}>6</Select.Option>
+                            <Select.Option value={7}>7</Select.Option>
+                            <Select.Option value={8}>8</Select.Option>
+                            <Select.Option value={9}>9</Select.Option>
+                            <Select.Option value={10}>10</Select.Option>
+                            <Select.Option value={11}>11</Select.Option>
+                            <Select.Option value={12}>12</Select.Option>
+                        </Select>
                     </Form.Item>
-                    <Form.Item label="Teacher subjects" required>
-                        <Input type="text" name="subjects" onChange={handleChange} />
+
+                    <Form.Item label="Subjects" required>
+                        <Select mode="multiple"
+                            allowClear
+                            style={{ width: '100%' }}
+                            placeholder="Please select subjects"
+                            onChange={handleChangeSubjects}>
+                            {
+                                subjectsList.map(subject => {
+                                    return (
+                                        <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                    )
+                                })
+                            }
+                        </Select>
                     </Form.Item>
+
                     <Form.Item label="Phone Number" required>
                         <PhoneInput
                             enableSearch
@@ -135,7 +190,11 @@ function CreateTeacher() {
                         <Input type="text" name="schoolBoard" onChange={handleChange} />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Teacher Profile'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>

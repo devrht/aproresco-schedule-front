@@ -38,14 +38,18 @@ function LayoutOfApp({ children }, props) {
     document.getElementById('root').style.height = '100%';
 
     let today = new Date();
+    console.log('TODAY ==> ', today.getMinutes());
     today.setDate(today.getDate() - 1)
     let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
     let month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
     let year = today.getFullYear();
-    console.log('Date: ' + year + '-' + month + '-' + day)
     if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
       localStorage.setItem('startDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
+      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+today.getHours()+':'+today.getMinutes()+':00 -0500')
+    }
+
+    if (localStorage.getItem('startTime') == null) {
+      localStorage.setItem('startTime', today.getHours() + ':' + today.getMinutes());
     }
 
     today = new Date();
@@ -56,8 +60,12 @@ function LayoutOfApp({ children }, props) {
 
     if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
       localStorage.setItem('endDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
+      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+today.getHours()+':'+today.getMinutes()+':00 -0500')
 
+    }
+
+    if (localStorage.getItem('endTime') == null) {
+      localStorage.setItem('endTime', today.getHours() + ':' + today.getMinutes());
     }
 
     let expireAt = new Date(localStorage.getItem("expireAt"));
@@ -109,7 +117,7 @@ function LayoutOfApp({ children }, props) {
   return (
     <Layout>
       {
-        logged ?
+        true ?
           <Sider className="sider">
             <h1>Appui Scolaire</h1>
             <Menu theme="dark" onClick={handleClick} selectedKeys={[key]} openKeys={openKeys} onOpenChange={onOpenChange} mode="inline">

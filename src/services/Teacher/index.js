@@ -199,17 +199,16 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
     }).catch(err => console.log(err));
 }
 
-export const createTeacher = (firstName, lastName, email, iemail, schoolName, schoolBoard, grade, subjects, phone) => {
+export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone) => {
     let data = {
         firstName,
         lastName,
-        externalEmail: email,
-        internalEmail: iemail,
+        externalEmail: iemail,
         schoolName,
         schoolBoard,
-        grade,
+        grades: grades,
         phoneNumber: phone,
-        subjects: subjects.split(',')
+        subjects: subjects
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/register`, data).then(res => {
         return res;

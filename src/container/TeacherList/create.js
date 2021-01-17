@@ -29,9 +29,10 @@ function CreateAvailibility() {
     const [schedules, setSchedules] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [dates, setDates] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [dat, setDat] = useState(null);
     const [subjec, setSubjec] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         getStudents();
@@ -76,16 +77,18 @@ function CreateAvailibility() {
 
     const handleSubmit = () => {
         let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
-        if (s == null || children == null)
+        if (s == null || children == null) {
             alert('Fill the form');
-        setLoading(true);
+            return
+        }
+        setSubmitting(true);
         createAvailibility(children, s).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
         })
-            .finally(() => setLoading(false));
+            .finally(() => setSubmitting(false));
     }
 
     const getStudents = () => {
@@ -104,7 +107,7 @@ function CreateAvailibility() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Availability</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Availability</p>}
                 extra={[
                 ]}
             >
@@ -179,7 +182,11 @@ function CreateAvailibility() {
                         </Select>
                     </Form.Item>
                     <Form.Item>
-                        <Button onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button disabled={submitting} onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Teacher Availability'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>

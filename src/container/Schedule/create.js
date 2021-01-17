@@ -23,6 +23,7 @@ function CreateSchedule() {
     const [subject, setSubject] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         getSubjects();
@@ -67,23 +68,23 @@ function CreateSchedule() {
             alert("Please, fill the form!");
             return
         }
-
+        setSubmitting(true)
         let date = new Date(formData.startDate);
         let day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         let year = date.getFullYear();
-        let d = month + '/' + day + '/' + year + ' 00:00:00 -0500';
+        let d = month + '/' + day + '/' + year + ' '+formData.startTime+':00 -0500';
 
         date = new Date(formData.endDate);
         day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         year = date.getFullYear();
-        let f = month + '/' + day + '/' + year + ' 00:00:00 -0500';
+        let f = month + '/' + day + '/' + year + ' '+formData.endTime+':00 -0500';
 
         createSchedule(subject, d, f, formData.description, grades).then(data => {
             history.push(`/schedules`)
 
-        })
+        }).finally(() => setSubmitting(false));
     }
 
     return (
@@ -127,8 +128,14 @@ function CreateSchedule() {
                     <Form.Item label="Start date" required>
                         <Input type="date" name="startDate" onChange={handleChange} />
                     </Form.Item>
+                    <Form.Item label="Start Hour" required>
+                        <Input type="time" name="startTime" onChange={handleChange} />
+                    </Form.Item>
                     <Form.Item label="End date" required>
                         <Input type="date" name="endDate" onChange={handleChange} />
+                    </Form.Item>
+                    <Form.Item label="End Hour" required>
+                        <Input type="time" name="endTime" onChange={handleChange} />
                     </Form.Item>
                     <Form.Item label="Description" required>
                         <Input type="text" name="description" onChange={handleChange} />
@@ -156,7 +163,11 @@ function CreateSchedule() {
                         </Select>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" size="large" htmlType="submit">Submit</Button>
+                        <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Schedule'
+                            }
+                        </Button>
                     </Form.Item>
                 </Form>
             </PageHeader>
