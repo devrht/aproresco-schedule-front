@@ -95,7 +95,7 @@ function LayoutOfApp({ children }, props) {
   const logout = () => {
     setLogged(false);
     localStorage.removeItem("token");
-    localStorage.removeItem("tenant");
+    // localStorage.removeItem("tenant");
     localStorage.removeItem("expireAt");
     window.location.reload();
   }
@@ -117,7 +117,7 @@ function LayoutOfApp({ children }, props) {
   return (
     <Layout>
       {
-        true ?
+        logged ?
           <Sider className="sider">
             <h1>Appui Scolaire</h1>
             <Menu theme="dark" onClick={handleClick} selectedKeys={[key]} openKeys={openKeys} onOpenChange={onOpenChange} mode="inline">

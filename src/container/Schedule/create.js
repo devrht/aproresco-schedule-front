@@ -50,8 +50,8 @@ function CreateSchedule() {
     }
 
     const handleChangeSelect = (value) => {
-        setGrades(value.toString().split(',').map(i=>Number(i)));
-      }
+        setGrades(value.toString().split(',').map(i => Number(i)));
+    }
 
     const handleSubmit = () => {
 
@@ -73,13 +73,13 @@ function CreateSchedule() {
         let day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         let year = date.getFullYear();
-        let d = month + '/' + day + '/' + year + ' '+formData.startTime+':00 -0500';
+        let d = month + '/' + day + '/' + year + ' ' + formData.startTime + ':00 -0500';
 
         date = new Date(formData.endDate);
         day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         year = date.getFullYear();
-        let f = month + '/' + day + '/' + year + ' '+formData.endTime+':00 -0500';
+        let f = month + '/' + day + '/' + year + ' ' + formData.endTime + ':00 -0500';
 
         createSchedule(subject, d, f, formData.description, grades).then(data => {
             history.push(`/schedules`)
@@ -125,18 +125,29 @@ function CreateSchedule() {
                                 }} onChange={(e) => setSubject(e.target.value)} />
                             </Form.Item>
                     }
-                    <Form.Item label="Start date" required>
-                        <Input type="date" name="startDate" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Start Hour" required>
-                        <Input type="time" name="startTime" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="End date" required>
-                        <Input type="date" name="endDate" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="End Hour" required>
-                        <Input type="time" name="endTime" onChange={handleChange} />
-                    </Form.Item>
+
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="date" name="startDate" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Start Hour" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="time" name="startTime" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="End date" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="date" name="endDate" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="End Hour" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="time" name="endTime" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
                     <Form.Item label="Description" required>
                         <Input type="text" name="description" onChange={handleChange} />
                     </Form.Item>

@@ -1,9 +1,13 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button } from 'antd';
+import { PageHeader, Form, Input, Button, Select } from 'antd';
 import { createStudent } from '../../services/Teacher';
+import { getParentProfile } from '../../services/Student';
 import React, { useEffect, useState, useReducer } from 'react'
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const formReducer = (state, event) => {
     return {
@@ -16,12 +20,33 @@ function CreateStudent() {
 
     const history = useHistory();
     const [submitting, setSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [parents, setParents] = useState([]);
+    const [parent, setParent] = useState(null);
+    const [name, setName] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
 
     useEffect(() => {
-
+        getListView();
     }, []);
+
+    const getListView = () => {
+        getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 1000, 'firstName', 'asc').then(data => {
+            console.log('DATA ==> ', data)
+            if (data) {
+                if (data.content) {
+                    setParents(data.content);
+                } else {
+                    setParents([]);
+                }
+            } else {
+                setParents([]);
+            }
+        })
+    }
+
 
     const handleChange = event => {
         setFormData({
@@ -30,15 +55,18 @@ function CreateStudent() {
         });
     }
 
-    const handleSubmit = () => {
+    const changeParent = (parent) => {
+        setName(parent.firstName + ' ' + parent.lastName);
+        setParent(parent);
+    }
 
-        if (formData.firstName && formData.lastName && formData.email && formData.schoolName && formData.schoolBoard && formData.parentEmail && formData.grade) {
+    const handleSubmit = () => {
+        if (formData.firstName && formData.lastName && formData.email && formData.schoolName && formData.schoolBoard && parent && formData.grade) {
             if (formData.firstName.toString().length <= 0
                 || formData.lastName.toString().length <= 0
-                || formData.email.toString().length <= 0
                 || formData.schoolName.toString().length <= 0
                 || formData.schoolBoard.toString().length <= 0
-                || formData.parentEmail.toString().length <= 0
+                || formData.email.toString().length <= 0
                 || formData.grade.toString().length <= 0
             ) {
                 alert("Please, fill the form!");
@@ -51,13 +79,13 @@ function CreateStudent() {
 
         setSubmitting(true);
 
-        createStudent(formData.firstName, formData.lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, formData.parentEmail).then(data => {
+        createStudent(formData.firstName, formData.lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent).then(data => {
             history.push(`/studentprofiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
         })
-        .finally(() => setSubmitting(false));
+            .finally(() => setSubmitting(false));
     }
 
     return (
@@ -65,7 +93,7 @@ function CreateStudent() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Create Student</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Student</p>}
                 extra={[
                 ]}
             >
@@ -75,27 +103,84 @@ function CreateStudent() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <Form.Item label="Fist Name" required>
-                        <Input type="text" name="firstName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Last Name" required>
-                        <Input type="text" name="lastName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Student Email" required>
-                        <Input type="email" name="email" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Student grade" required>
-                        <Input type="number" name="grade" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="School Name" required>
-                        <Input type="text" name="schoolName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="School Board" required>
-                        <Input type="text" name="schoolBoard" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Parent Email" required>
-                        <Input type="email" name="parentEmail" onChange={handleChange} />
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="firstName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="lastName" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="email" name="email" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="number" name="grade" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="schoolName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="schoolBoard" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Parent Email" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Autocomplete
+                                id="asynchronous-search"
+                                options={parents}
+                                size="small"
+                                inputValue={parent}
+                                onInputChange={(__, newInputValue) => {
+                                    setParent(newInputValue);
+                                }}
+                                onChange={(__, newValue) => {
+                                    changeParent(newValue);
+                                }}
+                                open={open}
+                                onOpen={() => {
+                                    setOpen(true);
+                                }}
+                                onClose={() => {
+                                    setOpen(false);
+                                }}
+                                loading={loading}
+                                getOptionLabel={(record) => record.email}
+                                renderInput={(params) =>
+                                    <TextField {...params}
+                                        variant="outlined"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                    />
+                                }
+                            />
+                        </Form.Item>
+                        <Form.Item label="Parent Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input disabled={true} type="text" value={name} />
+                        </Form.Item>
+                    </div>
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

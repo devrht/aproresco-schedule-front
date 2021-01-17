@@ -115,73 +115,82 @@ function CreateBooking() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-
-                    <Form.Item label="Student" required>
-                        <Autocomplete
-                            id="asynchronous-search"
-                            options={studentList}
-                            size="small"
-                            inputValue={student}
-                            // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
-                            onInputChange={(__, newInputValue) => {
-                                setStudent(newInputValue);
-                            }}
-                            onChange={(__, newValue) => {
-                                changeChildren(newValue.id);
-                            }}
-                            open={open}
-                            onOpen={() => {
-                                setOpen(true);
-                            }}
-                            onClose={() => {
-                                setOpen(false);
-                            }}
-                            loading={loadingS}
-                            getOptionLabel={(record) => record.firstName + " " + record.lastName}
-                            // style={{ minWidth: 450, marginLeft: -250 }}
-                            renderInput={(params) =>
-                                <TextField {...params}
-                                    variant="outlined"
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {loadingS ? <CircularProgress color="inherit" size={20} /> : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                />
-                            }
-                        />
-                    </Form.Item>
-                    <Form.Item label="Subject" required>
-                        <Select onChange={(e) => changeSubject(e)}>
-                            <option value={null}>Select a subject</option>
-                            {
-                                subjects.map(subject => {
-                                    return (
-                                        <option value={subject.subject} key={subject.id}>{subject.subject}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label="Start date" required>
-                        <Select onChange={(e) => changeDate(e)}>
-                            <option value={null}>Select a start date</option>
-                            {
-                                dates.map(date => {
-                                    return (
-                                        <option value={date.startDate} key={date.id}>{date.startDate}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label="Comment" required>
-                        <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} />
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Autocomplete
+                                id="asynchronous-search"
+                                options={studentList}
+                                size="small"
+                                inputValue={student}
+                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                onInputChange={(__, newInputValue) => {
+                                    setStudent(newInputValue);
+                                }}
+                                onChange={(__, newValue) => {
+                                    changeChildren(newValue.id);
+                                }}
+                                open={open}
+                                onOpen={() => {
+                                    setOpen(true);
+                                }}
+                                onClose={() => {
+                                    setOpen(false);
+                                }}
+                                loading={loadingS}
+                                getOptionLabel={(record) => record.firstName + " " + record.lastName}
+                                // style={{ minWidth: 450, marginLeft: -250 }}
+                                renderInput={(params) =>
+                                    <TextField {...params}
+                                        variant="outlined"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {loadingS ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                    />
+                                }
+                            />
+                        </Form.Item>
+                        <Form.Item label="Subject" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Select onChange={(e) => changeSubject(e)}>
+                                <option value={null}>Select a subject</option>
+                                {
+                                    subjects.map(subject => {
+                                        return (
+                                            <option value={subject.subject} key={subject.id}>{subject.subject}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Select onChange={(e) => changeDate(e)}>
+                                <option value={null}>Select a start date</option>
+                                {
+                                    dates.map(date => {
+                                        return (
+                                            <option value={date.startDate} key={date.id}>{date.startDate}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="Comment" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} />
+                        </Form.Item>
+                    </div>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

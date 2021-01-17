@@ -113,82 +113,103 @@ function CreateTeacher() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <Form.Item label="Fist Name" required>
-                        <Input type="text" name="firstName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Last Name" required>
-                        <Input type="text" name="lastName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Email" required>
-                        <Input type="email" name="iemail" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Grades" required>
-                        <Select
-                            mode="multiple"
-                            allowClear
-                            style={{ width: '100%' }}
-                            placeholder="Please select grades"
-                            onChange={handleChangeSelect}
-                        >
-                            <Select.Option value={1}>1</Select.Option>
-                            <Select.Option value={2}>2</Select.Option>
-                            <Select.Option value={3}>3</Select.Option>
-                            <Select.Option value={4}>4</Select.Option>
-                            <Select.Option value={5}>5</Select.Option>
-                            <Select.Option value={6}>6</Select.Option>
-                            <Select.Option value={7}>7</Select.Option>
-                            <Select.Option value={8}>8</Select.Option>
-                            <Select.Option value={9}>9</Select.Option>
-                            <Select.Option value={10}>10</Select.Option>
-                            <Select.Option value={11}>11</Select.Option>
-                            <Select.Option value={12}>12</Select.Option>
-                        </Select>
-                    </Form.Item>
 
-                    <Form.Item label="Subjects" required>
-                        <Select mode="multiple"
-                            allowClear
-                            style={{ width: '100%' }}
-                            placeholder="Please select subjects"
-                            onChange={handleChangeSubjects}>
-                            {
-                                subjectsList.map(subject => {
-                                    return (
-                                        <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="firstName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="lastName" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="email" name="iemail" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <PhoneInput
+                                enableSearch
+                                countryCodeEditable={false}
+                                disableCountryCode={false}
+                                inputClass={"form-control"}
+                                searchStyle={{
+                                    width: "90%",
+                                }}
+                                inputStyle={{
+                                    borderRadius: "0px",
+                                    width: "inherit",
+                                    paddingTop: '5px',
+                                    paddingBottom: '5px'
+                                }}
+                                country={country}
+                                // value={phone}
+                                onChange={(value, country, e, formattedValue) => {
+                                    setPhone(formattedValue)
+                                }}
+                            />
+                        </Form.Item>
+                    </div>
 
-                    <Form.Item label="Phone Number" required>
-                        <PhoneInput
-                            enableSearch
-                            countryCodeEditable={false}
-                            disableCountryCode={false}
-                            inputClass={"form-control"}
-                            searchStyle={{
-                                width: "90%",
-                            }}
-                            inputStyle={{
-                                borderRadius: "0px",
-                                width: "inherit",
-                                paddingTop: '5px',
-                                paddingBottom: '5px'
-                            }}
-                            country={country}
-                            // value={phone}
-                            onChange={(value, country, e, formattedValue) => {
-                                setPhone(formattedValue)
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="School Name" required>
-                        <Input type="text" name="schoolName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="School Board" required>
-                        <Input type="text" name="schoolBoard" onChange={handleChange} />
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Select
+                                mode="multiple"
+                                allowClear
+                                style={{ width: '100%' }}
+                                placeholder="Please select grades"
+                                onChange={handleChangeSelect}
+                            >
+                                <Select.Option value={1}>1</Select.Option>
+                                <Select.Option value={2}>2</Select.Option>
+                                <Select.Option value={3}>3</Select.Option>
+                                <Select.Option value={4}>4</Select.Option>
+                                <Select.Option value={5}>5</Select.Option>
+                                <Select.Option value={6}>6</Select.Option>
+                                <Select.Option value={7}>7</Select.Option>
+                                <Select.Option value={8}>8</Select.Option>
+                                <Select.Option value={9}>9</Select.Option>
+                                <Select.Option value={10}>10</Select.Option>
+                                <Select.Option value={11}>11</Select.Option>
+                                <Select.Option value={12}>12</Select.Option>
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Select mode="multiple"
+                                allowClear
+                                style={{ width: '100%' }}
+                                placeholder="Please select subjects"
+                                onChange={handleChangeSubjects}>
+                                {
+                                    subjectsList.map(subject => {
+                                        return (
+                                            <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="schoolName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="schoolBoard" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

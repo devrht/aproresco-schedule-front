@@ -84,41 +84,51 @@ function CreateParent() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <Form.Item label="First Name" required>
-                        <Input type="text" name="firstName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Last Name" required>
-                        <Input type="text" name="lastName" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Email" required>
-                        <Input type="email" name="email" onChange={handleChange} />
-                    </Form.Item>
-                    <Form.Item label="Phone Number" required>
-                        {/* <Input type="number" name="phoneCode" onChange={handleChange} /> */}
-                        {/* {country == null ? <p>Loading...</p> : */}
-                        <PhoneInput
-                            enableSearch
-                            countryCodeEditable={false}
-                            disableCountryCode={false}
-                            inputClass={"form-control"}
-                            searchStyle={{
-                                width: "90%",
-                            }}
-                            inputStyle={{
-                                borderRadius: "0px",
-                                width: "inherit",
-                                paddingTop: '5px',
-                                paddingBottom: '5px'
-                            }}
-                            country={country}
-                            // value={phone}
-                            onChange={(value, country, e, formattedValue) => {
-                                setCode(country.dialCode);
-                                let index = value.indexOf(country.dialCode);
-                                setPhone(value.slice(0, index) + value.slice(index + country.dialCode.length))
-                            }}
-                        />
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="First Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="firstName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="lastName" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="email" name="email" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
+                            {/* <Input type="number" name="phoneCode" onChange={handleChange} /> */}
+                            {/* {country == null ? <p>Loading...</p> : */}
+                            <PhoneInput
+                                enableSearch
+                                countryCodeEditable={false}
+                                disableCountryCode={false}
+                                inputClass={"form-control"}
+                                searchStyle={{
+                                    width: "90%",
+                                }}
+                                inputStyle={{
+                                    borderRadius: "0px",
+                                    width: "inherit",
+                                    paddingTop: '5px',
+                                    paddingBottom: '5px'
+                                }}
+                                country={country}
+                                // value={phone}
+                                onChange={(value, country, e, formattedValue) => {
+                                    setCode(country.dialCode);
+                                    let index = value.indexOf(country.dialCode);
+                                    setPhone(value.slice(0, index) + value.slice(index + country.dialCode.length))
+                                }}
+                            />
+                        </Form.Item>
+                    </div>
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

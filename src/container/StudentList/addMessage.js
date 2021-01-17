@@ -60,7 +60,7 @@ function AddMessage(props) {
     // }
 
     const handleSubmit = () => {
-        if ( template == null || body == null || subject == null) {
+        if (template == null || body == null || subject == null) {
             alert('Fill the form');
             return;
         }
@@ -99,57 +99,53 @@ function AddMessage(props) {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-
-
-                    {/* <Form.Item label="Start Date" required>
-                        <Input type="date" name="startDate" onChange={(e) => setStartDate(e.target.value)} />
-                    </Form.Item>
-
-                    <Form.Item label="End Date" required>
-                        <Input type="date" name="endDate" onChange={(e) => setEndDate(e.target.value)} />
-                    </Form.Item> */}
-                    <Form.Item label="Message Template" required>
-                        <Autocomplete
-                            id="asynchronous-search"
-                            options={templates}
-                            size="small"
-                            inputValue={template}
-                            // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
-                            onInputChange={(__, newInputValue) => {
-                                setTemplate(newInputValue);
-                            }}
-                            onChange={(__, newValue) => {
-                                changeTemplate(newValue);
-                            }}
-                            open={open}
-                            onOpen={() => {
-                                setOpen(true);
-                            }}
-                            onClose={() => {
-                                setOpen(false);
-                            }}
-                            loading={loadingS}
-                            getOptionLabel={(record) => record.name}
-                            // style={{ minWidth: 450, marginLeft: -250 }}
-                            renderInput={(params) =>
-                                <TextField {...params}
-                                    variant="outlined"
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {loadingS ? <CircularProgress color="inherit" size={20} /> : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                />
-                            }
-                        />
-                    </Form.Item>
-                    <Form.Item label="Subject" required>
-                        <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Message Template" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Autocomplete
+                                id="asynchronous-search"
+                                options={templates}
+                                size="small"
+                                inputValue={template}
+                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                onInputChange={(__, newInputValue) => {
+                                    setTemplate(newInputValue);
+                                }}
+                                onChange={(__, newValue) => {
+                                    changeTemplate(newValue);
+                                }}
+                                open={open}
+                                onOpen={() => {
+                                    setOpen(true);
+                                }}
+                                onClose={() => {
+                                    setOpen(false);
+                                }}
+                                loading={loadingS}
+                                getOptionLabel={(record) => record.name}
+                                // style={{ minWidth: 450, marginLeft: -250 }}
+                                renderInput={(params) =>
+                                    <TextField {...params}
+                                        variant="outlined"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {loadingS ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                    />
+                                }
+                            />
+                        </Form.Item>
+                        <Form.Item label="Subject" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                        </Form.Item>
+                    </div>
                     <Form.Item label="Body" required>
                         <TextArea type="text" name="body" value={body} onChange={(e) => setBody(e.target.value)} />
                     </Form.Item>

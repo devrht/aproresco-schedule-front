@@ -8,8 +8,6 @@ import { findParentProfileByEmail, getParentProfile } from '../../services/Stude
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 function ParentProfile() {
     const history = useHistory();

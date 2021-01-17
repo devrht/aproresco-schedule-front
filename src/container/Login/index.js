@@ -20,9 +20,13 @@ function Login() {
       .then(user => {
         if (user) {
           getTeacherProfile(data.profileObj.email).then(data => {
-            let mail = JSON.parse(localStorage.getItem("email"));
-            if (mail != data.externalEmail) {
-              localStorage.removeItem('tenant');
+            if (localStorage.getItem("email")) {
+              console.log(localStorage.getItem("email"))
+              let mail = JSON.parse(localStorage.getItem("email"));
+              if (mail)
+                if (mail != data.externalEmail) {
+                  localStorage.removeItem('tenant');
+                }
             }
             localStorage.setItem('email', JSON.stringify(data.externalEmail));
             localStorage.setItem('id', JSON.stringify(data.id));
