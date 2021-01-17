@@ -43,6 +43,7 @@ const addToken = () => {
                             // localStorage.removeItem("email");
                             // localStorage.removeItem("tenant");
                             localStorage.removeItem("expireAt");
+                            localStorage.removeItem("user");
                             window.location.reload(true);
                             return Promise.reject(error);
                         default:

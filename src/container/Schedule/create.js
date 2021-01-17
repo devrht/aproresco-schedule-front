@@ -19,6 +19,7 @@ function CreateSchedule() {
     const [loading, setLoading] = useState(false);
     const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
+    const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [grades, setGrades] = useState([]);
     const [subject, setSubject] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
@@ -51,6 +52,10 @@ function CreateSchedule() {
 
     const handleChangeSelect = (value) => {
         setGrades(value.toString().split(',').map(i => Number(i)));
+    }
+
+    const handleChangeSubjects = (value) => {
+        setSelectedSubjects(value);
     }
 
     const handleSubmit = () => {
@@ -98,14 +103,21 @@ function CreateSchedule() {
             >
                 <Form
                     form={form}
-                    onFinish={handleSubmit}
+                    // onFinish={handleSubmit}
+                    onClick={() => console.log('Bonjour')}
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
                     {
                         !isCreation ?
                             <Form.Item label="Subjects" required>
-                                <Select onChange={(e) => { e == null ? setIsCreation(true) : setSubject(e) }}>
+                                <Select
+                                    mode="multiple"
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                    placeholder="Please select subjects"
+                                    // onChange={(e) => { console.log(e[e.length-1]) }}>
+                                    onChange={(e) => { e[e.length-1] == null ? setIsCreation(true) : handleChangeSubjects(e) }}>
                                     <Select.Option value={null}>Create a new subject</Select.Option>
                                     {
                                         subjects.map(subject => {
@@ -120,6 +132,10 @@ function CreateSchedule() {
                             <Form.Item label="Subject (press Escape to view existing subject)" required>
                                 <Input type="text" name="subject" value={subject} onKeyUp={(e) => {
                                     if (e.key === 'Escape') {
+                                        setIsCreation(false);
+                                    }
+                                    if (e.key === 'Enter') {
+                                        setSubjects([...subjects, {subject: e.target.value, id: subjects.length+1}]);
                                         setIsCreation(false);
                                     }
                                 }} onChange={(e) => setSubject(e.target.value)} />

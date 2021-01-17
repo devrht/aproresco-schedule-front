@@ -215,6 +215,22 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
     }).catch(err => console.log(err));
 }
 
+export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard) => {
+    let data = {
+        firstName,
+        lastName,
+        schoolName,
+        schoolBoard,
+        externalEmail: email,
+        grades: grades,
+        phoneNumber: phone,
+        subjects: subjects
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
 export const createBooking = (studentProfile, schedule, studentComment) => {
     let data = {
         studentProfile,

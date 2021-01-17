@@ -5,6 +5,11 @@ import { useHistory } from 'react-router-dom'
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
 import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
 import { getTeacherProfile, newTenant } from '../../services/Teacher'
+import 'react-phone-input-2/lib/bootstrap.css'
+import "react-phone-input-2/lib/bootstrap.css";
+import PhoneInput from 'react-phone-input-2';
+import { getCountry, getSchedule } from '../../services/Student';
+import { updateTeacher } from '../../services/Teacher';
 const { Option } = Select;
 
 const formReducer = (state, event) => {
@@ -24,9 +29,22 @@ function Settings(props) {
   const [bridge, setBridge] = useState(false);
   const [persist, setPersist] = useState(false);
   const [teacher, setTeacher] = useState(null);
+  const [subjectsList, setSubjectsList] = useState([]);
+  const [isCreation, setIsCreation] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
+  const [phone, setPhone] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [school, setSchool] = useState('');
+  const [board, setBoard] = useState('');
+  const [email, setEmail] = useState('');
   const [tenant, setTenant] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [country, setCountry] = useState(null);
+  const [grades, setGrades] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const deletingStatus = useSelector((state) => {
     return state.Student.enableDeleting;
   })
@@ -36,13 +54,40 @@ function Settings(props) {
 
   useEffect(() => {
     setTenant(JSON.parse(localStorage.getItem('tenant')));
-    bridgeManagement(3).then(data => {
-    });
+    getSubjects();
+    getCountry().then(data => {
+      setCountry(data.countryCode.toString().toLowerCase());
+      getTeacher();
+    })
+  }, []);
 
+  const getTeacher = () => {
     getTeacherProfile().then(data => {
       setTeacher(data);
+      localStorage.setItem('user', JSON.stringify(data));
+      setLastName(data.lastName);
+      setFirstName(data.firstName);
+      setSchool(data.schoolName ? data.schoolName : '');
+      setPhone(data.phoneNumber ? data.phoneNumber : '')
+      setBoard(data.schoolBoard ? data.schoolBoard : '');
+      setEmail(data.externalEmail);
+      setGrades(data.grades ? data.grades : []);
+      setSubjects(data.subjects ? data.subjects : []);
     });
-  }, []);
+  }
+
+  const getSubjects = () => {
+    getSchedule(1).then(data => {
+      var obj = {};
+      for (var i = 0, len = data.content.length; i < len; i++)
+        obj[data.content[i]['subject']] = data.content[i];
+      data.content = new Array();
+      for (var key in obj)
+        data.content.push(obj[key]);
+      console.log(data.content)
+      setSubjectsList(data.content)
+    });
+  }
 
   const handleChange = event => {
     setFormData({
@@ -51,6 +96,13 @@ function Settings(props) {
     });
   }
 
+  const handleChangeSelect = (value) => {
+    setGrades(value.toString().split(',').map(i => Number(i)));
+  }
+
+  const handleChangeSubjects = (value) => {
+    setSubjects(value);
+  }
 
   const handleSubmit = () => {
 
@@ -65,7 +117,6 @@ function Settings(props) {
       alert("Please, fill the form!");
       return
     }
-
     newTenant(formData.tenant).then(data => {
       setTenant(formData.tenant); localStorage.setItem("tenant", JSON.stringify(formData.tenant))
       history.push(`/studentprofiles`)
@@ -74,6 +125,38 @@ function Settings(props) {
       console.log(err)
     });
 
+  }
+
+  const handleSubmitUpdate = () => {
+
+    if (firstName && lastName && email && phone && school && board) {
+      if (firstName.toString().length <= 0
+        || lastName.toString().length <= 0
+        || phone.toString().length <= 0
+        || email.toString().length <= 0
+        || school.toString().length <= 0
+        || board.toString().length <= 0
+      ) {
+        alert("Please, fill the form!");
+        return
+      }
+    } else {
+      alert("Please, fill the form!");
+      return
+    }
+
+    setSubmitting(true);
+
+    updateTeacher(teacher.id, firstName, lastName, email, grades, subjects, phone, school, board).then(data => {
+      // console.log(data)
+      getTeacher();
+      history.push(`/teacherprofiles`);
+      // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
+    }).catch(err => {
+      alert("Error occured when saving data, please retry!")
+      console.log(err)
+    })
+      .finally(() => setSubmitting(false));
   }
 
   const onEnableDeleting = () => {
@@ -93,22 +176,26 @@ function Settings(props) {
     });
   }
 
-  const onPersistAction = (status) => {
-    persistManagement(status).then(data => {
-      console.log(data);
-      setPersist(status);
-    });
+  const changeTenant = (e) => {
+    setTenant(e);
+    localStorage.setItem("tenant", JSON.stringify(e));
   }
 
   return (
     <div>
       <PageHeader
         ghost={false}
-        title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Settings</p>}
+        title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Settings</p>}
         extra={[
         ]}
       >
-
+        {
+          teacher != null ?
+            <>
+              <h2>Conference URL:</h2>
+              <p style={{ marginBottom: '40px' }}>{teacher.conferenceUrl}</p>
+            </> : null
+        }
         <div style={{ display: "flex", flexDirection: "row", flex: 1, alignItems: "center", justifyContent: "center" }}>
           <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
@@ -128,26 +215,13 @@ function Settings(props) {
 
         </div>
 
-        <Form
-          form={form}
-          onFinish={handleSubmit}
-          layout="vertical"
-          style={{ width: '100%', marginTop: '2%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Form.Item label="Enter the key of the organization you want to join" size={'large'} style={{ width: '80%' }}>
-            <Input type="tenant" name="tenant" onChange={handleChange} style={{ height: '50px' }} />
-          </Form.Item>
-
-          <Form.Item label=" " style={{ width: '20%', marginLeft: '30px' }}>
-            <Button type="primary" size="large" htmlType="submit" style={{ height: '50px' }}>Submit</Button>
-          </Form.Item>
-        </Form>
         {
-          teacher != null ?
+          teacher != null && !isCreation ?
             <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>
               <h1>My Organizations</h1>
               <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
-                <Select defaultValue={tenant} size={'large'} style={{ width: '100%' }} onChange={(e) => { setTenant(e); localStorage.setItem("tenant", JSON.stringify(e)) }}>
+                <Select defaultValue={tenant} size={'large'} style={{ width: '100%' }} onChange={(e) => { e == '000' ? setIsCreation(true) : changeTenant(e) }}>
+                  <Option value={'000'}>Add new organization</Option>
                   {teacher.tenants ? teacher.tenants.map(tenant => {
                     return (
                       <Option value={tenant.key}>{tenant.displayName}</Option>
@@ -156,8 +230,145 @@ function Settings(props) {
                   }
                 </Select>
               </div>
-            </div> : null}
+            </div> :
+            <Form
+              form={form}
+              onFinish={handleSubmit}
+              layout="vertical"
+              style={{ width: '100%', marginTop: '2%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+            >
+              <Form.Item label="Enter the key of the organization you want to join (press Escape to select existing organization)" size={'large'} style={{ width: '80%' }}>
+                <Input type="tenant" name="tenant" onKeyUp={(e) => {
+                  if (e.key === 'Escape') {
+                    setIsCreation(false);
+                  }
+                }} onChange={handleChange} style={{ height: '50px' }} />
+              </Form.Item>
 
+              <Form.Item label=" " style={{ width: '20%', marginLeft: '30px' }}>
+                <Button type="primary" size="large" htmlType="submit" style={{ height: '50px' }}>Submit</Button>
+              </Form.Item>
+            </Form>
+        }
+
+        <h2 style={{
+          marginTop: '30px',
+          marginBottom: '30px'
+        }}>My personnals informations:</h2>
+        <Form
+          form={form2}
+          onFinish={handleSubmitUpdate}
+          layout="vertical"
+        >
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
+              <Input type="text" name="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            </Form.Item>
+            <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
+              <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            </Form.Item>
+          </div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
+              <Input type="email" name="iemail" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </Form.Item>
+            <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
+              <PhoneInput
+                enableSearch
+                countryCodeEditable={false}
+                disableCountryCode={false}
+                for
+                inputClass={"form-control"}
+                searchStyle={{
+                  width: "90%",
+                }}
+                inputStyle={{
+                  borderRadius: "0px",
+                  width: "inherit",
+                  paddingTop: '5px',
+                  paddingBottom: '5px'
+                }}
+                value={phone}
+                country={country}
+                // value={phone}
+                onChange={(value, country, e, formattedValue) => {
+                  setPhone(formattedValue)
+                }}
+              />
+            </Form.Item>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}>
+              <Select
+                mode="multiple"
+                allowClear
+                value={grades}
+                style={{ width: '100%' }}
+                placeholder="Please select grades"
+                onChange={handleChangeSelect}
+              >
+                <Select.Option value={1}>1</Select.Option>
+                <Select.Option value={2}>2</Select.Option>
+                <Select.Option value={3}>3</Select.Option>
+                <Select.Option value={4}>4</Select.Option>
+                <Select.Option value={5}>5</Select.Option>
+                <Select.Option value={6}>6</Select.Option>
+                <Select.Option value={7}>7</Select.Option>
+                <Select.Option value={8}>8</Select.Option>
+                <Select.Option value={9}>9</Select.Option>
+                <Select.Option value={10}>10</Select.Option>
+                <Select.Option value={11}>11</Select.Option>
+                <Select.Option value={12}>12</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}>
+              <Select mode="multiple"
+                allowClear
+                value={subjects}
+                style={{ width: '100%' }}
+                placeholder="Please select subjects"
+                onChange={handleChangeSubjects}>
+                {
+                  subjectsList.map(subject => {
+                    return (
+                      <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+          </div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
+              <Input type="text" name="schoolName" value={school} onChange={(e) => setSchool(e.target.value)} />
+            </Form.Item>
+            <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
+              <Input type="text" name="schoolBoard" value={board} onChange={(e) => setBoard(e.target.value)} />
+            </Form.Item>
+          </div>
+          <Form.Item>
+            <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+              {
+                submitting ? 'Loading...' : 'Update a Teacher Profile'
+              }
+            </Button>
+          </Form.Item>
+        </Form>
       </PageHeader>
     </div>
   )

@@ -66,7 +66,6 @@ function CreateTeacher() {
         });
     }
 
-
     const handleSubmit = () => {
 
         if (formData.firstName && formData.lastName && formData.iemail && formData.schoolName && formData.schoolBoard && phone) {

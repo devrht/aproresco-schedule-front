@@ -38,7 +38,6 @@ function LayoutOfApp({ children }, props) {
     document.getElementById('root').style.height = '100%';
 
     let today = new Date();
-    console.log('TODAY ==> ', today.getMinutes());
     today.setDate(today.getDate() - 1)
     let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
     let month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
@@ -87,16 +86,23 @@ function LayoutOfApp({ children }, props) {
         setLogged(false);
         history.push('/login');
       }
-
     setPathName(window.location.pathname);
-    console.log(pathName);
-  }, [window.location.pathname])
+    if(localStorage.getItem('user')) {
+      let user = JSON.parse(localStorage.getItem('user'));
+      if(!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
+        history.push('/settings');
+      }
+    } else {
+      setLogged(false);
+      history.push('/login');
+    }
+  }, [window.location.pathname, pathName])
 
   const logout = () => {
     setLogged(false);
     localStorage.removeItem("token");
-    // localStorage.removeItem("tenant");
     localStorage.removeItem("expireAt");
+    localStorage.removeItem("user");
     window.location.reload();
   }
 

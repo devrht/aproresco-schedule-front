@@ -20,6 +20,7 @@ function Login() {
       .then(user => {
         if (user) {
           getTeacherProfile(data.profileObj.email).then(data => {
+            localStorage.setItem('user', JSON.stringify(data));
             if (localStorage.getItem("email")) {
               let mail = JSON.parse(localStorage.getItem("email"));
               if (mail)
@@ -27,15 +28,19 @@ function Login() {
                   localStorage.removeItem('tenant');
                 }
             }
-            if (data.tenants.length > 0) {
-              if (localStorage.getItem("tenant")) {
-                if (data.tenants.filter(t => t.key == localStorage.getItem("tenant")).length == 0) {
-                  localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+            if (data.tenants) {
+              if (data.tenants.length > 0) {
+                if (localStorage.getItem("tenant")) {
+                  if (data.tenants.filter(t => t.key == localStorage.getItem("tenant")).length == 0) {
+                    localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+                  } else {
+                    localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+                  }
                 } else {
                   localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
                 }
               } else {
-                localStorage.setItem('tenant', JSON.stringify(data.tenants[0].key))
+                localStorage.removeItem('tenant');
               }
             } else {
               localStorage.removeItem('tenant');
