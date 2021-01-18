@@ -25,6 +25,7 @@ function CreateStudent() {
     const [parents, setParents] = useState([]);
     const [parent, setParent] = useState(null);
     const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
 
@@ -47,7 +48,6 @@ function CreateStudent() {
         })
     }
 
-
     const handleChange = event => {
         setFormData({
             name: event.target.name,
@@ -55,15 +55,15 @@ function CreateStudent() {
         });
     }
 
-    const changeParent = (parent) => {
-        setName(parent.firstName + ' ' + parent.lastName);
+    const changeParent = (p) => {
+        setLastName(p.lastName);
         setParent(parent);
     }
 
     const handleSubmit = () => {
-        if (formData.firstName && formData.lastName && formData.email && formData.schoolName && formData.schoolBoard && parent && formData.grade) {
+        if (formData.firstName && lastName && formData.email && formData.schoolName && formData.schoolBoard && parent && formData.grade) {
             if (formData.firstName.toString().length <= 0
-                || formData.lastName.toString().length <= 0
+                || lastName.toString().length <= 0
                 || formData.schoolName.toString().length <= 0
                 || formData.schoolBoard.toString().length <= 0
                 || formData.email.toString().length <= 0
@@ -79,7 +79,7 @@ function CreateStudent() {
 
         setSubmitting(true);
 
-        createStudent(formData.firstName, formData.lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent).then(data => {
+        createStudent(formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent).then(data => {
             history.push(`/studentprofiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -103,39 +103,6 @@ function CreateStudent() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="firstName" onChange={handleChange} />
-                        </Form.Item>
-                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" onChange={handleChange} />
-                        </Form.Item>
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="email" onChange={handleChange} />
-                        </Form.Item>
-                        <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="number" name="grade" onChange={handleChange} />
-                        </Form.Item>
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="schoolName" onChange={handleChange} />
-                        </Form.Item>
-                        <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="schoolBoard" onChange={handleChange} />
-                        </Form.Item>
-                    </div>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
@@ -177,8 +144,41 @@ function CreateStudent() {
                                 }
                             />
                         </Form.Item>
-                        <Form.Item label="Parent Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                        {/* <Form.Item label="Parent Name" required style={{ flex: 1, marginLeft: '10px' }}>
                             <Input disabled={true} type="text" value={name} />
+                        </Form.Item> */}
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="firstName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="email" name="email" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="text" name="schoolName" onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="schoolBoard" onChange={handleChange} />
                         </Form.Item>
                     </div>
                     <Form.Item>

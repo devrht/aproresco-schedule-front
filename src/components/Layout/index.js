@@ -37,6 +37,16 @@ function LayoutOfApp({ children }, props) {
 
     document.getElementById('root').style.height = '100%';
 
+    if(localStorage.getItem('user')) {
+      let user = JSON.parse(localStorage.getItem('user'));
+      if(!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
+        history.push('/settings');
+      }
+    } else {
+      setLogged(false);
+      // history.push('/login');
+    }
+
     let today = new Date();
     today.setDate(today.getDate() - 1)
     let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
@@ -87,15 +97,6 @@ function LayoutOfApp({ children }, props) {
         history.push('/login');
       }
     setPathName(window.location.pathname);
-    if(localStorage.getItem('user')) {
-      let user = JSON.parse(localStorage.getItem('user'));
-      if(!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
-        history.push('/settings');
-      }
-    } else {
-      setLogged(false);
-      history.push('/login');
-    }
   }, [window.location.pathname, pathName])
 
   const logout = () => {

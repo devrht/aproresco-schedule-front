@@ -167,14 +167,13 @@ export const googleSignUp = (user) => {
     })
 }
 
-export const createSchedule = (subject, startDate, endDate, description, grades) => {
+export const createSchedule = (subjects, startDate, endDate, grades) => {
     let tenant = JSON.parse(localStorage.getItem("tenant"));
     let data = {
-        subject,
+        subject: subjects,
         startDate,
         endDate,
         grades: grades,
-        description,
         tenant: {
             "key": tenant
         }

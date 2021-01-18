@@ -162,7 +162,7 @@ function StudentProfile() {
         getListView();
         const interval = setInterval(() => {
             getListView();
-        }, 15000);
+        }, 3000);
         return () => clearInterval(interval);
     }, [tableProps.pageIndex]);
 
@@ -178,26 +178,9 @@ function StudentProfile() {
         return lastName
     }
 
-    const computeMinGrade = (min, profile, grade) => {
-        let i = 0;
-        let result = min;
-        if (profile == null) {
-            return 0;
-        }
-
-        for (i = 0; i < profile.grades.length; i++) {
-            let gradeindex = Number(profile.grades[i]) - Number(grade.toString());
-            gradeindex = Math.abs(gradeindex);
-            if (gradeindex >= 0 && gradeindex < result) {
-                result = gradeindex;
-            }
-        }
-        return result < min ? result : min;
-    }
-
     const getListView = () => {
+        console.log(search);
         if (search.firstName === "" && search.lastName === "") {
-            //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {

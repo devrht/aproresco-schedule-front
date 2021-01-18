@@ -77,7 +77,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                         />
                     </Form.Item> :
                     <>
-                        <Form.Item>
+                        <Form.Item style={{ width: '120px'}}>
                             <Input
                                 type="number"
                                 placeholder="Grade Min"
@@ -86,7 +86,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                                 onChange={changeInput}
                             />
                         </Form.Item>
-                        <Form.Item>
+                        <Form.Item style={{ width: '120px'}}>
                             <Input
                                 type="number"
                                 placeholder="Grade Max"

@@ -325,7 +325,7 @@ function StudentList() {
         getListView();
         const interval = setInterval(() => {
             getListView();
-        }, 15000);
+        }, 3000);
         return () => clearInterval(interval);
     }, [tableProps.pageIndex]);
 
@@ -405,10 +405,9 @@ function StudentList() {
     }
 
     const getListView = () => {
+        console.log(search)
         if (search.firstName === "" && search.lastName === "") {
-            //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)
@@ -438,7 +437,6 @@ function StudentList() {
         }
         else {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)
@@ -495,7 +493,6 @@ function StudentList() {
     };
 
     const assigningStudents = (teacher, studentId) => {
-        console.log(teacher);
         assignStudentToAnotherTeacher(teacher.id, studentId)
             .then(res => {
                 getListView();
@@ -517,7 +514,7 @@ function StudentList() {
         }}>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Student Bookings</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Student Bookings</p>}
                 extra={[
                 ]}
             >
@@ -530,7 +527,7 @@ function StudentList() {
                         <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end'}}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('studentlist/add')}>
                             <PlusOutlined />
                         </Button>

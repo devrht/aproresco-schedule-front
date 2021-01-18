@@ -193,10 +193,16 @@ function Settings(props) {
           teacher != null ?
             <>
               <h2>Conference URL:</h2>
-              <p style={{ marginBottom: '40px' }}>{teacher.conferenceUrl}</p>
+              <p onClick={() => window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')} style={{ marginBottom: '40px', cursor: 'pointer' }}>{teacher.conferenceUrl}</p>
             </> : null
         }
-        <div style={{ display: "flex", flexDirection: "row", flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <div style={{
+          display: teacher != null ? teacher.teacherProfile ? teacher.teacherProfile.tenantAdmin ? "flex": 'none' : 'none' : 'none',
+          flexDirection: "row",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
           <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
             onClick={() => onEnableDeleting()}> {deletingStatus ? 'Disable' : 'Enable'} deleting </Button>
@@ -208,10 +214,6 @@ function Settings(props) {
           <Button
             style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
             onClick={() => onBridgeAction(bridge ? 0 : 1)}> {!bridge ? 'Open' : 'Close'} the bridge </Button>
-
-          {/* <Button
-            style={{ flex: 1, marginRight: "20px", height: "60px", color: "white", backgroundColor: "#1890ff" }}
-            onClick={() => onPersistAction(!persist)}> {!persist ? 'Enable' : 'Disable'} Persistence </Button> */}
 
         </div>
 
