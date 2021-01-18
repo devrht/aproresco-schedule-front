@@ -542,7 +542,7 @@ function TeacherList() {
             return '';
         }
 
-        if (!profile.gardes) {
+        if (!profile.grades) {
             return '';
         }
 

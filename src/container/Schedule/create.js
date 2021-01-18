@@ -73,7 +73,10 @@ function CreateSchedule() {
             return
         }
         setSubmitting(true)
-        let date = new Date(formData.startDate);
+
+        let tmp = formData.startDate.split('-');
+        let date = new Date(Date.UTC(tmp[0], tmp[1] - 1, tmp[2]));
+        // let date = new Date(formData.startDate);
         let day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         let year = date.getFullYear();
@@ -85,7 +88,19 @@ function CreateSchedule() {
         year = date.getFullYear();
         let f = month + '/' + day + '/' + year + ' ' + formData.endTime + ':00 -0500';
 
-        createSchedule(selectedSubjects, d, f, grades).then(data => {
+        let data = [];
+        let tenant = JSON.parse(localStorage.getItem("tenant"))
+        selectedSubjects.forEach(s => data.push(
+            {
+                subject: s,
+                startDate: d,
+                endDate: f,
+                grades: grades,
+                tenant: {
+                    "key": tenant
+                }
+            }))
+        createSchedule(data).then(result => {
             history.push(`/schedules`)
 
         }).finally(() => setSubmitting(false));
@@ -103,8 +118,12 @@ function CreateSchedule() {
                 <Form
                     form={form}
                     onFinish={handleSubmit}
-                    onClick={() => console.log('Bonjour')}
                     layout="vertical"
+                    onKeyPress={event => {
+                        if (event.which === 13 /* Enter */) {
+                            event.preventDefault();
+                        }
+                    }}
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
                     {
@@ -116,7 +135,7 @@ function CreateSchedule() {
                                     style={{ width: '100%' }}
                                     placeholder="Please select subjects"
                                     // onChange={(e) => { console.log(e[e.length-1]) }}>
-                                    onChange={(e) => { e[e.length-1] == null ? setIsCreation(true) : handleChangeSubjects(e) }}>
+                                    onChange={(e) => { e[e.length - 1] == null ? setIsCreation(true) : handleChangeSubjects(e) }}>
                                     <Select.Option value={null}>Create a new subject</Select.Option>
                                     {
                                         subjects.map(subject => {
@@ -134,7 +153,7 @@ function CreateSchedule() {
                                         setIsCreation(false);
                                     }
                                     if (e.key === 'Enter') {
-                                        setSubjects([...subjects, {subject: e.target.value, id: subjects.length+1}]);
+                                        setSubjects([...subjects, { subject: e.target.value, id: subjects.length + 1 }]);
                                         setIsCreation(false);
                                     }
                                 }} onChange={(e) => setSubject(e.target.value)} />

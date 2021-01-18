@@ -325,7 +325,7 @@ function StudentList() {
         getListView();
         const interval = setInterval(() => {
             getListView();
-        }, 3000);
+        }, 15000);
         return () => clearInterval(interval);
     }, [tableProps.pageIndex]);
 

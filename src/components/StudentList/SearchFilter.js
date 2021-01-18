@@ -18,7 +18,8 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
     });
 
     const convertDate = (date, status) => {
-        let result = new Date(date.target.value);
+        let tmp = date.target.value.split('-');
+        let result = new Date(Date.UTC(tmp[0], tmp[1]-1, tmp[2]));
         if (date.target.value) {
             let day = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
             let month = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
@@ -28,12 +29,10 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                 localStorage.setItem('startDate', year + '-' + month + '-' + day)
                 localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
                 setStartDate(year + '-' + month + '-' + day)
-                //dispatch(setStartDate(year+'-'+day+'-'+month));
             } else {
                 localStorage.setItem('endDate', year + '-' + month + '-' + day)
                 localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
                 setEndDate(year + '-' + month + '-' + day)
-                //dispatch(setEndDate(year+'-'+day+'-'+month));
             }
         }
     }

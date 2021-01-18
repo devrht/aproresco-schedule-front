@@ -16,9 +16,7 @@ function Schedule() {
     const [sortingType, setSortingType] = useState("asc");
     const [gradeMin, setGradeMin] = useState("0");
     const [gradeMax, setGradeMax] = useState("100");
-    const deletingStatus = useSelector((state) => {
-        return state.Student.enableDeleting;
-    })
+
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
@@ -157,11 +155,7 @@ function Schedule() {
 
     useEffect(() => {
         getListView();
-    }, [tableProps.pageIndex]);
-
-    useEffect(() => {
-        getListView();
-    }, [sortingType, sortingName]);
+    }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const computeLastName = (name) => {
         let lastName = '';
@@ -171,32 +165,14 @@ function Schedule() {
         return lastName
     }
 
-    const computeMinGrade = (min, profile, grade) => {
-        let i = 0;
-        let result = min;
-        if (profile == null) {
-            return 0;
-        }
-
-        for (i = 0; i < profile.grades.length; i++) {
-            let gradeindex = Number(profile.grades[i]) - Number(grade.toString());
-            gradeindex = Math.abs(gradeindex);
-            if (gradeindex >= 0 && gradeindex < result) {
-                result = gradeindex;
-            }
-        }
-        return result < min ? result : min;
-    }
-
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
-            //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             getScheduleByDate(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
-                        console.log('DATA ==> ', data.content)
-                        setSchedules(data.content)
-                        console.log("NEW ==> ", schedules);
+                        console.log('DATA ==> ', data.content);
+                        setSchedules([])
+                        setSchedules(data.content);
                         setTableProps({
                             ...tableProps,
                             totalCount: data.totalCount,
@@ -252,6 +228,7 @@ function Schedule() {
             })
         }
     }
+
     const changeSearch = (e) => {
         const { name, value } = e.target;
         setSearch({ ...search, [name]: value });

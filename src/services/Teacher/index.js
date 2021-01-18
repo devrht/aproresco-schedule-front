@@ -167,17 +167,17 @@ export const googleSignUp = (user) => {
     })
 }
 
-export const createSchedule = (subjects, startDate, endDate, grades) => {
-    let tenant = JSON.parse(localStorage.getItem("tenant"));
-    let data = {
-        subject: subjects,
-        startDate,
-        endDate,
-        grades: grades,
-        tenant: {
-            "key": tenant
-        }
-    }
+export const createSchedule = (data) => {
+    // let tenant = JSON.parse(localStorage.getItem("tenant"));
+    // let data = {
+    //     subject: subjects,
+    //     startDate,
+    //     endDate,
+    //     grades: grades,
+    //     tenant: {
+    //         "key": tenant
+    //     }
+    // }
     return axios.post(`${routes.SERVER_ADDRESS}/schedule`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
