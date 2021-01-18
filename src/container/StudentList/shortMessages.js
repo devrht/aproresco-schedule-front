@@ -7,9 +7,7 @@ import '../../Assets/container/StudentList.css'
 import { getShortMessages, getShortMessagesByDate } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
-//icon
-
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 
 
 function ShortMessageList(props) {
@@ -45,14 +43,18 @@ function ShortMessageList(props) {
         selectedRow,
         onChange: (selectedrow, records) => {
             console.log('selectedRowKeys changed: ', records);
-            var recordIdArray = [];
-            records.map(record => {
-                recordIdArray.push({ id: record.id, firstName: record.firstName, lastName: record.lastName })
-            })
-            setSelectedRow(recordIdArray);
-            dispatch(assignStudents(recordIdArray))
+            setSelectedRow(records);
         }
     };
+
+    // const deleteRows = () => {
+    //     let ids = [];
+    //     selectedRow.forEach(r => ids.push(r.id));
+    //     console.log(ids.join(','));
+    //     deleteSchedule(ids.join(',')).then(data => {
+    //         console.log(data);
+    //     })
+    // }
 
     const columns = [
         {
@@ -67,7 +69,7 @@ function ShortMessageList(props) {
                         setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("firstName"); }
                     }
                 };
             },
@@ -99,7 +101,7 @@ function ShortMessageList(props) {
                         setSortingName("dateCreated");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("dateCreated"); }
                     }
                 };
             },
@@ -209,11 +211,11 @@ function ShortMessageList(props) {
             {/* <LayoutOfApp> */}
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Short Messages</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Short Messages</p>}
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px' }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -224,6 +226,11 @@ function ShortMessageList(props) {
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('/messages/add/' + params.id)}>
                             <PlusOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="danger">
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>
@@ -240,6 +247,8 @@ function ShortMessageList(props) {
                             pageSize: tableProps.pageSize,
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
+                        rowSelection={rowSelection}
+                        rowKey="id"
                     />}
 
             </PageHeader>

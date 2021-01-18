@@ -197,7 +197,7 @@ function Settings(props) {
             </> : null
         }
         <div style={{
-          display: teacher != null ? teacher.teacherProfile ? teacher.teacherProfile.tenantAdmin ? "flex": 'none' : 'none' : 'none',
+          display: teacher != null ? teacher.tenantAdmin ? "flex": 'none' : 'none',
           flexDirection: "row",
           flex: 1,
           alignItems: "center",

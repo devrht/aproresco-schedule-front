@@ -318,3 +318,87 @@ export const editSubjectGrade = (id, subjects, grades) => {
             //alert(err.message);
         })
 }
+
+export const deleteSchedule = (ids) => {
+    let data = ids.split(',');
+    let url = '';
+    data.forEach((d, i) => {
+        if(i == data.length-1)
+            url += 'id='+d
+        else 
+            url += 'id='+d+'&'
+    })
+    return axios.delete(`${routes.SERVER_ADDRESS}/schedule?${url}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const deleteStudentProfiles = (ids) => {
+    let data = ids.split(',');
+    let url = '';
+    data.forEach((d, i) => {
+        if(i == data.length-1)
+            url += 'id='+d
+        else 
+            url += 'id='+d+'&'
+    })
+    return axios.delete(`${routes.SERVER_ADDRESS}/schedule?${url}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const deleteTeacherProfile = (ids) => {
+    let data = ids.split(',');
+    let url = '';
+    data.forEach((d, i) => {
+        if(i == data.length-1)
+            url += 'id='+d
+        else 
+            url += 'id='+d+'&'
+    })
+    return axios.delete(`${routes.SERVER_ADDRESS}/schedule?${url}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const deleteParents = (ids) => {
+    let data = ids.split(',');
+    let url = '';
+    data.forEach((d, i) => {
+        if(i == data.length-1)
+            url += 'id='+d
+        else 
+            url += 'id='+d+'&'
+    })
+    return axios.delete(`${routes.SERVER_ADDRESS}/student-parent?${url}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const deleteAvailabilities = (ids) => {
+    let data = ids.split(',');
+    let url = '';
+    data.forEach((d, i) => {
+        if(i == data.length-1)
+            url += 'id='+d
+        else 
+            url += 'id='+d+'&'
+    })
+    return axios.delete(`${routes.SERVER_ADDRESS}/teacher-availability?${url}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const deleteBookings = (ids) => {
+    let data = ids.split(',');
+    let url = '';
+    data.forEach((d, i) => {
+        if(i == data.length-1)
+            url += 'id='+d
+        else 
+            url += 'id='+d+'&'
+    })
+    return axios.delete(`${routes.SERVER_ADDRESS}/student-booking?${url}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}

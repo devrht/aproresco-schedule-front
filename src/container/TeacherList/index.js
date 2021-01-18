@@ -4,12 +4,12 @@ import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip } from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities } from '../../services/Teacher'
-import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade } from '../../services/Student'
+import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade, deleteAvailabilities } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined, PlusOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -124,10 +124,20 @@ function TeacherList() {
         }
     };
 
+    const deleteRows = () => {
+        let ids = [];
+        selectedRow.forEach(r => ids.push(r.id));
+        deleteAvailabilities(ids.join(',')).then(data => {
+            getListView();
+            setSelectedRow([]);
+        })
+    }
+
     useEffect(() => {
         getListView();
         getStudentList();
     }, [tableProps.pageIndex]);
+    
     useEffect(() => {
         getListView();
         getStudentList();
@@ -210,7 +220,7 @@ function TeacherList() {
                         setSortingNameStudent("firstName");
                         if (sortingTypeStudent == "") { setSortingTypeStudent("asc") }
                         else if (sortingTypeStudent == "asc") { setSortingTypeStudent("desc") }
-                        else if (sortingTypeStudent == "desc") { setSortingTypeStudent(""); setSortingNameStudent(""); }
+                        else if (sortingTypeStudent == "desc") { setSortingTypeStudent("asc"); setSortingNameStudent("firstName"); }
                     }
                 };
             },
@@ -237,7 +247,7 @@ function TeacherList() {
                         setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("firstName"); }
                     }
                 };
             },
@@ -278,7 +288,7 @@ function TeacherList() {
                         setSortingName("startDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("startDate"); }
                     }
                 };
             },
@@ -382,7 +392,7 @@ function TeacherList() {
                         setSortingName("studentCount");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("studentCount"); }
                     }
                 };
             },
@@ -631,7 +641,7 @@ function TeacherList() {
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px'  }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -643,6 +653,11 @@ function TeacherList() {
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('teacherlist/add')}>
                             <PlusOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="danger" onClick={() => deleteRows()}>
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>

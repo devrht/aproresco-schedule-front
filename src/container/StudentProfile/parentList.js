@@ -4,16 +4,17 @@ import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { findParentProfileByEmail, getParentProfile } from '../../services/Student'
+import { findParentProfileByEmail, getParentProfile, deleteParents } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 
 function ParentProfile() {
     const history = useHistory();
     const [studentList, setStudentList] = useState();
     const [sortingName, setSortingName] = useState("firstName");
     const [sortingType, setSortingType] = useState("asc");
+    const [selectedRow, setSelectedRow] = useState([]);
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -29,7 +30,6 @@ function ParentProfile() {
     })
 
 
-    const [selectedRow, setSelectedRow] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const columns = [
@@ -45,7 +45,7 @@ function ParentProfile() {
                         setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("firstName"); }
                     }
                 };
             },
@@ -72,7 +72,21 @@ function ParentProfile() {
             fixed: 'left',
         },
         {
-            title: 'Email',
+            title: <div><span>Email </span>
+                {sortingName === "email" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "email" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "email" && sortingType === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("email");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("email"); }
+                    }
+                };
+            },
             dataIndex: 'email',
             key: 'email',
         },
@@ -82,8 +96,21 @@ function ParentProfile() {
             key: 'phoneNumber',
         },
         {
-            title: <div><span>Activation Date </span>
+            title: <div><span>Activation date </span>
+                {sortingName === "activationDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "activationDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "activationDate" && sortingType === "" && ""}
             </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("activationDate");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("activationDate"); }
+                    }
+                };
+            },
             render: (record) => (
                 <div>
                     {
@@ -104,7 +131,7 @@ function ParentProfile() {
             getListView();
         }, 15000);
         return () => clearInterval(interval);
-    }, [tableProps.pageIndex]);
+    }, [tableProps.pageIndex, search]);
 
     useEffect(() => {
         getListView();
@@ -118,21 +145,21 @@ function ParentProfile() {
         return lastName
     }
 
-    const computeMinGrade = (min, profile, grade) => {
-        let i = 0;
-        let result = min;
-        if (profile == null) {
-            return 0;
+    const rowSelection = {
+        selectedRow,
+        onChange: (selectedrow, records) => {
+            console.log('selectedRowKeys changed: ', records);
+            setSelectedRow(records);
         }
+    };
 
-        for (i = 0; i < profile.grades.length; i++) {
-            let gradeindex = Number(profile.grades[i]) - Number(grade.toString());
-            gradeindex = Math.abs(gradeindex);
-            if (gradeindex >= 0 && gradeindex < result) {
-                result = gradeindex;
-            }
-        }
-        return result < min ? result : min;
+    const deleteRows = () => {
+        let ids = [];
+        selectedRow.forEach(r => ids.push(r.id));
+        deleteParents(ids.join(',')).then(data => {
+            getListView();
+            setSelectedRow([]);
+        })
     }
 
     const getListView = () => {
@@ -231,11 +258,11 @@ function ParentProfile() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Parent Profiles</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Parent Profiles</p>}
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px' }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -246,6 +273,11 @@ function ParentProfile() {
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('/parentProfiles/add')}>
                             <PlusOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="danger" onClick={() => deleteRows()}>
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>
@@ -262,6 +294,7 @@ function ParentProfile() {
                             pageSize: tableProps.pageSize,
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
+                        rowSelection={rowSelection}
                         rowKey="id"
                     />}
 

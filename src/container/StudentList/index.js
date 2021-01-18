@@ -4,12 +4,12 @@ import { Table, PageHeader, Button, Spin, Tooltip, Row, Form, Input } from 'antd
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, editSubject, assignStudentToAnotherTeacher } from '../../services/Student'
+import { findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, editSubject, assignStudentToAnotherTeacher, deleteBookings } from '../../services/Student'
 import { findTeacherListByFirstNameAndLastName } from '../../services/Teacher'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -68,6 +68,17 @@ function StudentList() {
         }
     };
 
+
+    const deleteRows = () => {
+        let ids = [];
+        selectedRow.forEach(r => ids.push(r.id));
+        console.log(ids.join(','));
+        deleteBookings(ids.join(',')).then(data => {
+            getListView();
+            setSelectedRow([]);
+        })
+    }
+
     const columns = [
         {
             title: <div><span>Name </span>
@@ -81,7 +92,7 @@ function StudentList() {
                         setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("firstName"); }
                     }
                 };
             },
@@ -125,7 +136,7 @@ function StudentList() {
                         setSortingName("startDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("startDate"); }
                     }
                 };
             },
@@ -152,7 +163,7 @@ function StudentList() {
                         setSortingName("subject");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("subject"); }
                     }
                 };
             },
@@ -199,7 +210,7 @@ function StudentList() {
                         setSortingName("grade");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("grade"); }
                     }
                 };
             },
@@ -327,7 +338,7 @@ function StudentList() {
             getListView();
         }, 15000);
         return () => clearInterval(interval);
-    }, [tableProps.pageIndex]);
+    }, [tableProps.pageIndex, search]);
 
     useEffect(() => {
         getListView();
@@ -405,7 +416,6 @@ function StudentList() {
     }
 
     const getListView = () => {
-        console.log(search)
         if (search.firstName === "" && search.lastName === "") {
             getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
@@ -518,7 +528,7 @@ function StudentList() {
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px' }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -530,6 +540,11 @@ function StudentList() {
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('studentlist/add')}>
                             <PlusOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="danger" onClick={() => deleteRows()}>
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>

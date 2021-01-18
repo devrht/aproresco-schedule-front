@@ -4,10 +4,10 @@ import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate } from '../../services/Student'
+import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate, deleteTeacherProfile } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -30,9 +30,26 @@ function TeacherProfile() {
         lastName: "",
     })
 
-
     const [selectedRow, setSelectedRow] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const rowSelection = {
+        selectedRow,
+        onChange: (selectedrow, records) => {
+            console.log('selectedRowKeys changed: ', records);
+            setSelectedRow(records);
+        }
+    };
+
+    const deleteRows = () => {
+        let ids = [];
+        selectedRow.forEach(r => ids.push(r.id));
+        console.log(ids.join(','));
+        deleteTeacherProfile(ids.join(',')).then(data => {
+            getListView();
+            setSelectedRow([]);
+        })
+    }
 
     const columns = [
         {
@@ -47,7 +64,7 @@ function TeacherProfile() {
                         setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("firstName"); }
                     }
                 };
             },
@@ -92,7 +109,7 @@ function TeacherProfile() {
                         setSortingName("registrationDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("registrationDate"); }
                     }
                 };
             },
@@ -119,7 +136,7 @@ function TeacherProfile() {
                         setSortingName("internalEmail");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("internalEmail"); }
                     }
                 };
             },
@@ -145,7 +162,7 @@ function TeacherProfile() {
                         setSortingName("phoneNumber");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("phoneNumber"); }
                     }
                 };
             },
@@ -165,7 +182,7 @@ function TeacherProfile() {
             getListView();
         }, 15000);
         return () => clearInterval(interval);
-    }, [tableProps.pageIndex]);
+    }, [tableProps.pageIndex, search]);
 
     useEffect(() => {
         getListView();
@@ -177,23 +194,6 @@ function TeacherProfile() {
             lastName = lastName.trim() + ' ' + name[index].trim();
         }
         return lastName
-    }
-
-    const computeMinGrade = (min, profile, grade) => {
-        let i = 0;
-        let result = min;
-        if (profile == null) {
-            return 0;
-        }
-
-        for (i = 0; i < profile.grades.length; i++) {
-            let gradeindex = Number(profile.grades[i]) - Number(grade.toString());
-            gradeindex = Math.abs(gradeindex);
-            if (gradeindex >= 0 && gradeindex < result) {
-                result = gradeindex;
-            }
-        }
-        return result < min ? result : min;
     }
 
     const getListView = () => {
@@ -292,11 +292,11 @@ function TeacherProfile() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>Teacher Profiles</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Teacher Profiles</p>}
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px' }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -307,6 +307,11 @@ function TeacherProfile() {
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('/teacherprofiles/add')}>
                             < PlusOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="danger" onClick={() => deleteRows()}>
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>
@@ -323,6 +328,7 @@ function TeacherProfile() {
                             pageSize: tableProps.pageSize,
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
+                        rowSelection={rowSelection}
                         rowKey="id"
                     />}
 

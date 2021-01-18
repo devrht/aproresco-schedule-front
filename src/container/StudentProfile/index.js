@@ -4,10 +4,10 @@ import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate } from '../../services/Student'
+import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -30,9 +30,25 @@ function StudentProfile() {
         lastName: "",
     })
 
-
     const [selectedRow, setSelectedRow] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const rowSelection = {
+        selectedRow,
+        onChange: (selectedrow, records) => {
+            console.log('selectedRowKeys changed: ', records);
+            setSelectedRow(records);
+        }
+    };
+
+    const deleteRows = () => {
+        let ids = [];
+        selectedRow.forEach(r => ids.push(r.id));
+        deleteStudentProfiles(ids.join(',')).then(data => {
+            getListView();
+            setSelectedRow([]);
+        })
+    }
 
     const columns = [
         {
@@ -47,7 +63,7 @@ function StudentProfile() {
                         setSortingName("firstName");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("firstName"); }
                     }
                 };
             },
@@ -91,7 +107,7 @@ function StudentProfile() {
                         setSortingName("registrationDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("registrationDate"); }
                     }
                 };
             },
@@ -118,7 +134,7 @@ function StudentProfile() {
                         setSortingName("email");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("email"); }
                     }
                 };
             },
@@ -144,7 +160,7 @@ function StudentProfile() {
                         setSortingName("grade");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType(""); setSortingName(""); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("grade"); }
                     }
                 };
             },
@@ -164,7 +180,7 @@ function StudentProfile() {
             getListView();
         }, 15000);
         return () => clearInterval(interval);
-    }, [tableProps.pageIndex]);
+    }, [tableProps.pageIndex, search]);
 
     useEffect(() => {
         getListView();
@@ -278,7 +294,7 @@ function StudentProfile() {
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px' }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -289,6 +305,11 @@ function StudentProfile() {
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="primary" onClick={() => history.push('/studentprofiles/add')}>
                             <PlusOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="danger" onClick={() => deleteRows()}>
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>
@@ -305,6 +326,7 @@ function StudentProfile() {
                             pageSize: tableProps.pageSize,
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
+                        rowSelection={rowSelection}
                         rowKey="id"
                     />}
 
