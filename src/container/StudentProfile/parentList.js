@@ -258,7 +258,7 @@ function ParentProfile() {
                 extra={[
                 ]}
             >
-                <div style={{ display: 'flex', flexDirection: 'row', marginRight: '40px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <div style={{ display: 'flex', flex: 1 }}>
                         <SearchFilter
                             changeInput={changeSearch}
@@ -266,14 +266,14 @@ function ParentProfile() {
                         />
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <Button key='3' size="medium" type="primary" onClick={() => history.push('/parentProfiles/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
-                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                    <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="danger" onClick={() => deleteRows()}>
                             <DeleteOutlined />
+                        </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="primary" onClick={() => history.push('/parentProfiles/add')}>
+                            <PlusOutlined />
                         </Button>
                     </div>
                 </div>

@@ -25,14 +25,16 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
             let day = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
             let month = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
             let year = result.getFullYear();
+            let hours = result.getHours().toString().padStart(2, '0');
+            let minutes = result.getMinutes().toString().padStart(2, '0');
             let d = month + '/' + day + '/' + year + '%2000:00:00'
             if (status) {
                 localStorage.setItem('startDate', year + '-' + month + '-' + day)
-                localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
+                localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500')
                 setStartDate(year + '-' + month + '-' + day)
             } else {
                 localStorage.setItem('endDate', year + '-' + month + '-' + day)
-                localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
+                localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500')
                 setEndDate(year + '-' + month + '-' + day)
             }
         }

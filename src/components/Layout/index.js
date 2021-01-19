@@ -54,11 +54,11 @@ function LayoutOfApp({ children }, props) {
     let year = today.getFullYear();
     if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
       localStorage.setItem('startDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+today.getHours()+':'+today.getMinutes()+':00 -0500')
+      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0')+':00 -0500')
     }
 
     if (localStorage.getItem('startTime') == null) {
-      localStorage.setItem('startTime', today.getHours() + ':' + today.getMinutes());
+      localStorage.setItem('startTime', today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0'));
     }
 
     today = new Date();
@@ -69,12 +69,12 @@ function LayoutOfApp({ children }, props) {
 
     if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
       localStorage.setItem('endDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+today.getHours()+':'+today.getMinutes()+':00 -0500')
+      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0')+':00 -0500')
 
     }
 
     if (localStorage.getItem('endTime') == null) {
-      localStorage.setItem('endTime', today.getHours() + ':' + today.getMinutes());
+      localStorage.setItem('endTime', today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0'));
     }
 
     let expireAt = new Date(localStorage.getItem("expireAt"));
