@@ -98,18 +98,18 @@ function TeacherProfile() {
             fixed: 'left',
         },
         {
-            title: <div><span>Registration Date </span>
-                {sortingName === "registrationDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "registrationDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "registrationDate" && sortingType === "" && ""}
+            title: <div><span>Create Date </span>
+                {sortingName === "createDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "createDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "createDate" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("registrationDate");
+                        setSortingName("createDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("registrationDate"); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("createDate"); }
                     }
                 };
             },
@@ -117,12 +117,12 @@ function TeacherProfile() {
                 <div>
                     {
                         <Moment format="D MMM YYYY HH:MM" withTitle>
-                            {record.registrationDate}
+                            {record.createDate}
                         </Moment>
                     }
                 </div>
             ),
-            key: 'registrationDate',
+            key: 'createDate',
         },
         {
             title: <div><span>Email </span>
@@ -143,7 +143,7 @@ function TeacherProfile() {
             render: (record) => {
                 return (
                     <div>
-                        {record.internalEmail}
+                        {record.internalEmail ? record.internalEmail : record.externalEmail}
                     </div>
                 )
             },
@@ -182,11 +182,7 @@ function TeacherProfile() {
             getListView();
         }, 15000);
         return () => clearInterval(interval);
-    }, [tableProps.pageIndex, search]);
-
-    useEffect(() => {
-        getListView();
-    }, [sortingType, sortingName]);
+    }, [tableProps.pageIndex, search, sortingType, sortingName]);
 
     const computeLastName = (name) => {
         let lastName = '';

@@ -135,12 +135,12 @@ function TeacherList() {
 
     useEffect(() => {
         getListView();
-        getStudentList();
+        // getStudentList();
     }, [tableProps.pageIndex]);
     
     useEffect(() => {
         getListView();
-        getStudentList();
+        // getStudentList();
     }, [sortingType, sortingName]);
 
     const getListView = () => {

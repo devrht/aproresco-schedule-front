@@ -338,11 +338,7 @@ function StudentList() {
             getListView();
         }, 15000);
         return () => clearInterval(interval);
-    }, [tableProps.pageIndex, search]);
-
-    useEffect(() => {
-        getListView();
-    }, [sortingType, sortingName]);
+    }, [tableProps.pageIndex, search, sortingType, sortingName]);
 
     const computeLastName = (name) => {
         let lastName = '';

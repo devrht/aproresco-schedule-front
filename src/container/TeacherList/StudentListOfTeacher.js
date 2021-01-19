@@ -281,7 +281,7 @@ const columns = [
                                 <h4>Subjects</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{teacher.teacherProfile.subjects.join(', ')}</h4>
+                                <h4>{teacher.teacherProfile.subjects ? teacher.teacherProfile.subjects.join(', ') : 'No subjects'}</h4>
                             </Col>
                         </Row>
                     </Card>

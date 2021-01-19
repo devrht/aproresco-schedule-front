@@ -65,6 +65,40 @@ export const newTenant = (value) => {
 }
 
 export const getTeacherListByDate = (start, end, page, size, sortName = 'firstName', sortType = 'asc') => {
+    if(start == null || end == null) {
+        let today = new Date();
+    today.setDate(today.getDate() - 1)
+    let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
+    let month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
+    let year = today.getFullYear();
+    if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
+      localStorage.setItem('startDate', year + '-' + month + '-' + day)
+      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
+      start = month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500';
+    }
+
+    if (localStorage.getItem('startTime') == null) {
+      localStorage.setItem('startTime', today.getHours() + ':' + today.getMinutes());
+    }
+
+    today = new Date();
+    today.setDate(today.getDate() + 1);
+    day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
+    month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
+    year = today.getFullYear();
+
+    if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
+      localStorage.setItem('endDate', year + '-' + month + '-' + day)
+      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500')
+      end = month + '%2F' + day + '%2F' + year + '%2000:00:00 -0500';
+
+    }
+
+    if (localStorage.getItem('endTime') == null) {
+      localStorage.setItem('endTime', today.getHours() + ':' + today.getMinutes());
+    }
+
+    }
     return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
         headers: {
             "Access-Control-Allow-Origin": "*",
