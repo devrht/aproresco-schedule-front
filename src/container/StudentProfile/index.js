@@ -14,8 +14,8 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 function StudentProfile() {
     const history = useHistory();
     const [studentList, setStudentList] = useState();
-    const [sortingName, setSortingName] = useState("firstName");
-    const [sortingType, setSortingType] = useState("asc");
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })

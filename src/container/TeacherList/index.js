@@ -35,13 +35,13 @@ function TeacherList() {
     })
     const [teacherList, setTeacherList] = useState();
     const [teacherId, setTeacherId] = useState(0);
-    const [sortingName, setSortingName] = useState("firstName");
+    const [sortingName, setSortingName] = useState("createDate");
     const [studentList, setStudentList] = useState();
-    const [sortingType, setSortingType] = useState("asc");
+    const [sortingType, setSortingType] = useState("desc");
     const [selectedRow, setSelectedRow] = useState([]);
 
     const [sortingNameStudent, setSortingNameStudent] = useState("firstName");
-    const [sortingTypeStudent, setSortingTypeStudent] = useState("asc");
+    const [sortingTypeStudent, setSortingTypeStudent] = useState("desc");
     const [selectedRowStudent, setSelectedRowStudent] = useState([]);
 
     const [editableSubject, setEditableSubject] = useState([])
@@ -647,7 +647,7 @@ function TeacherList() {
                             changeInput={changeSearch}
                             searchList={searchList}
                         />
-                        <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button>
+                        {/* <Button style={{ display: deletingStatus ? 'block' : 'none' }} onClick={() => deleteBooking(selectedRow)}> Supprimer </Button> */}
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>

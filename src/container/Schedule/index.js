@@ -13,8 +13,8 @@ function Schedule() {
     const history = useHistory();
     const [schedules, setSchedules] = useState([]);
     const [selectedRow, setSelectedRow] = useState([]);
-    const [sortingName, setSortingName] = useState("startDate");
-    const [sortingType, setSortingType] = useState("asc");
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
     const [gradeMin, setGradeMin] = useState("0");
     const [gradeMax, setGradeMax] = useState("100");
     const deletingStatus = useSelector((state) => {

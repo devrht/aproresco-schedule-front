@@ -12,8 +12,8 @@ import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, De
 function ParentProfile() {
     const history = useHistory();
     const [studentList, setStudentList] = useState();
-    const [sortingName, setSortingName] = useState("firstName");
-    const [sortingType, setSortingType] = useState("asc");
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
     const [selectedRow, setSelectedRow] = useState([]);
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;

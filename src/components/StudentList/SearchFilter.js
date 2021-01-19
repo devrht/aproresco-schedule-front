@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Select, Input, Button } from 'antd'
+import { SearchOutlined } from "@ant-design/icons"
 
 const { Option } = Select;
 const SearchFilter = ({ changeInput, searchList, type }) => {
@@ -19,7 +20,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
 
     const convertDate = (date, status) => {
         let tmp = date.target.value.split('-');
-        let result = new Date(Date.UTC(tmp[0], tmp[1]-1, tmp[2]));
+        let result = new Date(Date.UTC(tmp[0], tmp[1] - 1, tmp[2]));
         if (date.target.value) {
             let day = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
             let month = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
@@ -44,13 +45,13 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                 setStartDate(time)
                 localStorage.setItem('startTime', time);
                 let tmp = localStorage.getItem('toStart').split('%20');
-                tmp[1] = time+tmp[1].substr(5, tmp[1].length);
+                tmp[1] = time + tmp[1].substr(5, tmp[1].length);
                 localStorage.setItem('toStart', tmp.join('%20'));
             } else {
                 setEndDate(time)
                 localStorage.setItem('endTime', time);
                 let tmp = localStorage.getItem('toEnd').split('%20');
-                tmp[1] = time+tmp[1].substr(5, tmp[1].length);
+                tmp[1] = time + tmp[1].substr(5, tmp[1].length);
                 localStorage.setItem('toEnd', tmp.join('%20'));
             }
         }
@@ -76,7 +77,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                         />
                     </Form.Item> :
                     <>
-                        <Form.Item style={{ width: '120px'}}>
+                        <Form.Item style={{ width: '120px' }}>
                             <Input
                                 type="number"
                                 placeholder="Grade Min"
@@ -85,7 +86,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                                 onChange={changeInput}
                             />
                         </Form.Item>
-                        <Form.Item style={{ width: '120px'}}>
+                        <Form.Item style={{ width: '120px' }}>
                             <Input
                                 type="number"
                                 placeholder="Grade Max"
@@ -128,7 +129,9 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                     onChange={(value) => convertTime(value, false)}
                 />
             </Form.Item>
-            <Button onClick={searchList}> Search </Button>
+            <Button onClick={searchList} type="primary">
+                <SearchOutlined />
+            </Button>
         </Form>
     )
 }

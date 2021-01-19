@@ -15,8 +15,8 @@ function ShortMessageList(props) {
     const history = useHistory();
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
-    const [sortingName, setSortingName] = useState("firstName");
-    const [sortingType, setSortingType] = useState("asc");
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
