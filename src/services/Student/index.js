@@ -52,7 +52,7 @@ export const getParentProfile = (start, end, page, size, sortName, sortType) => 
 }
 
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
-    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -67,7 +67,7 @@ export const getSchedule = (grade) => {
     let filter = 'startDate';
     let sort = 'asc';
     let tenant = JSON.parse(localStorage.getItem("tenant"));
-    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
         .then(res => {
             return res.data;
         })
@@ -152,7 +152,7 @@ export const findParentProfileByEmail = (email, start, end, page, size, sortName
 }
 
 export const findScheduleByGrade = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
-    return axios.get(`https://meet.appui.io:8443/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -270,7 +270,7 @@ export const assignMeetingToAnotherTeacher = (teacherId, url) => {
 }
 
 export const bridgeManagement = (status) => {
-    return axios.get(`https://meet.appui.io:8443/bridge?open=${status}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/bridge?open=${status}`)
         .then(res => {
             return res.data;
         })
