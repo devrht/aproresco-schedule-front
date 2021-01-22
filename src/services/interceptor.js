@@ -7,7 +7,7 @@ const addToken = () => {
             try {
                 // Get auth token
                 const accessToken = JSON.parse(localStorage.getItem("token"));
-                const tenant = JSON.parse(localStorage.getItem("tenant"));
+                const tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
 
                 if (accessToken) {
                     config.headers['Authorization'] = 'Bearer ' + accessToken;

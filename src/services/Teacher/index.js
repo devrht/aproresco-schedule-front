@@ -300,7 +300,7 @@ export const createParent = (firstName, lastName, phoneNumber, countryCode, emai
         email,
         tenants: [
             {
-                "key": JSON.parse(localStorage.getItem("tenant"))
+                "key": JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id))
             }
         ]
     }

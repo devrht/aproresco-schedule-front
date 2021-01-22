@@ -21,6 +21,7 @@ function CreateBooking() {
 
     const history = useHistory();
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState(null);
     const [comment, setComment] = useState('');

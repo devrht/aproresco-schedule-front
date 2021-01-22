@@ -66,7 +66,7 @@ export const getSchedule = (grade) => {
     let size = 20;
     let filter = 'startDate';
     let sort = 'asc';
-    let tenant = JSON.parse(localStorage.getItem("tenant"));
+    let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
     return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
         .then(res => {
             return res.data;

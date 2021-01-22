@@ -25,6 +25,8 @@ function Settings(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const [deleting, setDeleting] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [assigning, setAssigning] = useState(false);
   const [bridge, setBridge] = useState(false);
   const [persist, setPersist] = useState(false);
@@ -53,7 +55,7 @@ function Settings(props) {
   })
 
   useEffect(() => {
-    setTenant(JSON.parse(localStorage.getItem('tenant')));
+    setTenant(JSON.parse(localStorage.getItem('tenant'+JSON.parse(localStorage.getItem("user")).id)));
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
@@ -118,7 +120,7 @@ function Settings(props) {
       return
     }
     newTenant(formData.tenant).then(data => {
-      setTenant(formData.tenant); localStorage.setItem("tenant", JSON.stringify(formData.tenant))
+      setTenant(formData.tenant); localStorage.setItem("tenant"+JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
       history.push(`/teacherlist`)
     }).catch(err => {
       alert("Error occured when saving data, please retry!")
@@ -178,7 +180,7 @@ function Settings(props) {
 
   const changeTenant = (e) => {
     setTenant(e);
-    localStorage.setItem("tenant", JSON.stringify(e));
+    localStorage.setItem("tenant"+JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
   }
 
   return (
@@ -316,7 +318,11 @@ function Settings(props) {
                 mode="multiple"
                 allowClear
                 value={grades}
+                open={open}
+                onFocus={() => setOpen(true)}
+                onBlur={() => setOpen(false)}
                 style={{ width: '100%' }}
+                onSelect={() => setOpen(false)}
                 placeholder="Please select grades"
                 onChange={handleChangeSelect}
               >
@@ -339,7 +345,11 @@ function Settings(props) {
               <Select mode="multiple"
                 allowClear
                 value={subjects}
+                open={open2}
+                onFocus={() => setOpen2(true)}
+                onBlur={() => setOpen2(false)}
                 style={{ width: '100%' }}
+                onSelect={() => setOpen2(false)}
                 placeholder="Please select subjects"
                 onChange={handleChangeSubjects}>
                 {
