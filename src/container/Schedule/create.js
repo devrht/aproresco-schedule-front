@@ -17,6 +17,8 @@ function CreateSchedule() {
 
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
     const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
@@ -128,13 +130,17 @@ function CreateSchedule() {
                 >
                     {
                         !isCreation ?
-                            <Form.Item label="Subjects" required>
+                            <Form.Item label="Subjects" required
+                            onClick={() => setOpen(open ? false : true)}>
                                 <Select
                                     mode="multiple"
                                     allowClear
+                                    open={open}
+                                    onFocus={() => setOpen(true)}
+                                    onBlur={() => setOpen(false)}
                                     style={{ width: '100%' }}
+                                    onSelect={() => setOpen(false)}
                                     placeholder="Please select subjects"
-                                    // onChange={(e) => { console.log(e[e.length-1]) }}>
                                     onChange={(e) => { e[e.length - 1] == null ? setIsCreation(true) : handleChangeSubjects(e) }}>
                                     <Select.Option value={null}>Create a new subject</Select.Option>
                                     {
@@ -185,11 +191,16 @@ function CreateSchedule() {
                     {/* <Form.Item label="Description" required>
                         <Input type="text" name="description" onChange={handleChange} />
                     </Form.Item> */}
-                    <Form.Item label="Grades" required>
+                    <Form.Item label="Grades" required
+                            onClick={() => setOpen2(open2 ? false : true)}>
                         <Select
                             mode="multiple"
                             allowClear
+                            open={open2}
+                            onFocus={() => setOpen2(true)}
+                            onBlur={() => setOpen2(false)}
                             style={{ width: '100%' }}
+                            onSelect={() => setOpen2(false)}
                             placeholder="Please select grades"
                             onChange={handleChangeSelect}
                         >
