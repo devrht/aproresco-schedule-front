@@ -8,6 +8,7 @@ import { getStudentProfileByDate, getSchedule } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Moment from 'react-moment';
 
 const formReducer = (state, event) => {
     return {
@@ -181,7 +182,11 @@ function CreateBooking() {
                                 {
                                     dates.map(date => {
                                         return (
-                                            <option value={date.startDate} key={date.id}>{date.startDate}</option>
+                                            <option value={date.startDate} key={date.id}>
+                                                <Moment local format="D MMM YYYY HH:MM" withTitle>
+                                                    {date.startDate}
+                                                </Moment>
+                                            </option>
                                         )
                                     })
                                 }

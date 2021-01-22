@@ -19,7 +19,8 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
     });
 
     const convertDate = (date, status) => {
-        let tmp = new Date(date.target.value);
+        let tmp = new Date(date.target.value+" UTC");
+        console.log(tmp)
         let result = new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
         if (tmp) {
 
