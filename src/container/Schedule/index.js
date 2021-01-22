@@ -72,7 +72,7 @@ function Schedule() {
             render: (record) => (
                 <div>
                     {
-                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                        <Moment local format="D MMM YYYY HH:MM" withTitle>
                             {record.startDate}
                         </Moment>
                     }
@@ -125,7 +125,7 @@ function Schedule() {
             render: (record) => {
                 return (
                     <span>
-                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                        <Moment local format="D MMM YYYY HH:MM" withTitle>
                             {record.endDate}
                         </Moment>
                     </span>

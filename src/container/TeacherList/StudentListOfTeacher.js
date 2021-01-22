@@ -293,7 +293,7 @@ const columns = [
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>
-                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
                                         {teacher.startDate}
                                     </Moment>
                                 </h4>
@@ -305,7 +305,7 @@ const columns = [
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>
-                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
                                         {effectiveStartDate}
                                     </Moment>
                                 </h4>

@@ -78,7 +78,7 @@ function StudentDetail(props) {
             render: (record) => (
                 <div>
                     {
-                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                        <Moment local format="D MMM YYYY HH:MM" withTitle>
                             {record.schedule.startDate}
                         </Moment>
                     }
@@ -93,7 +93,7 @@ function StudentDetail(props) {
                 return (
                     <div>
                         {
-                            <Moment format="D MMM YYYY HH:MM" withTitle>
+                            <Moment local format="D MMM YYYY HH:MM" withTitle>
                                 {record.schedule.endDate}
                             </Moment>
                         }
@@ -135,7 +135,7 @@ function StudentDetail(props) {
                                 </Col>
                                 <Col className="gutter-row" span={14}>
                                     <h4 >
-                                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                                        <Moment local format="D MMM YYYY HH:MM" withTitle>
                                             {studentDetail.startDate}
                                         </Moment>
                                     </h4>

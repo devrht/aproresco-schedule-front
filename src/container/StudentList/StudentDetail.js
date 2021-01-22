@@ -58,7 +58,7 @@ function StudentDetail(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4 > 
-                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
                                         { studentDetail.schedule.startDate }
                                     </Moment>
                                 </h4>
@@ -118,7 +118,7 @@ function StudentDetail(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4 >{studentDetail.effectiveStartDate ? 
-                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
                                         { studentDetail.effectiveStartDate }
                                     </Moment> : 
                                     'Undefined'}
@@ -132,7 +132,7 @@ function StudentDetail(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4 >{studentDetail.rejectionDate ? 
-                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
                                         { studentDetail.rejectionDate }
                                     </Moment> : 
                                     'Undefined'}
@@ -146,7 +146,7 @@ function StudentDetail(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4 >{studentDetail.teacherAssignedDate ? 
-                                    <Moment format="D MMM YYYY HH:MM" withTitle>
+                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
                                         { studentDetail.teacherAssignedDate }
                                     </Moment> : 
                                     'Undefined'}

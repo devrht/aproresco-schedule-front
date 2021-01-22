@@ -296,7 +296,7 @@ function TeacherList() {
                 <div
                     style={{ display: "flex", flexDirection: 'row', alignItems: "center", width: '150px' }}>
                     {
-                        <Moment format="D MMM YYYY HH:MM" withTitle>
+                        <Moment local format="D MMM YYYY HH:MM" withTitle>
                             {record.startDate}
                         </Moment>
                     }

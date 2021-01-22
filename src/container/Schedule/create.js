@@ -31,6 +31,7 @@ function CreateSchedule() {
     }, []);
 
     const handleChange = event => {
+        console.log(event.target.value)
         setFormData({
             name: event.target.name,
             value: event.target.value,
@@ -74,19 +75,29 @@ function CreateSchedule() {
         }
         setSubmitting(true)
 
-        let tmp = formData.startDate.split('-');
-        let date = new Date(Date.UTC(tmp[0], tmp[1] - 1, tmp[2]));
-        // let date = new Date(formData.startDate);
+
+        let date = new Date(formData.startDate);
+        let result = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+
         let day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         let year = date.getFullYear();
-        let d = month + '/' + day + '/' + year + ' ' + formData.startTime + ':00 -0500';
+        
+        let uday = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
+        let umonth = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
+        let uyear = result.getFullYear();
+        let d = umonth + '/' + uday + '/' + uyear + ' ' + formData.startTime + ':00 -0500';
 
         date = new Date(formData.endDate);
+        result = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
         day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
         month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
         year = date.getFullYear();
-        let f = month + '/' + day + '/' + year + ' ' + formData.endTime + ':00 -0500';
+
+        uday = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
+        umonth = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
+        uyear = result.getFullYear();
+        let f = umonth + '/' + uday + '/' + uyear + ' ' + formData.endTime + ':00 -0500';
 
         let data = [];
         let tenant = JSON.parse(localStorage.getItem("tenant"))

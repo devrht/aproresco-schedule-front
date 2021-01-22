@@ -167,7 +167,7 @@ function CreateAvailibility() {
                                     dates.map(date => {
                                         return (
                                             <option value={date.startDate} key={date.id}>
-                                                <Moment format="D MMM YYYY HH:MM" withTitle>
+                                                <Moment local format="D MMM YYYY HH:MM" withTitle>
                                                     {date.startDate}
                                                 </Moment>
                                             </option>
@@ -183,7 +183,7 @@ function CreateAvailibility() {
                                     ends.map(date => {
                                         return (
                                             <option value={date.endDate} key={date.id}>
-                                                <Moment format="D MMM YYYY HH:MM" withTitle>
+                                                <Moment local format="D MMM YYYY HH:MM" withTitle>
                                                     {date.endDate}
                                                 </Moment>
                                             </option>
