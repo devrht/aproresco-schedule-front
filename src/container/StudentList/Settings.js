@@ -313,7 +313,8 @@ function Settings(props) {
             display: 'flex',
             flexDirection: 'row'
           }}>
-            <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}>
+            <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}
+                            onClick={() => setOpen(open ? false : true)}>
               <Select
                 mode="multiple"
                 allowClear
@@ -341,7 +342,8 @@ function Settings(props) {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}>
+            <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}
+                            onClick={() => setOpen2(open2 ? false : true)}>
               <Select mode="multiple"
                 allowClear
                 value={subjects}

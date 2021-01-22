@@ -37,9 +37,13 @@ function LayoutOfApp({ children }, props) {
 
     document.getElementById('root').style.height = '100%';
 
-    if(localStorage.getItem('user')) {
+    if (localStorage.getItem('user')) {
       let user = JSON.parse(localStorage.getItem('user'));
-      if(!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
+      let tenant = localStorage.getItem('tenant' + user.id);
+      if (!tenant) {
+        history.push('/settings');
+      }
+      if (!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
         history.push('/settings');
       }
     } else {
@@ -54,7 +58,7 @@ function LayoutOfApp({ children }, props) {
     let year = today.getFullYear();
     if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
       localStorage.setItem('startDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0')+':00 -0500')
+      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20' + today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0') + ':00 -0500')
     }
 
     if (localStorage.getItem('startTime') == null) {
@@ -69,7 +73,7 @@ function LayoutOfApp({ children }, props) {
 
     if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
       localStorage.setItem('endDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0')+':00 -0500')
+      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20' + today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0') + ':00 -0500')
 
     }
 

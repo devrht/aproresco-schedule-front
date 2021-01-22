@@ -90,7 +90,7 @@ function CreateSchedule() {
         let f = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
         let data = [];
-        let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("email")).id));
+        let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
 
         selectedSubjects.forEach(s => data.push(
             {

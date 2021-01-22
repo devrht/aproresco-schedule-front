@@ -153,6 +153,9 @@ function Schedule() {
         if (profile == null) {
             return '';
         }
+        if (profile.grades == null) {
+            return '';
+        }
 
         for (i = 0; i < profile.grades.length; i++) {
             if (i == 0) {
