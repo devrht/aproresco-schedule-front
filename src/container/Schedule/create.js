@@ -76,31 +76,20 @@ function CreateSchedule() {
         setSubmitting(true)
 
 
-        let date = new Date(formData.startDate);
-        let result = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+        let date = new Date(formData.startDate+ "T"+formData.startTime+":00");
+        console.log(date)
+        let d = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
+        // let d = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 -0500';
 
-        let day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
-        let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-        let year = date.getFullYear();
-        
-        let uday = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
-        let umonth = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
-        let uyear = result.getFullYear();
-        let d = umonth + '/' + uday + '/' + uyear + ' ' + formData.startTime + ':00 -0500';
+        date = new Date(formData.endDate+ "T"+formData.endTime+":00");
 
-        date = new Date(formData.endDate);
-        result = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-        day = date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate())
-        month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-        year = date.getFullYear();
-
-        uday = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
-        umonth = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
-        uyear = result.getFullYear();
-        let f = umonth + '/' + uday + '/' + uyear + ' ' + formData.endTime + ':00 -0500';
+        console.log(date)
+        let f = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
+        // let f = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 -0500';
 
         let data = [];
-        let tenant = JSON.parse(localStorage.getItem("tenant"))
+        let tenant = JSON.parse(localStorage.getItem("tenant"));
+
         selectedSubjects.forEach(s => data.push(
             {
                 subject: s,
