@@ -24,7 +24,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
         if (tmp) {
 
             let day = tmp.getDate().toString().padStart(2, '0');
-            let month = (tmp.getMonth() + 1).padStart(2, '0');
+            let month = (tmp.getMonth() + 1).toString().padStart(2, '0');
             let year = tmp.getFullYear();
             let hours = tmp.getHours().toString().padStart(2, '0');
             let minutes = tmp.getMinutes().toString().padStart(2, '0');
