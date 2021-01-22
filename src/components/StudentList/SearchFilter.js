@@ -23,23 +23,19 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
         let result = new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
         if (tmp) {
 
-            let day = tmp.getDate() < 10 ? '0' + (tmp.getDate()) : (tmp.getDate())
-            let month = tmp.getMonth() + 1 < 10 ? '0' + (tmp.getMonth() + 1) : (tmp.getMonth() + 1);
+            let day = tmp.getDate().toString().padStart(2, '0');
+            let month = (tmp.getMonth() + 1).padStart(2, '0');
             let year = tmp.getFullYear();
             let hours = tmp.getHours().toString().padStart(2, '0');
             let minutes = tmp.getMinutes().toString().padStart(2, '0');
 
-            let uday = result.getDate() < 10 ? '0' + (result.getDate()) : (result.getDate())
-            let umonth = result.getMonth() + 1 < 10 ? '0' + (result.getMonth() + 1) : (result.getMonth() + 1);
-            let uyear = result.getFullYear();
-
             if (status) {
                 localStorage.setItem('startDate', year + '-' + month + '-' + day)
-                localStorage.setItem('toStart', umonth + '%2F' + uday + '%2F' + uyear + '%20'+hours+':'+minutes+':00 -0500')
+                localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500')
                 setStartDate(year + '-' + month + '-' + day)
             } else {
                 localStorage.setItem('endDate', year + '-' + month + '-' + day)
-                localStorage.setItem('toEnd', umonth + '%2F' + uday + '%2F' + uyear + '%20'+hours+':'+minutes+':00 -0500')
+                localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500')
                 setEndDate(year + '-' + month + '-' + day)
             }
         }

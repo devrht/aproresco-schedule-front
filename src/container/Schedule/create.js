@@ -78,14 +78,14 @@ function CreateSchedule() {
 
         let date = new Date(formData.startDate+ "T"+formData.startTime+":00");
         console.log(date)
-        let d = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
-        // let d = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 -0500';
+        // let d = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
+        let d = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
         date = new Date(formData.endDate+ "T"+formData.endTime+":00");
 
         console.log(date)
-        let f = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
-        // let f = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 -0500';
+        // let f = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
+        let f = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
         let data = [];
         let tenant = JSON.parse(localStorage.getItem("tenant"));
