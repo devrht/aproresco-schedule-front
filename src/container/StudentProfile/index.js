@@ -87,7 +87,7 @@ function StudentProfile() {
                             <p style={{ width: "50%", textAlign: "left" }}>
                                 {(record.firstName + " " + record.lastName).length <= 20 ?
                                     record.firstName + " " + record.lastName :
-                                    (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                                    (record.firstName + " " + record.lastName).substring(0, 19) + '...'}
                             </p>
                         </Button>
                     </Tooltip>
