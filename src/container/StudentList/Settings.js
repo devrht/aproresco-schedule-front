@@ -55,7 +55,7 @@ function Settings(props) {
   })
 
   useEffect(() => {
-    setTenant(JSON.parse(localStorage.getItem('tenant'+JSON.parse(localStorage.getItem("user")).id)));
+    setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
@@ -77,6 +77,13 @@ function Settings(props) {
       setSubjects(data.subjects ? data.subjects : []);
     });
   }
+
+  useEffect(() => {
+    if (teacher != null)
+      if (teacher.phoneNumber != null)
+        if (teacher.phoneNumber.length >= 1)
+          history.push(`/teacherlist`);
+  }, [teacher])
 
   const getSubjects = () => {
     getSchedule(1).then(data => {
@@ -120,7 +127,7 @@ function Settings(props) {
       return
     }
     newTenant(formData.tenant).then(data => {
-      setTenant(formData.tenant); localStorage.setItem("tenant"+JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
+      setTenant(formData.tenant); localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
       history.push(`/teacherlist`)
     }).catch(err => {
       alert("Error occured when saving data, please retry!")
@@ -150,10 +157,7 @@ function Settings(props) {
     setSubmitting(true);
 
     updateTeacher(teacher.id, firstName, lastName, email, grades, subjects, phone, school, board).then(data => {
-      // console.log(data)
       getTeacher();
-      history.push(`/teacherlist`);
-      // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
     }).catch(err => {
       alert("Error occured when saving data, please retry!")
       console.log(err)
@@ -180,7 +184,7 @@ function Settings(props) {
 
   const changeTenant = (e) => {
     setTenant(e);
-    localStorage.setItem("tenant"+JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
+    localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
   }
 
   return (
@@ -199,7 +203,7 @@ function Settings(props) {
             </> : null
         }
         <div style={{
-          display: teacher != null ? teacher.tenantAdmin ? "flex": 'none' : 'none',
+          display: teacher != null ? teacher.tenantAdmin ? "flex" : 'none' : 'none',
           flexDirection: "row",
           flex: 1,
           alignItems: "center",
@@ -314,7 +318,7 @@ function Settings(props) {
             flexDirection: 'row'
           }}>
             <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}
-                            onClick={() => setOpen(open ? false : true)}>
+              onClick={() => setOpen(open ? false : true)}>
               <Select
                 mode="multiple"
                 allowClear
@@ -343,7 +347,7 @@ function Settings(props) {
             </Form.Item>
 
             <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}
-                            onClick={() => setOpen2(open2 ? false : true)}>
+              onClick={() => setOpen2(open2 ? false : true)}>
               <Select mode="multiple"
                 allowClear
                 value={subjects}
