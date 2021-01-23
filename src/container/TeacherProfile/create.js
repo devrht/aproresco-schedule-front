@@ -28,6 +28,8 @@ function CreateTeacher() {
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
 
     useEffect(() => {
         getSubjects();
@@ -159,11 +161,16 @@ function CreateTeacher() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}>
+                        <Form.Item label="Grades" required style={{ flex: 1, marginRight: '10px' }}
+                            onClick={() => setOpen(open ? false : true)}>
                             <Select
                                 mode="multiple"
                                 allowClear
+                                open={open}
+                                onFocus={() => setOpen(true)}
+                                onBlur={() => setOpen(false)}
                                 style={{ width: '100%' }}
+                                onSelect={() => setOpen(false)}
                                 placeholder="Please select grades"
                                 onChange={handleChangeSelect}
                             >
@@ -182,10 +189,14 @@ function CreateTeacher() {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}>
+                        <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen2(open2 ? false : true)}>
                             <Select mode="multiple"
                                 allowClear
+                                open={open2}
+                                onFocus={() => setOpen2(true)}
+                                onBlur={() => setOpen2(false)}
                                 style={{ width: '100%' }}
+                                onSelect={() => setOpen2(false)}
                                 placeholder="Please select subjects"
                                 onChange={handleChangeSubjects}>
                                 {

@@ -123,8 +123,15 @@ function StudentList() {
                 </div>,
             key: 'name',
             fixed: 'left',
-        },
-        {
+        }, {
+            title: <div>Parent Email</div>,
+            render: (record) => {
+                return (
+                    <span>{record.studentProfile.parent.email}</span>
+                )
+            },
+            key: 'parentEmail',
+        }, {
             title: <div><span>Start Date </span>
                 {sortingName === "startDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
                 {sortingName === "startDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
