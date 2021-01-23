@@ -75,7 +75,7 @@ function AddMessage(props) {
 
     const getTemplates = () => {
         setLoadingS(true);
-        getShortMessagesTemplates(params.id, 0, 1000, 'firstName', 'asc').then(data => {
+        getShortMessagesTemplates(params.id, 0, 100, 'firstName', 'asc').then(data => {
             if (data) {
                 if (data.content) {
                     setTemplates(data.content);

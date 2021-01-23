@@ -80,7 +80,7 @@ function CreateAvailibility() {
 
     const getStudents = () => {
         setLoadingS(true);
-        getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 1000, 'firstName', 'asc').then(data => {
+        getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
             if (data) {
                 if (data.content) {
                     setStudentList(data.content);

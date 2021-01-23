@@ -19,7 +19,7 @@ function CreateSchedule() {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
-    const [isCreation, setIsCreation] = useState(false);
+    const [isCreation, setIsCreation] = useState(true);
     const [subjects, setSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [grades, setGrades] = useState([]);
@@ -63,9 +63,8 @@ function CreateSchedule() {
 
     const handleSubmit = () => {
 
-        if (selectedSubjects && formData.startDate && formData.endDate) {
-            if (selectedSubjects.length <= 0
-                || formData.endDate.toString().length <= 0
+        if (formData.startDate && formData.endDate) {
+            if (formData.endDate.toString().length <= 0
                 || formData.startDate.toString().length <= 0
             ) {
                 alert("Please, fill the form 1!");
@@ -78,30 +77,44 @@ function CreateSchedule() {
         setSubmitting(true)
 
 
-        let date = new Date(formData.startDate+ "T"+formData.startTime+":00");
+        let date = new Date(formData.startDate + "T" + formData.startTime + ":00");
         console.log(date)
         // let d = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
-        let d = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
+        let d = (date.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours().toString().padStart(2, '0') + ':' + date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
-        date = new Date(formData.endDate+ "T"+formData.endTime+":00");
+        date = new Date(formData.endDate + "T" + formData.endTime + ":00");
 
         console.log(date)
         // let f = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
-        let f = (date.getUTCMonth()+1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear()+' '+date.getUTCHours().toString().padStart(2, '0') +':'+ date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
+        let f = (date.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours().toString().padStart(2, '0') + ':' + date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
         let data = [];
-        let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
+        let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
 
-        selectedSubjects.forEach(s => data.push(
-            {
-                subject: s,
-                startDate: d,
-                endDate: f,
-                grades: grades,
-                tenant: {
-                    "key": tenant
-                }
-            }))
+        if (isCreation) {
+            data.push(
+                {
+                    subject: subject,
+                    startDate: d,
+                    endDate: f,
+                    grades: grades,
+                    tenant: {
+                        "key": tenant
+                    }
+                })
+        } else {
+            selectedSubjects.forEach(s => data.push(
+                {
+                    subject: s,
+                    startDate: d,
+                    endDate: f,
+                    grades: grades,
+                    tenant: {
+                        "key": tenant
+                    }
+                }))
+        }
+
         createSchedule(data).then(result => {
             history.push(`/schedules`)
 
@@ -131,7 +144,7 @@ function CreateSchedule() {
                     {
                         !isCreation ?
                             <Form.Item label="Subjects" required
-                            onClick={() => setOpen(open ? false : true)}>
+                                onClick={() => setOpen(open ? false : true)}>
                                 <Select
                                     mode="multiple"
                                     allowClear
@@ -154,7 +167,7 @@ function CreateSchedule() {
                             </Form.Item>
                             :
                             <Form.Item label="Subject (press Escape to view existing subject)" required>
-                                <Input type="text" name="subject" value={subject} onKeyUp={(e) => {
+                                <Input autoFocus type="text" name="subject" value={subject} onKeyUp={(e) => {
                                     if (e.key === 'Escape') {
                                         setIsCreation(false);
                                     }
@@ -192,7 +205,7 @@ function CreateSchedule() {
                         <Input type="text" name="description" onChange={handleChange} />
                     </Form.Item> */}
                     <Form.Item label="Grades" required
-                            onClick={() => setOpen2(open2 ? false : true)}>
+                        onClick={() => setOpen2(open2 ? false : true)}>
                         <Select
                             mode="multiple"
                             allowClear

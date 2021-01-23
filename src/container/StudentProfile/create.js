@@ -34,7 +34,7 @@ function CreateStudent() {
     }, []);
 
     const getListView = () => {
-        getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 1000, 'firstName', 'asc').then(data => {
+        getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
             console.log('DATA ==> ', data)
             if (data) {
                 if (data.content) {

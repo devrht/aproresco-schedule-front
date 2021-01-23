@@ -63,7 +63,7 @@ export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, so
 
 export const getSchedule = (grade) => {
     let page = 0;
-    let size = 20;
+    let size = 100;
     let filter = 'startDate';
     let sort = 'asc';
     let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
