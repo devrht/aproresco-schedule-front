@@ -1,6 +1,7 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
+import { useLocation } from "react-router-dom";
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import { createStudent } from '../../services/Teacher';
 import { getParentProfile } from '../../services/Student';
@@ -19,17 +20,20 @@ const formReducer = (state, event) => {
 function UpdateStudent() {
 
     const history = useHistory();
+    const location = useLocation();
     const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [data, setData] = useState(location.state.student);
     const [open, setOpen] = useState(false);
     const [parents, setParents] = useState([]);
     const [parent, setParent] = useState(null);
     const [name, setName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [lastName, setLastName] = useState(location.state.student.lastName);
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
 
     useEffect(() => {
+        console.log(data)
         getListView();
     }, []);
 
@@ -93,7 +97,7 @@ function UpdateStudent() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Student</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Update Student</p>}
                 extra={[
                 ]}
             >
@@ -121,6 +125,7 @@ function UpdateStudent() {
                                     changeParent(newValue);
                                 }}
                                 open={open}
+                                defaultValue={data.parent}
                                 onOpen={() => {
                                     setOpen(true);
                                 }}
@@ -154,10 +159,10 @@ function UpdateStudent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="firstName" onChange={handleChange} />
+                            <Input type="text" name="firstName" onChange={handleChange} defaultValue={data.firstName} />
                         </Form.Item>
                         <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} defaultValue={data.lastName} />
                         </Form.Item>
                     </div>
                     <div style={{
@@ -165,10 +170,10 @@ function UpdateStudent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="email" onChange={handleChange} />
+                            <Input type="email" name="email" onChange={handleChange}  defaultValue={data.email}/>
                         </Form.Item>
                         <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} />
+                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} defaultValue={data.grade} />
                         </Form.Item>
                     </div>
                     <div style={{
@@ -176,16 +181,16 @@ function UpdateStudent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="schoolName" onChange={handleChange} />
+                            <Input type="text" name="schoolName" onChange={handleChange} defaultValue={data.schoolName} />
                         </Form.Item>
                         <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="schoolBoard" onChange={handleChange} />
+                            <Input type="text" name="schoolBoard" onChange={handleChange}  defaultValue={data.schoolBoard}/>
                         </Form.Item>
                     </div>
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Student Profile'
+                                submitting ? 'Loading...' : 'Update Student Profile'
                             }
                         </Button>
                     </Form.Item>

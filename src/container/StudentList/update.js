@@ -1,5 +1,6 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
@@ -20,10 +21,12 @@ const formReducer = (state, event) => {
 function UpdateBooking() {
 
     const history = useHistory();
+    const location = useLocation();
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState(null);
+    const [data, setData] = useState(location.state.student);
     const [comment, setComment] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [studentList, setStudentList] = useState([]);
@@ -38,6 +41,7 @@ function UpdateBooking() {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        console.log(data)
         getStudents();
     }, []);
 
@@ -107,7 +111,7 @@ function UpdateBooking() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Booking</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Update Booking</p>}
                 extra={[
                 ]}
             >
@@ -135,6 +139,7 @@ function UpdateBooking() {
                                 onChange={(__, newValue) => {
                                     changeChildren(newValue.id);
                                 }}
+                                defaultValue={data.studentProfile}
                                 open={open}
                                 onOpen={() => {
                                     setOpen(true);
@@ -162,7 +167,7 @@ function UpdateBooking() {
                             />
                         </Form.Item>
                         <Form.Item label="Subject" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Select onChange={(e) => changeSubject(e)}>
+                            <Select onChange={(e) => changeSubject(e)} defaultValue={data.schedule.subject}>
                                 <option value={null}>Select a subject</option>
                                 {
                                     subjects.map(subject => {
@@ -179,7 +184,9 @@ function UpdateBooking() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Select onChange={(e) => changeDate(e)}>
+                            <Select onChange={(e) => changeDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
+                                                    {data.schedule.startDate}
+                                                </Moment>}>
                                 <option value={null}>Select a start date</option>
                                 {
                                     dates.map(date => {
@@ -194,14 +201,14 @@ function UpdateBooking() {
                                 }
                             </Select>
                         </Form.Item>
-                        <Form.Item label="Comment" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} />
-                        </Form.Item>
+                        {/* <Form.Item label="Comment" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} defaultValue={data.comment} />
+                        </Form.Item> */}
                     </div>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Student booking'
+                                submitting ? 'Loading...' : 'Update Student booking'
                             }
                         </Button>
                     </Form.Item>

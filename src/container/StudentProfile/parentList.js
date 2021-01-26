@@ -7,7 +7,7 @@ import '../../Assets/container/StudentList.css'
 import { findParentProfileByEmail, getParentProfile, deleteParents } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 
 function ParentProfile() {
     const history = useHistory();
@@ -121,6 +121,16 @@ function ParentProfile() {
                 </div>
             ),
             key: 'activationDate',
+        },
+        {
+            title: <div><span>Action </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/parentProfiles/${record.id}/update`, { parent: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+                )
+            },
+            key: 'action',
         }
 
     ];

@@ -7,7 +7,7 @@ import '../../Assets/container/StudentList.css'
 import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate, deleteTeacherProfile } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -172,6 +172,16 @@ function TeacherProfile() {
                 )
             },
             key: 'phoneNumber',
+        },
+        {
+            title: <div><span>Action </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/teacherprofiles/${record.id}/update`, { teacher: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+                )
+            },
+            key: 'action',
         }
 
     ];

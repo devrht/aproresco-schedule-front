@@ -266,6 +266,7 @@ function Settings(props) {
         }}>My personnals informations:</h2>
         <Form
           form={form2}
+          autoComplete="off"
           onFinish={handleSubmitUpdate}
           layout="vertical"
         >

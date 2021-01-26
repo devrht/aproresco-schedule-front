@@ -15,6 +15,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     VideoCameraOutlined,
+    ApiOutlined,
     EditOutlined
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -333,8 +334,11 @@ function StudentList() {
                     }
                     {
                         !editTeacher.includes(record) ?
-                            <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><EditOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }} /></div> : null
+                            <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><ApiOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }} /></div> : null
                     }
+                    
+                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/studentlist/${record.id}/update`, { student: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+
                 </div>,
         },
     ];

@@ -1,6 +1,7 @@
 import 'antd/dist/antd.css';
 import PhoneInput from 'react-phone-input-2';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css';
 import { PageHeader, Form, Input, Button } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
@@ -19,7 +20,9 @@ const formReducer = (state, event) => {
 function UpdateParent() {
 
     const history = useHistory();
+    const location = useLocation();
     const [country, setCountry] = useState(null)
+    const [parent, setParent] = useState(location.state.parent)
     const [phone, setPhone] = useState('')
     const [code, setCode] = useState('')
     const [loading, setLoading] = useState(false);
@@ -30,6 +33,7 @@ function UpdateParent() {
     useEffect(() => {
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
+            setPhone(parent.phoneNumber)
         })
     }, []);
 
@@ -74,7 +78,7 @@ function UpdateParent() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Parent</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Update Parent</p>}
                 extra={[
                 ]}
             >
@@ -90,10 +94,10 @@ function UpdateParent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="First Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="firstName" onChange={handleChange} />
+                            <Input type="text" name="firstName" onChange={handleChange} defaultValue={parent.firstName} />
                         </Form.Item>
                         <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" onChange={handleChange} />
+                            <Input type="text" name="lastName" onChange={handleChange} defaultValue={parent.lastName} />
                         </Form.Item>
                     </div>
                     <div style={{
@@ -101,7 +105,7 @@ function UpdateParent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="email" onChange={handleChange} />
+                            <Input type="email" name="email" onChange={handleChange}  defaultValue={parent.email}/>
                         </Form.Item>
                         <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
                             {/* <Input type="number" name="phoneCode" onChange={handleChange} /> */}
@@ -121,7 +125,7 @@ function UpdateParent() {
                                     paddingBottom: '5px'
                                 }}
                                 country={country}
-                                // value={phone}
+                                value={phone}
                                 onChange={(value, country, e, formattedValue) => {
                                     setCode(country.dialCode);
                                     let index = value.indexOf(country.dialCode);
@@ -133,7 +137,7 @@ function UpdateParent() {
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Parent'
+                                submitting ? 'Loading...' : 'Update Parent'
                             }
                         </Button>
                     </Form.Item>

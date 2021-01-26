@@ -1,5 +1,6 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
@@ -19,6 +20,7 @@ const formReducer = (state, event) => {
 function CreateTeacher() {
 
     const history = useHistory();
+    const location = useLocation();
     const [country, setCountry] = useState(null);
     const [grades, setGrades] = useState([]);
     const [subjects, setSubjects] = useState([]);
@@ -30,11 +32,13 @@ function CreateTeacher() {
     const [submitting, setSubmitting] = useState(false);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [teacher, setTeacher] = useState(location.state.teacher);
 
     useEffect(() => {
         getSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
+            setPhone(teacher.phoneNumber)
         })
 
     }, []);
@@ -104,7 +108,7 @@ function CreateTeacher() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Teacher</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Update Teacher</p>}
                 extra={[
                 ]}
             >
@@ -121,10 +125,10 @@ function CreateTeacher() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="firstName" onChange={handleChange} />
+                            <Input type="text" name="firstName" onChange={handleChange} defaultValue={ teacher.firstName }/>
                         </Form.Item>
                         <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" onChange={handleChange} />
+                            <Input type="text" name="lastName" onChange={handleChange} defaultValue={ teacher.firstName }/>
                         </Form.Item>
                     </div>
                     <div style={{
@@ -132,7 +136,7 @@ function CreateTeacher() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="iemail" onChange={handleChange} />
+                            <Input type="email" name="iemail" onChange={handleChange}  defaultValue={ teacher.externalEmail }/>
                         </Form.Item>
                         <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
                             <PhoneInput
@@ -150,7 +154,7 @@ function CreateTeacher() {
                                     paddingBottom: '5px'
                                 }}
                                 country={country}
-                                // value={phone}
+                                value={phone}
                                 onChange={(value, country, e, formattedValue) => {
                                     setPhone(formattedValue)
                                 }}
@@ -167,7 +171,8 @@ function CreateTeacher() {
                             <Select
                                 mode="multiple"
                                 allowClear
-                                open={open}
+                                open={open} 
+                                defaultValue={ teacher.grades }
                                 onFocus={() => setOpen(true)}
                                 onBlur={() => setOpen(false)}
                                 style={{ width: '100%' }}
@@ -196,7 +201,8 @@ function CreateTeacher() {
                                 <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen2(open2 ? false : true)}>
                                     <Select mode="multiple"
                                         allowClear
-                                        open={open2}
+                                        open={open2} 
+                                        defaultValue={ teacher.subjects }
                                         onFocus={() => setOpen2(true)}
                                         onBlur={() => setOpen2(false)}
                                         style={{ width: '100%' }}
@@ -219,16 +225,16 @@ function CreateTeacher() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="School Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="schoolName" onChange={handleChange} />
+                            <Input type="text" name="schoolName" onChange={handleChange} defaultValue={ teacher.schoolName }/>
                         </Form.Item>
                         <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="schoolBoard" onChange={handleChange} />
+                            <Input type="text" name="schoolBoard" onChange={handleChange} defaultValue={ teacher.schoolBoard }/>
                         </Form.Item>
                     </div>
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Teacher Profile'
+                                submitting ? 'Loading...' : 'Update Teacher Profile'
                             }
                         </Button>
                     </Form.Item>

@@ -1,5 +1,6 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
@@ -20,6 +21,7 @@ const formReducer = (state, event) => {
 function CreateAvailibility() {
 
     const history = useHistory();
+    const location = useLocation();
     const [open, setOpen] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState(null);
@@ -33,21 +35,21 @@ function CreateAvailibility() {
     const [endDate, setEndDate] = useState(null);
     const [subjec, setSubjec] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [teacher, setTeacher] = useState(location.state.teacher);
 
     useEffect(() => {
+        setChildren(teacher.teacherProfile);
         getStudents();
     }, []);
+
     const changeChildren = (id) => {
         setDates([]);
         setDat(null);
         setSubjec(null);
         let _children = studentList.filter(c => c.id == id)[0];
         setChildren(_children);
-        // console.log(_children)
         getSchedule(1).then(data => {
             setSchedules(data.content);
-            // console.log(data.content);
-            // console.log(data.content.filter(s => _children.subjects.includes(s.subject)));
             setDat(null);
             setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
         });
@@ -94,7 +96,7 @@ function CreateAvailibility() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Availability</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Update Availability</p>}
                 extra={[
                 ]}
             >
@@ -110,6 +112,7 @@ function CreateAvailibility() {
                         <Autocomplete
                             id="asynchronous-search"
                             options={studentList}
+                            defaultValue={teacher.teacherProfile}
                             size="small"
                             inputValue={student}
                             // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
@@ -145,24 +148,14 @@ function CreateAvailibility() {
                             }
                         />
                     </Form.Item>
-                    {/* <Form.Item label="Subject" required>
-                        <Select onChange={(e) => changeSubject(e)}>
-                            <option value={null}>Select a subject</option>
-                            {
-                                subjects.map(subject => {
-                                    return (
-                                        <option value={subject.subject} key={subject.id}>{subject.subject}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Form.Item> */}
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Select onChange={(e) => changeDate(e)}>
+                            <Select onChange={(e) => changeDate(e)}defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
+                                                    {teacher.schedule.startDate}
+                                                </Moment>}>
                                 <option value={null}>Select a start date</option>
                                 {
                                     dates.map(date => {
@@ -178,7 +171,9 @@ function CreateAvailibility() {
                             </Select>
                         </Form.Item>
                         <Form.Item label="End date" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Select onChange={(e) => changeEndDate(e)}>
+                            <Select onChange={(e) => changeEndDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
+                                                    {teacher.schedule.endDate}
+                                                </Moment>}>
                                 <option value={null}>Select an end date</option>
                                 {
                                     ends.map(date => {
@@ -197,7 +192,7 @@ function CreateAvailibility() {
                     <Form.Item>
                         <Button disabled={submitting} onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Teacher Availability'
+                                submitting ? 'Loading...' : 'Update Teacher Availability'
                             }
                         </Button>
                     </Form.Item>

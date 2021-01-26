@@ -4,7 +4,8 @@ import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { createSchedule } from '../../services/Teacher'
 import { getSchedule } from '../../services/Student'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
+import Moment from 'react-moment';
 
 const formReducer = (state, event) => {
     return {
@@ -16,10 +17,12 @@ const formReducer = (state, event) => {
 function UpdateSchedule() {
 
     const history = useHistory();
+    const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [schedule, setSchedule] = useState(location.state.schedule);
     const [open2, setOpen2] = useState(false);
-    const [isCreation, setIsCreation] = useState(true);
+    const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [grades, setGrades] = useState([]);
@@ -29,6 +32,7 @@ function UpdateSchedule() {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        console.log(schedule)
         getSubjects();
     }, []);
 
@@ -128,7 +132,7 @@ function UpdateSchedule() {
         <div>
             <PageHeader
                 ghost={false}
-                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Schedule</p>}
+                title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Update Schedule</p>}
                 extra={[
                 ]}
             >
@@ -152,6 +156,7 @@ function UpdateSchedule() {
                                     mode="multiple"
                                     allowClear
                                     open={open}
+                                    defaultValue={schedule.subject}
                                     onFocus={() => setOpen(true)}
                                     onBlur={() => setOpen(false)}
                                     style={{ width: '100%' }}
@@ -187,10 +192,10 @@ function UpdateSchedule() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="date" name="startDate" onChange={handleChange} />
+                            <Input type="date" name="startDate" onChange={handleChange} defaultValue={schedule.startDate} />
                         </Form.Item>
                         <Form.Item label="Start time" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="time" name="startTime" onChange={handleChange} />
+                            <Input type="time" name="startTime" onChange={handleChange} defaultValue={schedule.startDate} />
                         </Form.Item>
                     </div>
                     <div style={{
@@ -198,20 +203,22 @@ function UpdateSchedule() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="End date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="date" name="endDate" onChange={handleChange} />
+                            <Input type="date" name="endDate" onChange={handleChange} defaultValue={<Moment local format="D MMM YYYY" withTitle>
+                                {schedule.endDate}
+                            </Moment>} />
                         </Form.Item>
                         <Form.Item label="End time" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="time" name="endTime" onChange={handleChange} />
+                            <Input type="time" name="endTime" onChange={handleChange} defaultValue={<Moment local format="HH:MM" withTitle>
+                                {schedule.endDate}
+                            </Moment>} />
                         </Form.Item>
                     </div>
-                    {/* <Form.Item label="Description" required>
-                        <Input type="text" name="description" onChange={handleChange} />
-                    </Form.Item> */}
                     <Form.Item label="Grades" required
                         onClick={() => setOpen2(open2 ? false : true)}>
                         <Select
                             mode="multiple"
                             allowClear
+                            defaultValue={schedule.grades}
                             open={open2}
                             onFocus={() => setOpen2(true)}
                             onBlur={() => setOpen2(false)}
@@ -237,7 +244,7 @@ function UpdateSchedule() {
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Schedule'
+                                submitting ? 'Loading...' : 'Update Schedule'
                             }
                         </Button>
                     </Form.Item>

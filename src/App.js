@@ -45,22 +45,28 @@ function App() {
             <Route exact path="/" name="Student Page" render={props => <StudentList {...props} />} />
             <Route exact path="/studentlist" name="Student Page" render={props => <StudentList {...props} />} />
             <Route exact path="/studentlist/add" name="Create Student Booking Page" render={props => <CreateBooking {...props} />} />
+            <Route exact path="/studentlist/:id/update" name="Create Student Booking Page" render={props => <UpdateBooking {...props} />} />
             <Route exact path="/studentprofiles" name="Student Page" render={props => <StudentProfile {...props} />} />
+            <Route exact path="/studentprofiles/:id/update" name="Student Page" render={props => <UpdateStudent {...props} />} />
             <Route exact path="/parentProfiles" name="Parent Page" render={props => <ParentList {...props} />} />
             <Route exact path="/parentProfiles/add" name="Create Parent Page" render={props => <CreateParent {...props} />} />
+            <Route exact path="/parentProfiles/:id/update" name="Create Parent Page" render={props => <UpdateParent {...props} />} />
             <Route exact path="/studentprofiles/:id/details" name="Student Page" render={props => <StudentDetails {...props} />} />
             <Route exact path="/studentprofiles/add" name="Create Student Page" render={props => <CreateStudent {...props} />} />
             <Route exact path="/teacherprofiles" name="Teacher Page" render={props => <TeacherProfile {...props} />} />
             <Route exact path="/teacherprofiles/add" name="Create Teacher Page" render={props => <CreateTeacher {...props} />} />
+            <Route exact path="/teacherprofiles/:id/update" name="Create Teacher Page" render={props => <UpdateTeacher {...props} />} />
             <Route exact path="/settings" name="Settings Page" render={props => <Settings {...props} />} />
             <Route exact path="/short-messages/:id" name="Settings Page" render={props => <ShortMessages {...props} />} />
             <Route exact path="/messages/add/:id" name="Add messages Page" render={props => <CreateMessage {...props} />} />
             <Route exact path="/studentlist/teacher/:id" name="StudentOfTeacher Page" render={props => <StudentsOfTeacher {...props} />} />
             <Route exact path="/teacherlist" name="Teacher Page" render={props => <TeacherList {...props} />} />
             <Route exact path="/teacherlist/add" name="Create Parent Page" render={props => <CreateAvailibility {...props} />} />
+            <Route exact path="/teacherlist/:id/update" name="Update availability Page" render={props => <UpdateAvailibility {...props} />} />
             <Route exact path="/parentProfiles/:id/details" name="Show parent Page" render={props => <ShowParent {...props} />} />
             <Route exact path="/schedules" name="Schedules Page" render={props => <Schedules {...props} />} />
             <Route exact path="/schedules/add" name="Create Schedule Page" render={props => <CreateSchedule {...props} />} />
+            <Route exact path="/schedules/:id/update" name="Create Schedule Page" render={props => <UpdateSchedule {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />
             <Redirect from="/" to="/login" />
           </React.Suspense>

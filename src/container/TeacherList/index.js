@@ -9,7 +9,7 @@ import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -447,6 +447,8 @@ function TeacherList() {
                         >
                             <ApiOutlined style={{ color: assigningStatus && assignStudentList.length > 0 ? '#1890FF' : 'gray', fontSize: 20 }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()} />
                         </Popconfirm>
+
+                        <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/teacherlist/${record.id}/update`, { teacher: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
                     </div>
                 )
 
