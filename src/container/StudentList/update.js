@@ -17,7 +17,7 @@ const formReducer = (state, event) => {
     }
 }
 
-function CreateBooking() {
+function UpdateBooking() {
 
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -210,4 +210,4 @@ function CreateBooking() {
         </div>
     )
 }
-export default CreateBooking
+export default UpdateBooking

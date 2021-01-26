@@ -16,6 +16,7 @@ const StudentDetail = React.lazy(() => import('./container/StudentList/StudentDe
 const StudentDetails = React.lazy(() => import('./container/StudentProfile/StudentDetails'))
 const Schedules = React.lazy(() => import('./container/Schedule'))
 const ParentList = React.lazy(() => import('./container/StudentProfile/parentList'))
+const ShowParent = React.lazy(() => import('./container/StudentProfile/showParent'))
 const CreateParent = React.lazy(() => import('./container/StudentProfile/createParent'))
 const CreateSchedule = React.lazy(() => import('./container/Schedule/create'))
 const CreateStudent = React.lazy(() => import('./container/StudentProfile/create'))
@@ -23,7 +24,13 @@ const CreateTeacher = React.lazy(() => import('./container/TeacherProfile/create
 const CreateBooking = React.lazy(() => import('./container/StudentList/create'))
 const CreateAvailibility = React.lazy(() => import('./container/TeacherList/create'))
 const CreateMessage = React.lazy(() => import('./container/StudentList/addMessage'))
-const ShowParent = React.lazy(() => import('./container/StudentProfile/showParent'))
+
+const UpdateParent = React.lazy(() => import('./container/StudentProfile/updateParent'))
+const UpdateSchedule = React.lazy(() => import('./container/Schedule/update'))
+const UpdateStudent = React.lazy(() => import('./container/StudentProfile/update'))
+const UpdateTeacher = React.lazy(() => import('./container/TeacherProfile/update'))
+const UpdateBooking = React.lazy(() => import('./container/StudentList/update'))
+const UpdateAvailibility = React.lazy(() => import('./container/TeacherList/update'))
 
 addToken();
 

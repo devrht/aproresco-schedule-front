@@ -16,7 +16,7 @@ const formReducer = (state, event) => {
     }
 }
 
-function CreateStudent() {
+function UpdateStudent() {
 
     const history = useHistory();
     const [submitting, setSubmitting] = useState(false);
@@ -194,4 +194,4 @@ function CreateStudent() {
         </div>
     )
 }
-export default CreateStudent
+export default UpdateStudent

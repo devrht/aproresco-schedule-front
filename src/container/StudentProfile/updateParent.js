@@ -16,7 +16,7 @@ const formReducer = (state, event) => {
     }
 }
 
-function CreateParent() {
+function UpdateParent() {
 
     const history = useHistory();
     const [country, setCountry] = useState(null)
@@ -142,4 +142,4 @@ function CreateParent() {
         </div>
     )
 }
-export default CreateParent;
+export default UpdateParent;

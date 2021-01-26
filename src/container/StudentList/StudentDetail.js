@@ -185,7 +185,9 @@ function StudentDetail(props) {
                                 <h4>ConferenceUrl</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.conferenceUrl : '' : ''}</h4>
+                                <h4 onClick={() => studentDetail.teacherAvailability ? 
+                                studentDetail.teacherAvailability.teacherProfile ?
+                                window.open(studentDetail.teacherAvailability.teacherProfile.conferenceUrl.includes('http') ? studentDetail.teacherAvailability.teacherProfile.conferenceUrl : 'http://' + studentDetail.teacherAvailability.teacherProfile.conferenceUrl) : null : null }>{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.conferenceUrl : '' : ''}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16} style={{ display: studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? 'flex' : 'none' : 'none' }}>

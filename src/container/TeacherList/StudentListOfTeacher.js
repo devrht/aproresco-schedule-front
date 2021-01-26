@@ -6,27 +6,55 @@ import { getStudentListById } from '../../services/Student'
 import { useSelector, useDispatch } from 'react-redux'
 import { assignStudents, enableAssigning } from '../../Action-Reducer/Student/action'
 import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '../../services/Student'
-import { markTeacherAsPresent, markAsSupervisor, markAsAdmin } from '../../services/Teacher'
+import { markTeacherAsPresent, markAsSupervisor, markAsAdmin, markAsApproved } from '../../services/Teacher'
 import { Form, Row, Col, Card, Input } from 'antd'
 import { useLocation } from "react-router-dom";
 import Moment from 'react-moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCrown, faShieldAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCrown, faShieldAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 function StudentListOfTeacher(props) {
 
     const dispatch = useDispatch();
     const location = useLocation();
+    const [teacher, setTeacher] = useState(location.state.teacher);
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
     const [confUrl, setConfUrl] = useState();
     const [editable, setEditable] = useState(false);
-    const [supervisor, setSupervisor] = useState(location.state.teacher.teacherProfile.supervisor ? true : false);
-    const [admin, setAdmin] = useState(location.state.teacher.teacherProfile.tenantAdmin ? true : false);
+
+
+    const getRole = (role) => {
+        let result = false;
+        teacher.tenants.forEach(t => {
+            if (t.roles) {
+                if (t.roles.includes(role)) {
+                    result = true;
+                }
+            }
+        })
+
+        return result;
+    }
+
+    const getApproved = () => {
+        let result = false;
+        teacher.tenants.forEach(t => {
+            if (t.tenant) {
+                if (t.approveDate)
+                    if (t.approveDate != null)
+                        result = true;
+            }
+        })
+        return result;
+    }
+
+    const [supervisor, setSupervisor] = useState(getRole('supervisor'));
+    const [admin, setAdmin] = useState(getRole('admin'));
+    const [approved, setApproved] = useState(getApproved());
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
-    const [teacher, setTeacher] = useState(location.state.teacher);
     const history = useHistory();
     const [active, setActive] = useState(true);
     const [present, setPresent] = useState(true);
@@ -59,61 +87,61 @@ function StudentListOfTeacher(props) {
     }, []);
 
 
-const columns = [
-    {
-        title: <div><span>Name </span>
-        </div>,
-        render: (record) =>
-            <div
-                style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
-            >
-                <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
-                    <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
-                    <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
-                    <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
-                </Tooltip>
-                <Tooltip title={(record.firstName + " " + record.lastName)}>
-                    <Button
-                        style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            history.push(`/studentprofiles/${record.id}/details`, { student: record })
-                            // history.push(`/studentlist/studentDetail/${record.id}`)
-                        }}>
-                        <p style={{ width: "50%", textAlign: "left" }}>
-                            {(record.firstName + " " + record.lastName).length <= 20 ?
-                                record.firstName + " " + record.lastName :
-                                (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
-                        </p>
-                    </Button>
-                </Tooltip>
+    const columns = [
+        {
+            title: <div><span>Name </span>
             </div>,
-        key: 'name',
-        fixed: 'left',
-    },
-    // {
-    //     title: 'Start Date',
-    //     dataIndex: 'startDate',
-    //     key: 'startDate',
-    //     fixed: 'left',
-    // },
-    // {
-    //     title: 'Subject',
-    //     dataIndex: 'subject',
-    //     key: 'subjects',
-    // },
-    {
-        title: 'Grade',
-        dataIndex: 'grade',
-        key: 'grade',
-    },
-    // {
-    //     title: 'Action',
-    //     key: 'operation',
-    //     fixed: 'right',
-    //     render: () => <Button>Edit</Button>,
-    // },
-];
+            render: (record) =>
+                <div
+                    style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+                >
+                    <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
+                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
+                    </Tooltip>
+                    <Tooltip title={(record.firstName + " " + record.lastName)}>
+                        <Button
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                history.push(`/studentprofiles/${record.id}/details`, { student: record })
+                                // history.push(`/studentlist/studentDetail/${record.id}`)
+                            }}>
+                            <p style={{ width: "50%", textAlign: "left" }}>
+                                {(record.firstName + " " + record.lastName).length <= 20 ?
+                                    record.firstName + " " + record.lastName :
+                                    (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                            </p>
+                        </Button>
+                    </Tooltip>
+                </div>,
+            key: 'name',
+            fixed: 'left',
+        },
+        // {
+        //     title: 'Start Date',
+        //     dataIndex: 'startDate',
+        //     key: 'startDate',
+        //     fixed: 'left',
+        // },
+        // {
+        //     title: 'Subject',
+        //     dataIndex: 'subject',
+        //     key: 'subjects',
+        // },
+        {
+            title: 'Grade',
+            dataIndex: 'grade',
+            key: 'grade',
+        },
+        // {
+        //     title: 'Action',
+        //     key: 'operation',
+        //     fixed: 'right',
+        //     render: () => <Button>Edit</Button>,
+        // },
+    ];
 
     const getListView = () => {
         setStudents(null);
@@ -202,6 +230,12 @@ const columns = [
         });
     }
 
+    const markTeacherAsApproved = () => {
+        markAsApproved(teacher.teacherProfile.id, !approved).then(data => {
+            setApproved(!approved);
+        });
+    }
+
     return (
         <div>
             {/* {console.log(params)}
@@ -210,12 +244,15 @@ const columns = [
                 ghost={false}
                 title={
                     <div style={{ display: "flex", flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
-                        <p style={{ fontSize: '3em', textAlign: 'center', margin: '20px', marginBottom: '20px'  }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>
+                        <p style={{ fontSize: '3em', textAlign: 'center', margin: '20px', marginBottom: '20px' }}>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}</p>
                         <Tooltip title={admin ? "Administrator" : "Not An Administrator"}>
                             <FontAwesomeIcon onClick={() => markTeacherAsAdmin()} icon={faCrown} color={admin ? "gold" : "gray"} size={"2x"} style={{ marginLeft: 20 }} />
                         </Tooltip>
                         <Tooltip title={supervisor ? "Supervisor" : "Not A Supervisor"}>
                             <FontAwesomeIcon onClick={() => markTeacherAsSupervisor()} icon={faShieldAlt} color={supervisor ? "blue" : "gray"} size={"2x"} style={{ marginLeft: 20 }} />
+                        </Tooltip>
+                        <Tooltip title={approved ? "Approved" : "Not Approved"}>
+                            <FontAwesomeIcon onClick={() => markTeacherAsApproved()} icon={faThumbsUp} color={approved ? "green" : "gray"} size={"2x"} style={{ marginLeft: 20 }} />
                         </Tooltip>
                     </div>
                 }

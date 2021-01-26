@@ -95,6 +95,7 @@ function AddMessage(props) {
             >
                 <Form
                     form={form}
+                    autoComplete="off"
                     onFinish={handleSubmit}
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}

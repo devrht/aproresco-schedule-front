@@ -24,84 +24,146 @@ export const getTeacherList = (page, size, sortName, sortType) => {
 
 export const markAsSupervisor = (id, value) => {
 
+    let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
+
     let data = {
-        "supervisor": value
+        roles: [
+            "supervisor"
+        ],
+        tenant: {
+            key: tenant
+        }
     }
 
-    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data)
-        .then(res => {
-            return res.data;
-        })
+    if (value)
+        return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/roles`, data)
+            .then(res => {
+                return res.data;
+            })
+    else
+    return axios.delete(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/tenant/${tenant}/role/supervisor`)
+            .then(res => {
+                return res.data;
+            })
 }
 
 export const markAsAdmin = (id, value) => {
 
+    let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
+
     let data = {
-        "tenantAdmin": value
+        roles: [
+            "admin"
+        ],
+        tenant: {
+            key: tenant
+        }
     }
 
-    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data)
-        .then(res => {
-            return res.data;
-        })
+    if (value)
+        return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/roles`, data)
+            .then(res => {
+                return res.data;
+            })
+    else
+        return axios.delete(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/tenant/${tenant}/role/admin`)
+            .then(res => {
+                return res.data;
+            })
+}
+
+export const markAsApproved = (id, value) => {
+
+    let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
+
+    let data = {
+        tenants: [
+            {
+                tenant: {
+                    key: tenant
+                }
+            }
+        ]
+    }
+
+    if (value)
+        return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/approval`, data)
+            .then(res => {
+                return res.data;
+            })
+    else
+        return axios.delete(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/approval`, data)
+            .then(res => {
+                return res.data;
+            })
 }
 
 export const newTenant = (value) => {
 
     let data = {
-        tenants: [
-            {
-                "key": value
-            }
-        ]
+        "key": value
     }
 
     let id = JSON.parse(localStorage.getItem("id"));
 
-    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data)
+    return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/tenant`, data)
+        .then(res => {
+            return res.data;
+        })
+}
+
+export const deleteTenant = (value) => {
+
+    let data = {
+        "key": value
+    }
+
+    let id = JSON.parse(localStorage.getItem("id"));
+
+    return axios.delete(`${routes.SERVER_ADDRESS}/teacher-profile/${id}/tenant`, data)
         .then(res => {
             return res.data;
         })
 }
 
 export const getTeacherListByDate = (start, end, page, size, sortName = 'firstName', sortType = 'asc') => {
-    if(start == null || end == null) {
+    if (start == null || end == null) {
         let today = new Date();
-    today.setDate(today.getDate() - 1)
-    let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
-    let month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
-    let year = today.getFullYear();
-    let hours = today.getHours().toString().padStart(2, '0');
-    let minutes = today.getMinutes().toString().padStart(2, '0');
+        today.setDate(today.getDate() - 1)
+        let day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
+        let month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
+        let year = today.getFullYear();
+        let hours = today.getHours().toString().padStart(2, '0');
+        let minutes = today.getMinutes().toString().padStart(2, '0');
 
-    if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
-      localStorage.setItem('startDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500')
-      start = month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500';
-    }
+        if (localStorage.getItem('startDate') == null || localStorage.getItem('toStart') == null) {
+            localStorage.setItem('startDate', year + '-' + month + '-' + day)
+            localStorage.setItem('toStart', month + '%2F' + day + '%2F' + year + '%20' + hours + ':' + minutes + ':00 -0500')
+            start = month + '%2F' + day + '%2F' + year + '%20' + hours + ':' + minutes + ':00 -0500';
+        }
 
-    if (localStorage.getItem('startTime') == null) {
-      localStorage.setItem('startTime', today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0'));
-    }
+        if (localStorage.getItem('startTime') == null) {
+            localStorage.setItem('startTime', today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0'));
+        }
 
-    today = new Date();
-    today.setDate(today.getDate() + 1);
-    day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
-    month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
-    year = today.getFullYear();
-    hours = today.getHours().toString().padStart(2, '0');
-    minutes = today.getMinutes().toString().padStart(2, '0');
+        today = new Date();
+        today.setDate(today.getDate() + 1);
+        day = today.getDate() < 10 ? '0' + (today.getDate()) : (today.getDate())
+        month = today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1);
+        year = today.getFullYear();
+        hours = today.getHours().toString().padStart(2, '0');
+        minutes = today.getMinutes().toString().padStart(2, '0');
 
-    if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
-      localStorage.setItem('endDate', year + '-' + month + '-' + day)
-      localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500')
-      end = month + '%2F' + day + '%2F' + year + '%20'+hours+':'+minutes+':00 -0500';
+        if (localStorage.getItem('endDate') == null || localStorage.getItem('toEnd') == null) {
+            localStorage.setItem('endDate', year + '-' + month + '-' + day)
+            localStorage.setItem('toEnd', month + '%2F' + day + '%2F' + year + '%20' + hours + ':' + minutes + ':00 -0500')
+            end = month + '%2F' + day + '%2F' + year + '%20' + hours + ':' + minutes + ':00 -0500';
 
-    }
+        }
 
-    if (localStorage.getItem('endTime') == null) {
-      localStorage.setItem('endTime', today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0'));
-    }
+        if (localStorage.getItem('endTime') == null) {
+            localStorage.setItem('endTime', today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0'));
+        }
 
     }
     return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
@@ -264,7 +326,7 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         phoneNumber: phone,
         subjects: subjects
     }
-    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/${id}`, data).then(res => {
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/update/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -300,7 +362,7 @@ export const createParent = (firstName, lastName, phoneNumber, countryCode, emai
         email,
         tenants: [
             {
-                "key": JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id))
+                "key": JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id))
             }
         ]
     }

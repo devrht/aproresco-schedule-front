@@ -13,7 +13,7 @@ const formReducer = (state, event) => {
     }
 }
 
-function CreateSchedule() {
+function UpdateSchedule() {
 
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -246,4 +246,4 @@ function CreateSchedule() {
         </div>
     )
 }
-export default CreateSchedule
+export default UpdateSchedule;

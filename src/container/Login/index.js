@@ -32,12 +32,12 @@ function Login() {
               if (data.tenants.length > 0) {
                 if (localStorage.getItem("tenant"+data.id)) {
                   if (data.tenants.filter(t => t.key == localStorage.getItem("tenant"+data.id)).length == 0) {
-                    localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].key))
+                    localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
                   } else {
-                    localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].key))
+                    localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
                   }
                 } else {
-                  localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].key))
+                  localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
                 }
               } else {
                 localStorage.removeItem('tenant'+data.id);

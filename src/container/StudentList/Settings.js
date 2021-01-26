@@ -33,6 +33,7 @@ function Settings(props) {
   const [teacher, setTeacher] = useState(null);
   const [subjectsList, setSubjectsList] = useState([]);
   const [isCreation, setIsCreation] = useState(false);
+  const [updated, setUpdated] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -81,7 +82,7 @@ function Settings(props) {
   useEffect(() => {
     if (teacher != null)
       if (teacher.phoneNumber != null)
-        if (teacher.phoneNumber.length >= 1)
+        if (teacher.phoneNumber.length >= 1 && updated)
           history.push(`/teacherlist`);
   }, [teacher])
 
@@ -93,7 +94,6 @@ function Settings(props) {
       data.content = new Array();
       for (var key in obj)
         data.content.push(obj[key]);
-      console.log(data.content)
       setSubjectsList(data.content)
     });
   }
@@ -157,6 +157,7 @@ function Settings(props) {
     setSubmitting(true);
 
     updateTeacher(teacher.id, firstName, lastName, email, grades, subjects, phone, school, board).then(data => {
+      setUpdated(true);
       getTeacher();
     }).catch(err => {
       alert("Error occured when saving data, please retry!")
@@ -232,7 +233,7 @@ function Settings(props) {
                   <Option value={'000'}>Add new organization</Option>
                   {teacher.tenants ? teacher.tenants.map(tenant => {
                     return (
-                      <Option value={tenant.key}>{tenant.displayName}</Option>
+                      <Option value={tenant.tenant.key}>{tenant.tenant.displayName}</Option>
                     )
                   }) : null
                   }
@@ -346,27 +347,30 @@ function Settings(props) {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}
-              onClick={() => setOpen2(open2 ? false : true)}>
-              <Select mode="multiple"
-                allowClear
-                value={subjects}
-                open={open2}
-                onFocus={() => setOpen2(true)}
-                onBlur={() => setOpen2(false)}
-                style={{ width: '100%' }}
-                onSelect={() => setOpen2(false)}
-                placeholder="Please select subjects"
-                onChange={handleChangeSubjects}>
-                {
-                  subjectsList.map(subject => {
-                    return (
-                      <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
-                    )
-                  })
-                }
-              </Select>
-            </Form.Item>
+            {
+              subjectsList.length > 0 ?
+
+                <Form.Item label="Subjects" required style={{ flex: 1, marginLeft: '10px' }}
+                  onClick={() => setOpen2(open2 ? false : true)}>
+                  <Select mode="multiple"
+                    allowClear
+                    value={subjects}
+                    open={open2}
+                    onFocus={() => setOpen2(true)}
+                    onBlur={() => setOpen2(false)}
+                    style={{ width: '100%' }}
+                    onSelect={() => setOpen2(false)}
+                    placeholder="Please select subjects"
+                    onChange={handleChangeSubjects}>
+                    {
+                      subjectsList.map(subject => {
+                        return (
+                          <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                        )
+                      })
+                    }
+                  </Select>
+                </Form.Item> : null}
           </div>
           <div style={{
             display: 'flex',

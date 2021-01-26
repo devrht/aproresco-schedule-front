@@ -53,6 +53,32 @@ function Schedule() {
     }
 
     const columns = [
+
+        {
+            title: <div><span>Subject </span>
+                {sortingName === "subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "subject" && sortingType === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("subject");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("subject"); }
+                    }
+                };
+            },
+            render: (record) => {
+                return (
+                    <div>
+                        {record.subject}
+                    </div>
+                )
+            },
+            key: 'subject',
+        },
         {
             title: <div><span>Start Date </span>
                 {sortingName === "startDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
@@ -80,32 +106,6 @@ function Schedule() {
             ),
             key: 'startDate',
         },
-        {
-            title: <div><span>Subject </span>
-                {sortingName === "subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "subject" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "subject" && sortingType === "" && ""}
-            </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("subject");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("subject"); }
-                    }
-                };
-            },
-            render: (record) => {
-                return (
-                    <div>
-                        {record.subject}
-                    </div>
-                )
-            },
-            key: 'subject',
-        }
-        ,
         {
             title: <div><span>End Date </span>
                 {sortingName === "endDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
