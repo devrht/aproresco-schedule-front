@@ -27,26 +27,28 @@ function StudentListOfTeacher(props) {
 
     const getRole = (role) => {
         let result = false;
-        teacher.tenants.forEach(t => {
-            if (t.roles) {
-                if (t.roles.includes(role)) {
-                    result = true;
+        if (teacher.tenants) {
+            teacher.tenants.forEach(t => {
+                if (t.roles) {
+                    if (t.roles.includes(role)) {
+                        result = true;
+                    }
                 }
-            }
-        })
-
+            })
+        }
         return result;
     }
 
     const getApproved = () => {
         let result = false;
-        teacher.tenants.forEach(t => {
-            if (t.tenant) {
-                if (t.approveDate)
-                    if (t.approveDate != null)
-                        result = true;
-            }
-        })
+        if (teacher.tenants)
+            teacher.tenants.forEach(t => {
+                if (t.tenant) {
+                    if (t.approveDate)
+                        if (t.approveDate != null)
+                            result = true;
+                }
+            })
         return result;
     }
 
