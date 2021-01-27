@@ -33,6 +33,14 @@ function Tenant(props) {
     getTeachers();
     let tenant = JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id));
     getTenant(tenant).then(data => {
+      if(!data) {
+        history.push('/settings')
+        return
+      }
+      if(!data.displayName) {
+        history.push('/settings')
+        return
+      }
       setTenant(data)
       setName(data.displayName);
       setMax(data.maxTeacherPerSupervisor);
