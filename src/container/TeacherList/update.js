@@ -50,13 +50,10 @@ function CreateAvailibility() {
 
     const changeChildren = (id) => {
         setDates([]);
-        setDat(null);
-        setSubjec(null);
         let _children = studentList.filter(c => c.id == id)[0];
         setChildren(_children);
         getSchedule(1).then(data => {
             setSchedules(data.content);
-            setDat(null);
             setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
         });
     }

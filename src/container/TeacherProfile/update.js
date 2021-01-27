@@ -79,12 +79,6 @@ function CreateTeacher() {
     }
 
     const handleSubmit = () => {
-        console.log(formData.firstName)
-        console.log(formData.lastName)
-        console.log(formData.iemail)
-        console.log(formData.schoolName)
-        console.log(formData.schoolBoard)
-        console.log(phone)
         if (formData.firstName && formData.lastName && formData.iemail && formData.schoolName && formData.schoolBoard && phone) {
             if (formData.firstName.toString().length <= 0
                 || formData.lastName.toString().length <= 0
@@ -139,7 +133,7 @@ function CreateTeacher() {
                             <Input type="text" name="firstName" onChange={handleChange} defaultValue={ teacher.firstName }/>
                         </Form.Item>
                         <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" onChange={handleChange} defaultValue={ teacher.firstName }/>
+                            <Input type="text" name="lastName" onChange={handleChange} defaultValue={ teacher.lastName }/>
                         </Form.Item>
                     </div>
                     <div style={{
