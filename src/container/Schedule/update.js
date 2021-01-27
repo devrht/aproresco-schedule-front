@@ -2,7 +2,7 @@ import React, { useEffect, useState, useReducer } from 'react'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { createSchedule } from '../../services/Teacher'
+import { updateSchedule } from '../../services/Teacher'
 import { getSchedule } from '../../services/Student'
 import { useHistory, useLocation } from 'react-router-dom'
 import Moment from 'react-moment';
@@ -26,6 +26,10 @@ function UpdateSchedule() {
     const [subjects, setSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [grades, setGrades] = useState([]);
+    const [sDate, setSDate] = useState('');
+    const [sTime, setSTime] = useState('');
+    const [eTime, setETime] = useState('');
+    const [eDate, setEDate] = useState('');
     const [subject, setSubject] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
@@ -33,6 +37,19 @@ function UpdateSchedule() {
 
     useEffect(() => {
         console.log(schedule)
+        let s = schedule.startDate.replaceAll('/', '-').split(' ')[0].split('-');
+        let f = schedule.startDate.replaceAll('/', '-').split(' ')[0].split('-');
+        let st = schedule.startDate.replaceAll('/', '-').split(' ')[1].split(':');
+        let et = schedule.endDate.replaceAll('/', '-').split(' ')[1].split(':');
+        formData.startDate = s[2]+'-'+s[0]+'-'+s[1];
+        formData.endDate = f[2]+'-'+f[0]+'-'+f[1];
+        setSDate(formData.startDate);
+        setEDate(formData.endDate);
+        setSTime(st[0]+':'+st[1]);
+        setETime(et[0]+':'+et[1]);
+        formData.endDate = schedule.endDate;
+        console.log(schedule.startDate, formData.startDate)
+        setSelectedSubjects([schedule.subject])
         getSubjects();
     }, []);
 
@@ -66,10 +83,9 @@ function UpdateSchedule() {
     }
 
     const handleSubmit = () => {
-
-        if (formData.startDate && formData.endDate) {
-            if (formData.endDate.toString().length <= 0
-                || formData.startDate.toString().length <= 0
+        if (sDate && eDate) {
+            if (eDate.toString().length <= 0
+                || sDate.toString().length <= 0
             ) {
                 alert("Please, fill the form 1!");
                 return
@@ -80,16 +96,16 @@ function UpdateSchedule() {
         }
         setSubmitting(true)
 
-        if (formData.endDate <= formData.startDate) {
+        if (eDate < sDate) {
             alert("Start date cannot be after end date");
             setSubmitting(false);
             return
         }
-        let date = new Date(formData.startDate + "T" + formData.startTime + ":00");
+        let date = new Date(sDate + "T" + sTime + ":00");
         // let d = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
         let d = (date.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours().toString().padStart(2, '0') + ':' + date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
-        date = new Date(formData.endDate + "T" + formData.endTime + ":00");
+        date = new Date(eDate + "T" + eTime + ":00");
 
         // let f = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
         let f = (date.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours().toString().padStart(2, '0') + ':' + date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
@@ -97,31 +113,16 @@ function UpdateSchedule() {
         let data = [];
         let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
 
-        if (isCreation) {
-            data.push(
-                {
-                    subject: subject,
-                    startDate: d,
-                    endDate: f,
-                    grades: grades,
-                    tenant: {
-                        "key": tenant
-                    }
-                })
-        } else {
-            selectedSubjects.forEach(s => data.push(
-                {
-                    subject: s,
-                    startDate: d,
-                    endDate: f,
-                    grades: grades,
-                    tenant: {
-                        "key": tenant
-                    }
-                }))
-        }
 
-        createSchedule(data).then(result => {
+        updateSchedule(schedule.id, {
+            subject: isCreation ? subject : selectedSubjects[0],
+            startDate: d,
+            endDate: f,
+            grades: grades,
+            tenant: {
+                "key": tenant
+            }
+        }).then(result => {
             history.push(`/schedules`)
 
         }).finally(() => setSubmitting(false));
@@ -192,10 +193,10 @@ function UpdateSchedule() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="date" name="startDate" onChange={handleChange} defaultValue={schedule.startDate} />
+                            <Input type="date" name="startDate" onChange={(e) => setSDate(e.target.value)} value={sDate} />
                         </Form.Item>
                         <Form.Item label="Start time" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="time" name="startTime" onChange={handleChange} defaultValue={schedule.startDate} />
+                            <Input type="time" name="startTime" onChange={(e) => setSTime(e.target.value)} value={sTime} />
                         </Form.Item>
                     </div>
                     <div style={{
@@ -203,14 +204,10 @@ function UpdateSchedule() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="End date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="date" name="endDate" onChange={handleChange} defaultValue={<Moment local format="D MMM YYYY" withTitle>
-                                {schedule.endDate}
-                            </Moment>} />
+                            <Input type="date" name="endDate" onChange={(e) => setEDate(e.target.value)} value={eDate}/>
                         </Form.Item>
                         <Form.Item label="End time" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="time" name="endTime" onChange={handleChange} defaultValue={<Moment local format="HH:MM" withTitle>
-                                {schedule.endDate}
-                            </Moment>} />
+                            <Input type="time" name="endTime" onChange={(e) => setETime(e.target.value)} value={eTime}/>
                         </Form.Item>
                     </div>
                     <Form.Item label="Grades" required

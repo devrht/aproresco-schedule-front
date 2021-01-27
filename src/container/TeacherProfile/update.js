@@ -6,7 +6,7 @@ import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
-import { createSchedule, createTeacher } from '../../services/Teacher';
+import { updateTeacher, createTeacher } from '../../services/Teacher';
 import React, { useEffect, useState, useReducer } from 'react'
 import { getCountry, getSchedule } from '../../services/Student';
 
@@ -38,6 +38,13 @@ function CreateTeacher() {
         getSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
+            formData.firstName = teacher.firstName;
+            formData.lastName = teacher.lastName;
+            formData.schoolName = teacher.schoolName;
+            formData.schoolBoard = teacher.schoolBoard;
+            formData.iemail = teacher.externalEmail;
+            setGrades(teacher.grades)
+            setSubjects(teacher.subjects)
             setPhone(teacher.phoneNumber)
         })
 
@@ -67,13 +74,17 @@ function CreateTeacher() {
             data.content = new Array();
             for (var key in obj)
                 data.content.push(obj[key]);
-            console.log(data.content)
             setSubjectsList(data.content)
         });
     }
 
     const handleSubmit = () => {
-
+        console.log(formData.firstName)
+        console.log(formData.lastName)
+        console.log(formData.iemail)
+        console.log(formData.schoolName)
+        console.log(formData.schoolBoard)
+        console.log(phone)
         if (formData.firstName && formData.lastName && formData.iemail && formData.schoolName && formData.schoolBoard && phone) {
             if (formData.firstName.toString().length <= 0
                 || formData.lastName.toString().length <= 0
@@ -82,17 +93,17 @@ function CreateTeacher() {
                 || phone.toString().length <= 0
                 || formData.iemail.toString().length <= 0
             ) {
-                alert("Please, fill the form!");
-                // return
+                alert("Please, fill the form 1!");
+                return
             }
         } else {
-            alert("Please, fill the form!");
-            // return
+            alert("Please, fill the form 2!");
+            return
         }
 
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone).then(data => {
+        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects, phone, formData.schoolName, formData.schoolBoard).then(data => {
             // console.log(data)
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })

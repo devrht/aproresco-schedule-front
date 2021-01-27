@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
-import { createBooking } from '../../services/Teacher';
+import { updateBooking } from '../../services/Teacher';
 import { getStudentProfileByDate, getSchedule } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -41,8 +41,22 @@ function UpdateBooking() {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        console.log(data)
+        setChildren(data.studentProfile)
+        setSubjec(data.schedule.subject)
+        setDat(data.schedule.startDate)
+        setComment('')
         getStudents();
+        getSchedule(1).then(data => {
+            setSchedules(data.content)
+            var obj = {};
+            for (var i = 0, len = data.content.length; i < len; i++)
+                obj[data.content[i]['subject']] = data.content[i];
+
+            data.content = new Array();
+            for (var key in obj)
+                data.content.push(obj[key]);
+            setSubjects(data.content)
+        });
     }, []);
 
     const handleChange = event => {
@@ -84,10 +98,12 @@ function UpdateBooking() {
 
     const handleSubmit = () => {
         let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
-        if (comment == null || s == null || children == null)
+        if (s == null || children == null) {
             alert('Fill the form');
+            return;
+        }
         setSubmitting(true);
-        createBooking(children, s, comment).then(data => {
+        updateBooking(data.id, children, s, comment).then(data => {
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -185,8 +201,8 @@ function UpdateBooking() {
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
                             <Select onChange={(e) => changeDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
-                                                    {data.schedule.startDate}
-                                                </Moment>}>
+                                {data.schedule.startDate}
+                            </Moment>}>
                                 <option value={null}>Select a start date</option>
                                 {
                                     dates.map(date => {

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
-import { createAvailibility } from '../../services/Teacher';
+import { updateAvailibility } from '../../services/Teacher';
 import { getTeacherProfileByDate, getSchedule } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -39,7 +39,13 @@ function CreateAvailibility() {
 
     useEffect(() => {
         setChildren(teacher.teacherProfile);
+        setDat(teacher.schedule.startDate)
+        setEndDate(teacher.schedule.endDate)
         getStudents();
+        getSchedule(1).then(data => {
+            setSchedules(data.content);
+            setDates([...new Map(data.content.filter(s => teacher.teacherProfile.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
+        });
     }, []);
 
     const changeChildren = (id) => {
@@ -71,7 +77,7 @@ function CreateAvailibility() {
             return
         }
         setSubmitting(true);
-        createAvailibility(children, s).then(data => {
+        updateAvailibility(teacher.id, children, s).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -153,9 +159,9 @@ function CreateAvailibility() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Select onChange={(e) => changeDate(e)}defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
-                                                    {teacher.schedule.startDate}
-                                                </Moment>}>
+                            <Select onChange={(e) => changeDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
+                                {teacher.schedule.startDate}
+                            </Moment>}>
                                 <option value={null}>Select a start date</option>
                                 {
                                     dates.map(date => {
@@ -172,8 +178,8 @@ function CreateAvailibility() {
                         </Form.Item>
                         <Form.Item label="End date" required style={{ flex: 1, marginLeft: '10px' }}>
                             <Select onChange={(e) => changeEndDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
-                                                    {teacher.schedule.endDate}
-                                                </Moment>}>
+                                {teacher.schedule.endDate}
+                            </Moment>}>
                                 <option value={null}>Select an end date</option>
                                 {
                                     ends.map(date => {

@@ -51,6 +51,15 @@ export const getParentProfile = (start, end, page, size, sortName, sortType) => 
         })
 }
 
+export const getTenant = (key) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/tenant-profile/${key}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+        })
+}
+
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/schedules?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {

@@ -269,17 +269,13 @@ export const googleSignUp = (user) => {
 }
 
 export const createSchedule = (data) => {
-    // let tenant = JSON.parse(localStorage.getItem("tenant"));
-    // let data = {
-    //     subject: subjects,
-    //     startDate,
-    //     endDate,
-    //     grades: grades,
-    //     tenant: {
-    //         "key": tenant
-    //     }
-    // }
     return axios.post(`${routes.SERVER_ADDRESS}/schedule`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const updateSchedule = (id, data) => {
+    return axios.patch(`${routes.SERVER_ADDRESS}/schedule/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -295,6 +291,35 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
         parent: { email: parent }
     }
     return axios.post(`${routes.SERVER_ADDRESS}/student-profile`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, parent) => {
+    let data = {
+        firstName,
+        lastName,
+        email,
+        schoolName,
+        schoolBoard,
+        grade,
+        parent: { email: parent }
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/student-profile/${id}`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPerSupervisor, supportUrl, primaryContact) => {
+    let data = {
+        conferenceUrlPrefix,
+        displayName,
+        key,
+        maxTeacherPerSupervisor,
+        primaryContact,
+        supportUrl
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/tenant-profile/${key}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -342,6 +367,17 @@ export const createBooking = (studentProfile, schedule, studentComment) => {
     }).catch(err => console.log(err));
 }
 
+export const updateBooking = (id, studentProfile, schedule, studentComment) => {
+    let data = {
+        studentProfile,
+        schedule,
+        studentComment
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/student-booking/${id}`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
 
 export const createAvailibility = (teacherProfile, schedule) => {
     let data = {
@@ -349,6 +385,16 @@ export const createAvailibility = (teacherProfile, schedule) => {
         schedule,
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-availability`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const updateAvailibility = (id, teacherProfile, schedule) => {
+    let data = {
+        teacherProfile,
+        schedule,
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-availability/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -367,6 +413,19 @@ export const createParent = (firstName, lastName, phoneNumber, countryCode, emai
         ]
     }
     return axios.post(`${routes.SERVER_ADDRESS}/student-parent`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const updateParent = (id, firstName, lastName, phoneNumber, countryCode, email) => {
+    let data = {
+        phoneNumber,
+        countryCode,
+        firstName,
+        lastName,
+        email,
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/student-parent/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

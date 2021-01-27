@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
 import { useLocation } from "react-router-dom";
 import { PageHeader, Form, Input, Button, Select } from 'antd';
-import { createStudent } from '../../services/Teacher';
+import { updateStudent } from '../../services/Teacher';
 import { getParentProfile } from '../../services/Student';
 import React, { useEffect, useState, useReducer } from 'react'
 import TextField from '@material-ui/core/TextField';
@@ -34,6 +34,13 @@ function UpdateStudent() {
 
     useEffect(() => {
         console.log(data)
+        formData.firstName = data.firstName;
+        setLastName(data.lastName);
+        formData.schoolName = data.schoolName;
+        formData.schoolBoard = data.schoolBoard;
+        formData.email = data.email;
+        formData.grade = data.grade;
+        setParent(data.parent.email)
         getListView();
     }, []);
 
@@ -83,7 +90,7 @@ function UpdateStudent() {
 
         setSubmitting(true);
 
-        createStudent(formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent).then(data => {
+        updateStudent(data.id, formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent).then(data => {
             history.push(`/studentprofiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -170,7 +177,7 @@ function UpdateStudent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="email" onChange={handleChange}  defaultValue={data.email}/>
+                            <Input type="email" name="email" onChange={handleChange} defaultValue={data.email} />
                         </Form.Item>
                         <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }}>
                             <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} defaultValue={data.grade} />
@@ -184,7 +191,7 @@ function UpdateStudent() {
                             <Input type="text" name="schoolName" onChange={handleChange} defaultValue={data.schoolName} />
                         </Form.Item>
                         <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="schoolBoard" onChange={handleChange}  defaultValue={data.schoolBoard}/>
+                            <Input type="text" name="schoolBoard" onChange={handleChange} defaultValue={data.schoolBoard} />
                         </Form.Item>
                     </div>
                     <Form.Item>

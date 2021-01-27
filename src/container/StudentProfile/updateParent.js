@@ -6,7 +6,7 @@ import '../../Assets/container/StudentList.css';
 import { PageHeader, Form, Input, Button } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
-import { createParent } from '../../services/Teacher';
+import { updateParent } from '../../services/Teacher';
 import { getCountry } from '../../services/Student';
 import React, { useEffect, useState, useReducer } from 'react'
 
@@ -33,6 +33,10 @@ function UpdateParent() {
     useEffect(() => {
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
+            formData.firstName = parent.firstName;
+            formData.lastName = parent.lastName;
+            formData.email = parent.email;
+            setCode(parent.countryCode)
             setPhone(parent.phoneNumber)
         })
     }, []);
@@ -64,7 +68,7 @@ function UpdateParent() {
 
         setSubmitting(true);
 
-        createParent(formData.firstName, formData.lastName, phone, code, formData.email).then(data => {
+        updateParent(parent.id, formData.firstName, formData.lastName, phone, code, formData.email).then(data => {
             history.push(`/parentProfiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")

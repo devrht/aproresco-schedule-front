@@ -10,6 +10,7 @@ import {
   SettingOutlined,
   MessageOutlined,
   LogoutOutlined,
+  SafetyOutlined,
   CalendarOutlined,
   BookOutlined
 } from '@ant-design/icons';
@@ -161,6 +162,7 @@ function LayoutOfApp({ children }, props) {
                 justifyContent: 'flex-end',
               }}>
                 <SettingOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/settings') }} />
+                <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/tenant') }} />
                 <LogoutOutlined style={{ fontSize: '30px' }} onClick={() => { logout(); }} />
               </div> : null}
           <div className="content-div" style={{ padding: 0 }}>{children}</div>
