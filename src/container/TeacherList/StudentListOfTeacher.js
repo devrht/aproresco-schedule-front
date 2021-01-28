@@ -83,6 +83,7 @@ function StudentListOfTeacher(props) {
     };
 
     useEffect(() => {
+        console.log(teacher)
         setPresent(teacher.effectiveStartDate ? false : true);
         setEffectiveStartDate(teacher.effectiveStartDate);
         getListView();
@@ -113,7 +114,7 @@ function StudentListOfTeacher(props) {
                             <p style={{ width: "50%", textAlign: "left" }}>
                                 {(record.firstName + " " + record.lastName).length <= 20 ?
                                     record.firstName + " " + record.lastName :
-                                    (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                                    (record.firstName + " " + record.lastName).substring(0, 19) + '...'}
                             </p>
                         </Button>
                     </Tooltip>
@@ -260,7 +261,13 @@ function StudentListOfTeacher(props) {
                 }
                 extra={[
                     <div style={{ display: 'flex' }}>
-                        <Button key='3' type="primary"
+                        <Button key='1' type="primary"
+                            style={{ display: 'flex' }}
+                            onClick={(e) => { e.stopPropagation(); teacher.schedule ? history.push(`/teacherlist/${teacher.id}/update`, { teacher: teacher }) : history.push(`/teacherprofiles/${teacher.id}/update`, { teacher: {...teacher, ...teacher.teacherProfile} }) }}
+                        >
+                            Edit
+                        </Button>
+                        <Button key='2' type="primary"
                             style={{ display: 'none' }}
                             onClick={() => markAsPresent()}
                         >
@@ -321,6 +328,14 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>{teacher.teacherProfile.subjects ? teacher.teacherProfile.subjects.join(', ') : 'No subjects'}</h4>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col className="gutter-row" span={8}>
+                                <h4>Grades</h4>
+                            </Col>
+                            <Col className="gutter-row" span={14}>
+                                <h4>{teacher.teacherProfile.grades ? teacher.teacherProfile.grades.join(', ') : 'No Grades'}</h4>
                             </Col>
                         </Row>
                     </Card>

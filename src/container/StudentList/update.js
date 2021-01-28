@@ -4,8 +4,8 @@ import { useLocation } from "react-router-dom";
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
-import { updateBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, getSchedule } from '../../services/Student'
+import { updateBooking, findTeacherListByFirstNameAndLastName } from '../../services/Teacher';
+import { getStudentProfileByDate, getSchedule, assignStudentToAnotherTeacher } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -39,8 +39,24 @@ function UpdateBooking() {
     const [dat, setDat] = useState(null);
     const [subjec, setSubjec] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [teacher, setTeacher] = useState(null);
+    const [teacherName, setTeacherName] = useState(null);
+    const [list, setList] = useState([]);
+    const [teacherSearch, setTeacherSearch] = useState({
+        name: "",
+        firstName: "",
+        lastName: "",
+    })
+    const [search, setSearch] = useState({
+        name: "",
+        firstName: "",
+        lastName: "",
+    })
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
 
     useEffect(() => {
+        console.log(data)
         setChildren(data.studentProfile)
         setSubjec(data.schedule.subject)
         setDat(data.schedule.startDate)
@@ -121,6 +137,53 @@ function UpdateBooking() {
             }
         }).finally(() => setLoadingS(false))
     }
+
+
+    const assigningStudents = (teacher, studentId) => {
+        assignStudentToAnotherTeacher(teacher.id, studentId)
+            .then(res => {
+            }).finally(() => {
+            })
+    }
+
+    const getTeacherListView = () => {
+        setLoading(true);
+        findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setList(data.content)
+                } else {
+                    setList([])
+                }
+            } else {
+                setList([])
+            }
+        }).finally(() => setLoading(false));
+    }
+
+    const computeLastName = (name) => {
+        let lastName = '';
+        for (let index = 1; index < name.length; index++) {
+            lastName = lastName.trim() + ' ' + name[index].trim();
+        }
+        return lastName
+    }
+
+    const changeTeacherSearch = (e) => {
+        const { name, value } = e.target;
+        setTeacherName(value);
+        setTeacherSearch({ ...search, [name]: value.trim() });
+        if (e.target.name === "name") {
+            var nameData = value.trim().split(" ");
+            if (nameData.length > 1) {
+                setTeacherSearch({ ...search, firstName: nameData[0].trim(), lastName: computeLastName(nameData) });
+            }
+            else {
+                setTeacherSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
+            }
+        }
+        getTeacherListView();
+    };
 
     return (
 
@@ -217,9 +280,58 @@ function UpdateBooking() {
                                 }
                             </Select>
                         </Form.Item>
-                        {/* <Form.Item label="Comment" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} defaultValue={data.comment} />
-                        </Form.Item> */}
+                        <Form.Item label="Teacher availability" required style={{ flex: 1, marginLeft: '10px' }}>
+                            <Autocomplete
+                                id="asynchronous-search"
+                                options={list}
+                                size="small"
+                                inputValue={teacherName}
+                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                onInputChange={(__, newInputValue) => {
+                                    console.log(newInputValue)
+                                    setTeacherName(newInputValue);
+                                }}
+                                onChange={(__, newValue) => {
+                                    if (newValue != null)
+                                        setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                }}
+                                open={open2}
+                                onOpen={() => {
+                                    setOpen2(true);
+                                }}
+                                onClose={() => {
+                                    setOpen2(false);
+                                }}
+                                loading={loading}
+                                getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
+                                // style={{ minWidth: 450, marginLeft: -250 }}
+                                renderInput={(params) =>
+                                    <TextField {...params}
+                                        variant="outlined"
+                                        onChange={(e) => changeTeacherSearch(e)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !open) {
+                                                let teachers = list.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
+                                                if (teachers.length === 0) {
+                                                    alert('This teacher is not found');
+                                                } else {
+                                                    assigningStudents(teachers[0], data.id);
+                                                }
+                                            }
+                                        }}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                    />
+                                }
+                            />
+                        </Form.Item>
                     </div>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">

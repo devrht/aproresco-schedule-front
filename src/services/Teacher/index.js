@@ -310,11 +310,12 @@ export const updateStudent = (id, firstName, lastName, email, schoolName, school
     }).catch(err => console.log(err));
 }
 
-export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPerSupervisor, supportUrl, primaryContact) => {
+export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPerSupervisor, supportUrl, videoServer, primaryContact) => {
     let data = {
         conferenceUrlPrefix,
         displayName,
         key,
+        videoServer,
         maxTeacherPerSupervisor,
         primaryContact,
         supportUrl

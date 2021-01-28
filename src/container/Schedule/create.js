@@ -76,7 +76,7 @@ function CreateSchedule() {
         }
         setSubmitting(true)
 
-        if (formData.endDate <= formData.startDate) {
+        if (formData.endDate < formData.startDate) {
             alert("Start date cannot be after end date");
             setSubmitting(false);
             return

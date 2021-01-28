@@ -64,7 +64,7 @@ function StudentDetail(props) {
                             <p style={{ width: "50%", textAlign: "left" }}>
                                 {(record.firstName + " " + record.lastName).length <= 20 ?
                                     record.firstName + " " + record.lastName :
-                                    (record.firstName + " " + record.studentProfile.lastName).substring(0, 19) + '...'}
+                                    (record.firstName + " " + record.lastName).substring(0, 19) + '...'}
                             </p>
                         </Button>
                     </Tooltip>
@@ -124,6 +124,16 @@ function StudentDetail(props) {
             {studentDetail ?
                 <PageHeader
                     ghost={false}
+                    extra={[
+                        <div style={{ display: 'flex' }}>
+                            <Button key='3' type="primary"
+                                style={{ display: 'flex' }}
+                                onClick={(e) => { e.stopPropagation(); history.push(`/studentprofiles/${studentDetail.id}/update`, { student: studentDetail }) }}
+                            >
+                                Edit
+                            </Button>
+                        </div>
+                    ]}
                     title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>{studentDetail.firstName} {studentDetail.lastName}</p>}
                 >
 

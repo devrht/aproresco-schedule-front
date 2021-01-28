@@ -12,13 +12,13 @@ const { Option } = Select;
 
 function Tenant(props) {
 
-
   const history = useHistory();
   const dispatch = useDispatch();
   const [tenant, setTenant] = useState(null);
   const [name, setName] = useState('');
   const [max, setMax] = useState('');
   const [url, setUrl] = useState('');
+  const [videoServer, setVideoServer] = useState('');
   const [conf, setConf] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [form] = Form.useForm();
@@ -33,20 +33,21 @@ function Tenant(props) {
     getTeachers();
     let tenant = JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id));
     getTenant(tenant).then(data => {
-      if(!data) {
+      if (!data) {
         history.push('/settings')
         return
       }
-      if(!data.displayName) {
+      if (!data.displayName) {
         history.push('/settings')
         return
       }
       setTenant(data)
       setName(data.displayName);
+      setVideoServer(data.videoServer);
       setMax(data.maxTeacherPerSupervisor);
       setConf(data.conferenceUrlPrefix);
       setTeacher(data.primaryContact)
-      setTeacherName(data.primaryContact ? data.primaryContact.firstName+ " "+data.primaryContact.lastName : '')
+      setTeacherName(data.primaryContact ? data.primaryContact.firstName + " " + data.primaryContact.lastName : '')
     })
   }, []);
 
@@ -63,17 +64,17 @@ function Tenant(props) {
 
   const handleSubmit = () => {
     if (name == null || url == null || conf == null || teacher == null || max == null) {
-        alert('Fill the form');
-        return;
+      alert('Fill the form');
+      return;
     }
     setSubmitting(true);
-    updateTenant(tenant.key, name, conf, max, url, teacher).then(data => {
-        history.push(`/studentlist`)
+    updateTenant(tenant.key, name, conf, max, url, videoServer, teacher).then(data => {
+      history.push(`/studentlist`)
     }).catch(err => {
-        alert("Error occured when saving data, please retry!")
-        console.log(err)
+      alert("Error occured when saving data, please retry!")
+      console.log(err)
     }).finally(() => setSubmitting(false));
-}
+  }
 
   return (
     <div>
@@ -116,7 +117,10 @@ function Tenant(props) {
             display: 'flex',
             flexDirection: 'row'
           }}>
-            <Form.Item label="Primary Contact" required style={{ flex: 1, marginRight: '10px' }}>
+            <Form.Item label="Video server" required style={{ flex: 1, marginRight: '10px' }}>
+              <Input type="text" name="videoServer" value={videoServer} onChange={(e) => setVideoServer(e.target.value)} />
+            </Form.Item>
+            <Form.Item label="Primary Contact" required style={{ flex: 1, marginLeft: '10px' }}>
               <Autocomplete
                 id="asynchronous-search"
                 options={list}

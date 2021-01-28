@@ -35,6 +35,7 @@ function CreateTeacher() {
     const [teacher, setTeacher] = useState(location.state.teacher);
 
     useEffect(() => {
+        console.log(teacher)
         getSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
@@ -104,8 +105,7 @@ function CreateTeacher() {
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
-        })
-            .finally(() => setSubmitting(false));
+        }).finally(() => setSubmitting(false));
     }
 
     return (

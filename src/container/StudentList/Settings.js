@@ -40,6 +40,7 @@ function Settings(props) {
   const [phone, setPhone] = useState('');
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
+  const [admin, setAdmin] = useState(false);
   const [school, setSchool] = useState('');
   const [board, setBoard] = useState('');
   const [email, setEmail] = useState('');
@@ -55,6 +56,20 @@ function Settings(props) {
     return state.Student.enableAssigning;
   })
 
+  const getRole = (role, data) => {
+    let result = false;
+    if (data.tenants) {
+      data.tenants.forEach(t => {
+        if (t.roles) {
+          if (t.roles.includes(role)) {
+            result = true;
+          }
+        }
+      })
+    }
+    return result;
+  }
+
   useEffect(() => {
     setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
     getSubjects();
@@ -68,6 +83,7 @@ function Settings(props) {
     getTeacherProfile().then(data => {
       setTeacher(data);
       localStorage.setItem('user', JSON.stringify(data));
+      setAdmin(getRole('admin', data))
       setLastName(data.lastName);
       setFirstName(data.firstName);
       setSchool(data.schoolName ? data.schoolName : '');
@@ -204,7 +220,7 @@ function Settings(props) {
             </> : null
         }
         <div style={{
-          display: teacher != null ? teacher.tenantAdmin ? "flex" : 'none' : 'none',
+          display: teacher != null ? admin ? "flex" : 'none' : 'none',
           flexDirection: "row",
           flex: 1,
           alignItems: "center",

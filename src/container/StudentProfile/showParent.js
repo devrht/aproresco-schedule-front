@@ -101,6 +101,16 @@ const columns = [
             {parentDetail ?
                 <PageHeader
                     ghost={false}
+                    extra={[
+                        <div style={{ display: 'flex' }}>
+                            <Button key='3' type="primary"
+                                style={{ display: 'flex' }}
+                                onClick={(e) => { e.stopPropagation(); history.push(`/parentProfiles/${parentDetail.id}/update`, { parent: parentDetail }) }}
+                            >
+                                Edit
+                            </Button>
+                        </div>
+                    ]}
                     title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px'  }}>{parentDetail.firstName} {parentDetail.lastName}</p>}
                 >
 
