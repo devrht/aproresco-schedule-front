@@ -50,7 +50,7 @@ function Tenant(props) {
       setUrl(data.supportUrl);
       setWelcome(data.staticWelcomeUrl);
       setTeacher(data.primaryContact)
-      setVideoServer(data.videoServerurl)
+      setVideoServer(data.videoServerUrl)
       setTeacherName(data.primaryContact ? data.primaryContact.firstName + " " + data.primaryContact.lastName : '')
     })
   }, []);
