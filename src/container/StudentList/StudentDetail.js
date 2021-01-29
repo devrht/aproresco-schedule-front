@@ -7,7 +7,7 @@ import { assignStudentToAnotherTeacher } from '../../services/Student'
 import { createComment, updateComment, approveComment } from '../../services/Teacher'
 import Moment from 'react-moment';
 import {
-    SafetyOutlined
+    CheckOutlined
 } from '@ant-design/icons';
 
 function StudentDetail(props) {
@@ -34,18 +34,18 @@ function StudentDetail(props) {
     const handleSubmit = () => {
         if (comment == null) {
             createComment(studentDetail.id, content).then(data => {
-                history.push('/studentlist')
+                // history.push('/studentlist')
             })
         } else {
             updateComment(comment.id, content).then(data => {
-                history.push('/studentlist')
+                // history.push('/studentlist')
             })
         }
     }
 
     const handleApproval = (c) => {
         approveComment(c).then(data => {
-            history.push('/studentlist')
+            // history.push('/studentlist')
         })
     }
 
@@ -255,9 +255,9 @@ function StudentDetail(props) {
                         </Card>
                     </Row>
                     <Row gutter={24} style={{ marginBottom: '3%' }}>
-                        <Card title="Comment section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
+                        <Card title="Feedback section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
                             <Row gutter={16}>
-                                <Form.Item label={comment ? "Content (press escape to create)" : "Content"} required style={{ flex: 1, marginRight: '10px' }}>
+                                <Form.Item label={comment ? "Message (press escape to create)" : "Message"} required style={{ flex: 1, marginRight: '10px' }}>
                                     <Input type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)} onKeyUp={(e) => {
                                         if (e.key === 'Escape') {
                                             setComment(null);
@@ -267,21 +267,23 @@ function StudentDetail(props) {
                                 </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" size="medium" htmlType="submit" onClick={() => handleSubmit()}>
-                                        {comment ? 'Update comment' : 'Send comment'}
+                                        {comment ? 'Update comment' : 'Add comment'}
                                     </Button>
                                 </Form.Item>
                             </Row>
                             {
                                 studentDetail.teacherComments ?
                                     studentDetail.teacherComments.map(c => (
-                                        <Row gutter={16}>
-                                            <Col className="gutter-row" span={8} onClick={() => handleComment(c)}>
-                                                <h4>{c.content ? c.content : 'No content found in this comment'}</h4>
-                                            </Col>
-                                            <Col className="gutter-row" span={8} onClick={() => handleComment(c)}>
-                                                <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px', color: c.approveDate ? 'green' : 'red' }} onClick={() => handleApproval(c)}/>
-                                            </Col>
-                                        </Row>
+                                        <>
+                                            <Row gutter={16} style={{ height: 50 }}>
+                                                <Col className="gutter-row" style={{ width: '95%' }} onClick={() => handleComment(c)}>
+                                                    <h4>{c.content ? c.content : 'No message found in this feedback'}</h4>
+                                                </Col>
+                                                <Col className="gutter-row" onClick={() => handleComment(c)}>
+                                                    <CheckOutlined style={{ fontSize: '20px', marginRight: '20px', color: c.approveDate ? 'green' : 'gray' }} onClick={() => handleApproval(c)} />
+                                                </Col>
+                                            </Row>
+                                        </>
                                     ))
                                     : null
                             }
