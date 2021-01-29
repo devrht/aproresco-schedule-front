@@ -445,7 +445,7 @@ function TeacherList() {
                             cancelText="Cancel"
                             disabled={assignStudentList.length > 0 ? false : true}
                         >
-                            <ApiOutlined style={{ color: assigningStatus && assignStudentList.length > 0 ? '#1890FF' : 'gray', fontSize: 20 }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()} />
+                            {/* <ApiOutlined style={{ color: assigningStatus && assignStudentList.length > 0 ? '#1890FF' : 'gray', fontSize: 20 }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()} /> */}
                         </Popconfirm>
 
                         <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/teacherlist/${record.id}/update`, { teacher: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
