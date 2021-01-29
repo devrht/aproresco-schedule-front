@@ -286,10 +286,10 @@ function StudentDetail(props) {
                                     studentDetail.teacherComments.map(c => (
                                         <>
                                             <Row gutter={16} style={{ height: 50 }}>
-                                                <Col className="gutter-row" style={{ width: '95%' }} onClick={() => handleComment(c)}>
+                                                <Col className="gutter-row" style={{ width: '90%' }} onClick={() => handleComment(c)}>
                                                     <h4>{c.content ? c.content : 'No message found in this feedback'}</h4>
                                                 </Col>
-                                                <Col className="gutter-row" onClick={() => handleComment(c)}>
+                                                <Col className="gutter-row" style={{ width: '10%' }} onClick={() => handleComment(c)}>
                                                     <CheckOutlined style={{ fontSize: '20px', marginRight: '20px', color: c.approveDate ? 'green' : 'gray' }} onClick={() => handleApproval(c)} />
                                                 </Col>
                                             </Row>
