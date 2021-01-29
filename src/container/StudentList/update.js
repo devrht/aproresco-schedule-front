@@ -56,12 +56,13 @@ function UpdateBooking() {
     const [sortingType, setSortingType] = useState("desc");
 
     useEffect(() => {
-        console.log(data)
         setChildren(data.studentProfile)
+        setTeacher(data.teacherAvailability)
         setSubjec(data.schedule.subject)
         setDat(data.schedule.startDate)
         setComment('')
         getStudents();
+        getTeacherListView();
         getSchedule(1).then(data => {
             setSchedules(data.content)
             var obj = {};
@@ -291,9 +292,17 @@ function UpdateBooking() {
                                     console.log(newInputValue)
                                     setTeacherName(newInputValue);
                                 }}
+                                defaultValue={data.teacherAvailability}
                                 onChange={(__, newValue) => {
-                                    if (newValue != null)
-                                        setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                    setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                    if (newValue != null) {
+                                        let teachers = list.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                        if (teachers.length === 0) {
+                                            alert('This teacher is not found');
+                                        } else {
+                                            assigningStudents(teachers[0], data.id);
+                                        }
+                                    }
                                 }}
                                 open={open2}
                                 onOpen={() => {

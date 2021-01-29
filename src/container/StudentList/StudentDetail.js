@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { getStudentDetail } from '../../services/Student'
 import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
+import { Form, Input } from 'antd';
 import { useLocation, useHistory } from "react-router-dom";
 import { assignStudentToAnotherTeacher } from '../../services/Student'
+import { createComment } from '../../services/Teacher'
 import Moment from 'react-moment';
 
 function StudentDetail(props) {
@@ -11,6 +13,8 @@ function StudentDetail(props) {
     const history = useHistory();
     const { params } = props.match;
     const [studentDetail, setStudentDetail] = useState(location.state.student);
+    const [content, setContent] = useState('');
+    const [comment, setComment] = useState(null);
 
     useEffect(() => {
         // getDetailView();
@@ -22,6 +26,16 @@ function StudentDetail(props) {
             console.log('DATA ==> ', data)
             setStudentDetail(data)
         })
+    }
+
+    const handleSubmit = () => {
+        console.log(comment, content);
+        if(comment == null) {
+            createComment(studentDetail.id, content).then(data => {
+                console.log(data)
+                history.push('/studentlist')
+            })
+        }
     }
 
 
@@ -221,6 +235,25 @@ function StudentDetail(props) {
                                 </Col>
                                 <Col className="gutter-row" span={14}>
                                     <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.studentCount : ''}</h4>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </Row>
+                    <Row gutter={24} style={{ marginBottom: '3%' }}>
+                        <Card title="Comment section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
+                            <Row gutter={16}>
+                                <Form.Item label="Content" required style={{ flex: 1, marginRight: '10px' }}>
+                                    <Input type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)} />
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" size="medium" htmlType="submit" onClick={() => handleSubmit()}>
+                                        Send comment
+                                    </Button>
+                                </Form.Item>
+                            </Row>
+                            <Row gutter={16}>
+                                <Col className="gutter-row" span={8} onClick={() => setComment(null)}>
+                                    <h4 >Lorem ipsu dolor sit amed</h4>
                                 </Col>
                             </Row>
                         </Card>

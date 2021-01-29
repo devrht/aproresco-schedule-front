@@ -19,6 +19,7 @@ function Tenant(props) {
   const [max, setMax] = useState('');
   const [url, setUrl] = useState('');
   const [videoServer, setVideoServer] = useState('');
+  const [welcome, setWelcome] = useState('');
   const [conf, setConf] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [form] = Form.useForm();
@@ -46,7 +47,10 @@ function Tenant(props) {
       setVideoServer(data.videoServer);
       setMax(data.maxTeacherPerSupervisor);
       setConf(data.conferenceUrlPrefix);
+      setUrl(data.supportUrl);
+      setWelcome(data.staticWelcomeUrl);
       setTeacher(data.primaryContact)
+      setVideoServer(data.videoServerurl)
       setTeacherName(data.primaryContact ? data.primaryContact.firstName + " " + data.primaryContact.lastName : '')
     })
   }, []);
@@ -68,7 +72,7 @@ function Tenant(props) {
       return;
     }
     setSubmitting(true);
-    updateTenant(tenant.key, name, conf, max, url, videoServer, teacher).then(data => {
+    updateTenant(tenant.key, name, conf, max, url, videoServer, welcome, teacher).then(data => {
       history.push(`/studentlist`)
     }).catch(err => {
       alert("Error occured when saving data, please retry!")
@@ -120,7 +124,13 @@ function Tenant(props) {
             <Form.Item label="Video server" required style={{ flex: 1, marginRight: '10px' }}>
               <Input type="text" name="videoServer" value={videoServer} onChange={(e) => setVideoServer(e.target.value)} />
             </Form.Item>
-            <Form.Item label="Primary Contact" required style={{ flex: 1, marginLeft: '10px' }}>
+            <Form.Item label="Static welcome Url" required style={{ flex: 1, marginLeft: '10px' }}>
+              <Input type="text" name="welcome" value={welcome} onChange={(e) => setWelcome(e.target.value)} />
+            </Form.Item>
+            
+          </div>
+
+          <Form.Item label="Primary Contact" required style={{ flex: 1, marginLeft: '10px' }}>
               <Autocomplete
                 id="asynchronous-search"
                 options={list}
@@ -161,7 +171,6 @@ function Tenant(props) {
                 }
               />
             </Form.Item>
-          </div>
 
           <Form.Item>
             <Button disabled={submitting} type="primary" size="large" htmlType="submit">

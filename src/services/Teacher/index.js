@@ -310,12 +310,13 @@ export const updateStudent = (id, firstName, lastName, email, schoolName, school
     }).catch(err => console.log(err));
 }
 
-export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPerSupervisor, supportUrl, videoServer, primaryContact) => {
+export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPerSupervisor, supportUrl, videoServerurl, staticWelcomeUrl, primaryContact) => {
     let data = {
         conferenceUrlPrefix,
         displayName,
         key,
-        videoServer,
+        staticWelcomeUrl,
+        videoServerurl,
         maxTeacherPerSupervisor,
         primaryContact,
         supportUrl
@@ -337,6 +338,18 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
         subjects: subjects
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/register`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+
+export const createComment = (id, content) => {
+    let data = {
+        content,
+        commenter: { id: JSON.parse(localStorage.getItem("user")).id },
+        tenant: { key: JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id))}
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/student-booking/${id}/teacher-comment`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
