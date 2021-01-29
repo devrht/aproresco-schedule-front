@@ -364,7 +364,11 @@ export const updateComment = (id, content) => {
 }
 
 export const approveComment = (c) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/teacher-comment/${c.id}/approval`, c).then(res => {
+    let data = {
+        ...c,
+        approver: { id: JSON.parse(localStorage.getItem("user")).id }
+    }
+    return axios.post(`${routes.SERVER_ADDRESS}/teacher-comment/${c.id}/approval`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

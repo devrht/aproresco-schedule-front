@@ -3,7 +3,7 @@ import { getStudentDetail } from '../../services/Student'
 import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
 import { Form, Input } from 'antd';
 import { useLocation, useHistory } from "react-router-dom";
-import { assignStudentToAnotherTeacher } from '../../services/Student'
+import { assignStudentToAnotherTeacher, getBooking } from '../../services/Student'
 import { createComment, updateComment, approveComment } from '../../services/Teacher'
 import Moment from 'react-moment';
 import {
@@ -31,14 +31,23 @@ function StudentDetail(props) {
         })
     }
 
+    const getStudentBooking = () => {
+        getBooking(studentDetail.id).then(data => {
+            console.log(data)
+            setStudentDetail(data.data)
+        })
+    }
+
     const handleSubmit = () => {
         if (comment == null) {
             createComment(studentDetail.id, content).then(data => {
                 // history.push('/studentlist')
+                getStudentBooking();
             })
         } else {
             updateComment(comment.id, content).then(data => {
                 // history.push('/studentlist')
+                getStudentBooking();;
             })
         }
     }
@@ -46,6 +55,7 @@ function StudentDetail(props) {
     const handleApproval = (c) => {
         approveComment(c).then(data => {
             // history.push('/studentlist')
+            getStudentBooking();
         })
     }
 

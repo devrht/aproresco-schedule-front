@@ -318,6 +318,16 @@ export const editSubject = (id, subject) => {
         })
 }
 
+export const getBooking = (id) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/student-booking/${id}`)
+        .then(res => {
+            return res;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
 export const editSubjectGrade = (id, subjects, grades) => {
     return axios.get(`${routes.SERVER_ADDRESS}/teachers_availabilities/update/${id}?subjects=${subjects}&grades=${grades}`)
         .then(res => {
