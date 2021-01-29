@@ -354,6 +354,23 @@ export const createComment = (id, content) => {
     }).catch(err => console.log(err));
 }
 
+export const updateComment = (id, content) => {
+    let data = {
+        content
+    }
+    return axios.patch(`${routes.SERVER_ADDRESS}/teacher-comment/${id}`, data).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const approveComment = (c) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/teacher-comment/${c.id}/approval`, c).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+
+
 export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard) => {
     let data = {
         firstName,

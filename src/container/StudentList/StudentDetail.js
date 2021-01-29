@@ -4,8 +4,11 @@ import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
 import { Form, Input } from 'antd';
 import { useLocation, useHistory } from "react-router-dom";
 import { assignStudentToAnotherTeacher } from '../../services/Student'
-import { createComment } from '../../services/Teacher'
+import { createComment, updateComment, approveComment } from '../../services/Teacher'
 import Moment from 'react-moment';
+import {
+    SafetyOutlined
+} from '@ant-design/icons';
 
 function StudentDetail(props) {
 
@@ -29,15 +32,27 @@ function StudentDetail(props) {
     }
 
     const handleSubmit = () => {
-        console.log(comment, content);
-        if(comment == null) {
+        if (comment == null) {
             createComment(studentDetail.id, content).then(data => {
-                console.log(data)
+                history.push('/studentlist')
+            })
+        } else {
+            updateComment(comment.id, content).then(data => {
                 history.push('/studentlist')
             })
         }
     }
 
+    const handleApproval = (c) => {
+        approveComment(c).then(data => {
+            history.push('/studentlist')
+        })
+    }
+
+    const handleComment = (comment) => {
+        setComment(comment);
+        setContent(comment.content)
+    }
 
     const rejectStudent = () => {
         assignStudentToAnotherTeacher(null, studentDetail.id)
@@ -242,20 +257,35 @@ function StudentDetail(props) {
                     <Row gutter={24} style={{ marginBottom: '3%' }}>
                         <Card title="Comment section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
                             <Row gutter={16}>
-                                <Form.Item label="Content" required style={{ flex: 1, marginRight: '10px' }}>
-                                    <Input type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)} />
+                                <Form.Item label={comment ? "Content (press escape to create)" : "Content"} required style={{ flex: 1, marginRight: '10px' }}>
+                                    <Input type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)} onKeyUp={(e) => {
+                                        if (e.key === 'Escape') {
+                                            setComment(null);
+                                            setContent('')
+                                        }
+                                    }} />
                                 </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" size="medium" htmlType="submit" onClick={() => handleSubmit()}>
-                                        Send comment
+                                        {comment ? 'Update comment' : 'Send comment'}
                                     </Button>
                                 </Form.Item>
                             </Row>
-                            <Row gutter={16}>
-                                <Col className="gutter-row" span={8} onClick={() => setComment(null)}>
-                                    <h4 >Lorem ipsu dolor sit amed</h4>
-                                </Col>
-                            </Row>
+                            {
+                                studentDetail.teacherComments ?
+                                    studentDetail.teacherComments.map(c => (
+                                        <Row gutter={16}>
+                                            <Col className="gutter-row" span={8} onClick={() => handleComment(c)}>
+                                                <h4>{c.content ? c.content : 'No content found in this comment'}</h4>
+                                            </Col>
+                                            <Col className="gutter-row" span={8} onClick={() => handleComment(c)}>
+                                                <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px', color: c.approveDate ? 'green' : 'red' }} onClick={() => handleApproval(c)}/>
+                                            </Col>
+                                        </Row>
+                                    ))
+                                    : null
+                            }
+
                         </Card>
                     </Row>
                 </PageHeader> : null}
