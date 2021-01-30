@@ -165,7 +165,7 @@ function UpdateStudent() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
+                        <Form.Item label="First Name" required style={{ flex: 1, marginRight: '10px' }}>
                             <Input type="text" name="firstName" onChange={handleChange} defaultValue={data.firstName} />
                         </Form.Item>
                         <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>

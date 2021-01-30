@@ -49,13 +49,13 @@ function CreateAvailibility() {
             // console.log(data.content);
             // console.log(data.content.filter(s => _children.subjects.includes(s.subject)));
             setDat(null);
-            setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
+            setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['createDate'], item])).values()]);
         });
     }
 
     const changeDate = (date) => {
         setDat(date);
-        setEnds([...new Map(schedules.filter(s => children.subjects.includes(s.subject)).filter(s => s.startDate == date).map(item => [item['id'], item])).values()]);
+        setEnds([...new Map(schedules.filter(s => children.subjects.includes(s.subject)).filter(s => s.startDate == date).map(item => [item['createDate'], item])).values()]);
     }
 
     const changeEndDate = (date) => {

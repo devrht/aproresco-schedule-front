@@ -12,6 +12,7 @@ const formReducer = (state, event) => {
         [event.name]: event.value
     }
 }
+const OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
 function CreateSchedule() {
 
@@ -22,6 +23,7 @@ function CreateSchedule() {
     const [isCreation, setIsCreation] = useState(true);
     const [subjects, setSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
+    const [filteredOptions, setFilteredOptions] = useState(OPTIONS);
     const [grades, setGrades] = useState([]);
     const [subject, setSubject] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
@@ -56,6 +58,10 @@ function CreateSchedule() {
     const handleChangeSelect = (value) => {
         setGrades(value.toString().split(',').map(i => Number(i)));
     }
+
+    useEffect(() => {
+        setFilteredOptions(OPTIONS.filter(o => !grades.includes(Number(o)) || !["8", "9", "10", "11", "12"].includes(o)));
+    }, [grades]);
 
     const handleChangeSubjects = (value) => {
         setSelectedSubjects(value);
@@ -213,6 +219,7 @@ function CreateSchedule() {
                             mode="multiple"
                             allowClear
                             open={open2}
+                            value={grades}
                             onFocus={() => setOpen2(true)}
                             onBlur={() => setOpen2(false)}
                             style={{ width: '100%' }}
@@ -220,18 +227,11 @@ function CreateSchedule() {
                             placeholder="Please select grades"
                             onChange={handleChangeSelect}
                         >
-                            <Select.Option value={1}>1</Select.Option>
-                            <Select.Option value={2}>2</Select.Option>
-                            <Select.Option value={3}>3</Select.Option>
-                            <Select.Option value={4}>4</Select.Option>
-                            <Select.Option value={5}>5</Select.Option>
-                            <Select.Option value={6}>6</Select.Option>
-                            <Select.Option value={7}>7</Select.Option>
-                            <Select.Option value={8}>8</Select.Option>
-                            <Select.Option value={9}>9</Select.Option>
-                            <Select.Option value={10}>10</Select.Option>
-                            <Select.Option value={11}>11</Select.Option>
-                            <Select.Option value={12}>12</Select.Option>
+                            {filteredOptions.map(item => (
+                                <Select.Option key={item} value={item}>
+                                    {item}
+                                </Select.Option>
+                            ))}
                         </Select>
                     </Form.Item>
                     <Form.Item>

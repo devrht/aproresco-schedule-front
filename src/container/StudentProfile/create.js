@@ -100,7 +100,6 @@ function CreateStudent() {
                 <Form
                     form={form}
                     onFinish={handleSubmit}
-                    autoComplete="off"
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
@@ -153,22 +152,22 @@ function CreateStudent() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="firstName" onChange={handleChange} />
+                        <Form.Item label="First Name" required style={{ flex: 1, marginRight: '10px' }} autoComplete="off">
+                            <Input type="text" name="firstName" onChange={handleChange} autoComplete="off"/>
                         </Form.Item>
-                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }} autoComplete="off">
+                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="off"/>
                         </Form.Item>
                     </div>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="email" onChange={handleChange} />
+                        <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }} autoComplete="off">
+                            <Input type="email" name="email" onChange={handleChange} autoComplete="off"/>
                         </Form.Item>
-                        <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} />
+                        <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }} autoComplete="off">
+                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} autoComplete="off"/>
                         </Form.Item>
                     </div>
                     <div style={{
