@@ -109,7 +109,6 @@ function CreateTeacher() {
                 ]}
             >
                 <Form
-                    autoComplete="off"
                     form={form}
                     onFinish={handleSubmit}
                     layout="vertical"
@@ -120,18 +119,18 @@ function CreateTeacher() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="firstName" onChange={handleChange} />
+                        <Form.Item label="Fist Name" required style={{ flex: 1, marginRight: '10px' }} autoComplete="off">
+                            <Input type="text" name="firstName" onChange={handleChange} autoComplete="off" />
                         </Form.Item>
-                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="text" name="lastName" onChange={handleChange} />
+                        <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }} autoComplete="off">
+                            <Input type="text" name="lastName" onChange={handleChange} autoComplete="off" />
                         </Form.Item>
                     </div>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
+                        <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }} autoComplete="off">
                             <Input type="email" name="iemail" onChange={handleChange} />
                         </Form.Item>
                         <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>

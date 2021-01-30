@@ -12,7 +12,7 @@ const formReducer = (state, event) => {
         [event.name]: event.value
     }
 }
-const OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+const OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 function CreateSchedule() {
 
@@ -60,7 +60,7 @@ function CreateSchedule() {
     }
 
     useEffect(() => {
-        setFilteredOptions(OPTIONS.filter(o => !grades.includes(Number(o)) || !["8", "9", "10", "11", "12"].includes(o)));
+        setFilteredOptions(OPTIONS.filter(o => !grades.includes(Number(o))));
     }, [grades]);
 
     const handleChangeSubjects = (value) => {
