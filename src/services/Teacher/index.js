@@ -465,7 +465,7 @@ export const updateParent = (id, firstName, lastName, phoneNumber, countryCode, 
     }).catch(err => console.log(err));
 }
 
-export const createMessage = (type, startDate, endDate, message, subject, async, template) => {
+export const createMessage = (type, startDate, endDate, message, subject, async, template, name) => {
     let data = {
         // startDate,
         // endDate,
@@ -475,7 +475,7 @@ export const createMessage = (type, startDate, endDate, message, subject, async,
         saveAstemplate: template
     }
     let url = type == 'StudentProfile' ? 'reminder/students' : 'reminder/teachers';
-    return axios.get(`${routes.SERVER_ADDRESS}/${url}?message=${message}&subject=${subject}&async=${async}&saveAstemplate=${template}`).then(res => {
+    return axios.get(`${routes.SERVER_ADDRESS}/${url}?message=${message}&subject=${subject}&firstName=${name}&async=${async}&saveAstemplate=${template}`).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

@@ -4,7 +4,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { createBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, getSchedule } from '../../services/Student'
+import { getStudentProfileByDate, getSchedule, findStudentProfileByFirstNameAndLastName } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -91,15 +91,26 @@ function CreateBooking() {
         }).finally(() => setSubmitting(false));
     }
 
-    const getStudents = () => {
+    const getStudents = (search = '') => {
         setLoadingS(true);
-        getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-            if (data) {
-                if (data.content) {
-                    setStudentList(data.content);
+        if(search.length < 0) {
+            getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+                if (data) {
+                    if (data.content) {
+                        setStudentList(data.content);
+                    }
                 }
-            }
-        }).finally(() => setLoadingS(false))
+            }).finally(() => setLoadingS(false))
+        } else {
+            findStudentProfileByFirstNameAndLastName(search, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+                if (data) {
+                    if (data.content) {
+                        setStudentList(data.content);
+                    }
+                }
+            }).finally(() => setLoadingS(false))
+        }
+        
     }
 
     return (
@@ -131,6 +142,7 @@ function CreateBooking() {
                                 // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
                                 onInputChange={(__, newInputValue) => {
                                     setStudent(newInputValue);
+                                    getStudents(newInputValue);
                                 }}
                                 onChange={(__, newValue) => {
                                     changeChildren(newValue.id);

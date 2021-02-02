@@ -4,7 +4,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { createAvailibility } from '../../services/Teacher';
-import { getTeacherProfileByDate, getSchedule } from '../../services/Student'
+import { getTeacherProfileByDate, getSchedule, findTeacherProfileByFirstNameAndLastName } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -22,7 +22,7 @@ function CreateAvailibility() {
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
-    const [student, setStudent] = useState(null);
+    const [student, setStudent] = useState('');
     const [studentList, setStudentList] = useState([]);
     const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
@@ -78,15 +78,25 @@ function CreateAvailibility() {
             .finally(() => setSubmitting(false));
     }
 
-    const getStudents = () => {
+    const getStudents = (newInputValue = '') => {
         setLoadingS(true);
-        getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-            if (data) {
-                if (data.content) {
-                    setStudentList(data.content);
+        if(newInputValue.length < 1) {
+            getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+                if (data) {
+                    if (data.content) {
+                        setStudentList(data.content);
+                    }
                 }
-            }
-        }).finally(() => setLoadingS(false))
+            }).finally(() => setLoadingS(false))
+        } else {
+            findTeacherProfileByFirstNameAndLastName(newInputValue, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+                if (data) {
+                    if (data.content) {
+                        setStudentList(data.content);
+                    }
+                }
+            }).finally(() => setLoadingS(false))
+        }
     }
 
     return (
@@ -114,10 +124,17 @@ function CreateAvailibility() {
                             inputValue={student}
                             // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
                             onInputChange={(__, newInputValue) => {
-                                setStudent(newInputValue);
+                                if (newInputValue != null) {
+                                    setStudent(newInputValue);
+                                    getStudents(newInputValue);
+                                }
+                                console.log(newInputValue)
                             }}
                             onChange={(__, newValue) => {
-                                changeChildren(newValue.id);
+                                if (newValue != null) {
+                                    changeChildren(newValue.id);
+                                }
+                                console.log(newValue)
                             }}
                             open={open}
                             onOpen={() => {

@@ -147,6 +147,9 @@ function AddMessage(props) {
                             <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
                         </Form.Item>
                     </div>
+                    <Form.Item label="Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                        <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
+                    </Form.Item>
                     <Form.Item label="Body" required>
                         <TextArea type="text" name="body" value={body} onChange={(e) => setBody(e.target.value)} />
                     </Form.Item>

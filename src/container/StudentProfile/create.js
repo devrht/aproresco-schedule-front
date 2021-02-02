@@ -3,11 +3,12 @@ import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import { createStudent } from '../../services/Teacher';
-import { getParentProfile } from '../../services/Student';
+import { getParentProfile, findParentProfileByEmail } from '../../services/Student';
 import React, { useEffect, useState, useReducer } from 'react'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Search from 'antd/lib/input/Search';
 
 const formReducer = (state, event) => {
     return {
@@ -33,19 +34,34 @@ function CreateStudent() {
         getListView();
     }, []);
 
-    const getListView = () => {
-        getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-            console.log('DATA ==> ', data)
-            if (data) {
-                if (data.content) {
-                    setParents(data.content);
+    const getListView = (search = '') => {
+        if (search.length < 0) {
+            getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+                console.log('DATA ==> ', data)
+                if (data) {
+                    if (data.content) {
+                        setParents(data.content);
+                    } else {
+                        setParents([]);
+                    }
                 } else {
                     setParents([]);
                 }
-            } else {
-                setParents([]);
-            }
-        })
+            })
+        } else {
+            findParentProfileByEmail(search, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+                console.log('DATA ==> ', data)
+                if (data) {
+                    if (data.content) {
+                        setParents(data.content);
+                    } else {
+                        setParents([]);
+                    }
+                } else {
+                    setParents([]);
+                }
+            })
+        }
     }
 
     const handleChange = event => {
@@ -115,6 +131,7 @@ function CreateStudent() {
                                 inputValue={parent}
                                 onInputChange={(__, newInputValue) => {
                                     setParent(newInputValue);
+                                    getListView(newInputValue)
                                 }}
                                 onChange={(__, newValue) => {
                                     changeParent(newValue);
@@ -153,10 +170,10 @@ function CreateStudent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="First Name" required style={{ flex: 1, marginRight: '10px' }} autoComplete="off">
-                            <Input type="text" name="firstName" onChange={handleChange} autoComplete="off"/>
+                            <Input type="text" name="firstName" onChange={handleChange} autoComplete="off" />
                         </Form.Item>
                         <Form.Item label="Last Name" required style={{ flex: 1, marginLeft: '10px' }} autoComplete="off">
-                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="off"/>
+                            <Input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="off" />
                         </Form.Item>
                     </div>
                     <div style={{
@@ -164,10 +181,10 @@ function CreateStudent() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Student Email" required style={{ flex: 1, marginRight: '10px' }} autoComplete="off">
-                            <Input type="email" name="email" onChange={handleChange} autoComplete="off"/>
+                            <Input type="email" name="email" onChange={handleChange} autoComplete="off" />
                         </Form.Item>
                         <Form.Item label="Student grade" required style={{ flex: 1, marginLeft: '10px' }} autoComplete="off">
-                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} autoComplete="off"/>
+                            <Input type="number" min={0} max={12} step={1} name="grade" onChange={handleChange} autoComplete="off" />
                         </Form.Item>
                     </div>
                     <div style={{
