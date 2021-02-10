@@ -42,7 +42,7 @@ function ShortMessageList(props) {
     const rowSelection = {
         selectedRow,
         onChange: (selectedrow, records) => {
-            console.log('selectedRowKeys changed: ', records);
+            //console.log('selectedRowKeys changed: ', records);
             setSelectedRow(records);
         }
     };
@@ -111,7 +111,7 @@ function ShortMessageList(props) {
     ];
 
     useEffect(() => {
-        console.log(params.id);
+        //console.log(params.id);
         getListView();
     }, [tableProps.pageIndex]);
     useEffect(() => {
@@ -123,7 +123,9 @@ function ShortMessageList(props) {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             getShortMessagesByDate(params.id, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
+                    console.log('liste de message',data);
                     if (data.content) {
+                        
                         setStudentList(data.content)
                         setTableProps({
                             ...tableProps,
@@ -152,6 +154,7 @@ function ShortMessageList(props) {
         else {
             getShortMessages(params.id, search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
+                    console.log('deuxieme message', data);
                     if (data.content) {
                         setStudentList(data.content)
                         setTableProps({

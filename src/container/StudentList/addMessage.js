@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextArea from 'antd/lib/input/TextArea';
+import { getTeacherProfileByDate } from '../../services/Student';
 
 const formReducer = (state, event) => {
     return {
@@ -16,6 +17,7 @@ const formReducer = (state, event) => {
         [event.name]: event.value
     }
 }
+    
 
 function AddMessage(props) {
 
@@ -38,6 +40,20 @@ function AddMessage(props) {
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
 
+    const [dispo, setDispo] = useState(); 
+    const [tableProps, setTableProps] = useState({
+        totalCount: 0,
+        pageIndex: 0,
+        pageSize: 30,
+    });
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
+    const [search, setSearch] = useState({
+        name: "",
+        firstName: "",
+        lastName: "",
+    })
+
     useEffect(() => {
         getTemplates();
     }, []);
@@ -54,7 +70,13 @@ function AddMessage(props) {
         setSubject(temp.subject);
         setBody(temp.body);
     }
-
+    const getDisponibilities = () => {
+        getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            setDispo(data);
+            console.log('deuxuieme data',data.content);
+            console.log('dispo data', dispo);
+        })
+    } 
     // const changeTemplate = (id) => {
     //     setTemplate()
     // }
@@ -65,12 +87,29 @@ function AddMessage(props) {
             return;
         }
         setSubmitting(true)
-        createMessage(params.id, startDate, endDate, body, subject, async, asTemplate, name).then(data => {
-            history.push(`/short-messages/${params.id}`)
-        }).catch(err => {
-            alert("Error occured when saving data, please retry!")
-            console.log(err)
-        }).finally(() => setSubmitting(false))
+        // createMessage(params.id, startDate, endDate, body, subject, async, asTemplate, name).then(data => {
+        //     history.push(`/short-messages/${params.id}`)
+        // }).catch(err => {
+        //     alert("Error occured when saving data, please retry!")
+        //     console.log(err)
+        // }).finally(() => setSubmitting(false))
+
+      
+        //console.log('Mon pour message DATA 2 ==> ',data.content.name);
+
+      
+        getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            data.content.map((e, index) => (
+                createMessage(params.id, startDate, endDate, body, subject, async, asTemplate, e.firstName).then(data => {
+                    console.log(data);
+                    history.push(`/short-messages/${params.id}`)
+                }).catch(err => {
+                    alert("Error occured when saving data, please retry!")
+                    console.log(err)
+                }).finally(() => setSubmitting(false))
+                )
+            )
+        })
     }
 
     const getTemplates = () => {
@@ -78,6 +117,9 @@ function AddMessage(props) {
         getShortMessagesTemplates(params.id, 0, 100, 'firstName', 'asc').then(data => {
             if (data) {
                 if (data.content) {
+                    
+                    console.log(data)
+
                     setTemplates(data.content);
                 }
             }
@@ -110,7 +152,7 @@ function AddMessage(props) {
                                 options={templates}
                                 size="small"
                                 inputValue={template}
-                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                //closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
                                 onInputChange={(__, newInputValue) => {
                                     setTemplate(newInputValue);
                                 }}
@@ -125,8 +167,8 @@ function AddMessage(props) {
                                     setOpen(false);
                                 }}
                                 loading={loadingS}
-                                getOptionLabel={(record) => record.name}
-                                // style={{ minWidth: 450, marginLeft: -250 }}
+                                getOptionLabel={(record) => record.body }
+                                //style={{ minWidth: 450, marginLeft: -250 }}
                                 renderInput={(params) =>
                                     <TextField {...params}
                                         variant="outlined"
@@ -147,9 +189,9 @@ function AddMessage(props) {
                             <Input type="text" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
                         </Form.Item>
                     </div>
-                    <Form.Item label="Name" required style={{ flex: 1, marginLeft: '10px' }}>
+                    {/* <Form.Item label="Name" required style={{ flex: 1, marginLeft: '10px' }}>
                         <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item label="Body" required>
                         <TextArea type="text" name="body" value={body} onChange={(e) => setBody(e.target.value)} />
                     </Form.Item>
@@ -169,13 +211,24 @@ function AddMessage(props) {
                             <Checkbox onChange={(e) => setIsEmail(e.target.checked)} />
                         </Form.Item>
                     </div>
-                    <Form.Item>
-                        <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
-                            {
-                                submitting ? 'Loading...' : 'Create a Message'
-                            }
-                        </Button>
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Form.Item>
+                            <Button onClick={() => { history.push('/short-messages/StudentProfile') }} type="danger" size="large" htmlType="button">
+                                Cancel Message
+                            </Button>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
+                                {
+                                    submitting ? 'Loading...' : 'Send Message'
+                                }
+                            </Button>
+                        </Form.Item>
+                    </div>
                 </Form>
             </PageHeader>
         </div>
