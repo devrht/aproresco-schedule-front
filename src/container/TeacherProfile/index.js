@@ -5,17 +5,20 @@ import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate, deleteTeacherProfile } from '../../services/Student'
+import { sendTeachersMessage } from '../../services/Teacher'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import {MessageOutlined} from '@ant-design/icons'
 
 function TeacherProfile() {
     const history = useHistory();
     const [teacherList, setTeacherList] = useState();
     const [sortingName, setSortingName] = useState("createDate");
     const [sortingType, setSortingType] = useState("desc");
+    const [mess_id, setMess_id] = useState("t1");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -292,6 +295,12 @@ function TeacherProfile() {
         setTeacherList([]);
     };
 
+    const sendMessage = (messId) => {
+        sendTeachersMessage(messId).then(res => {
+            console.log(res);
+        })
+    }
+
 
     return (
 
@@ -315,11 +324,20 @@ function TeacherProfile() {
                             <DeleteOutlined />
                         </Button>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
-                        <Button key='3' size="medium" type="primary" onClick={() => history.push('/teacherprofiles/add')}>
-                            < PlusOutlined />
-                        </Button>
-                    </div>
+                    {
+                        (selectedRow.length == 0) ? 
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                                <Button key='3' size="medium" type="primary" onClick={() => history.push('/teacherprofiles/add')}>
+                                    < PlusOutlined />
+                                </Button>
+                            </div> 
+                            : 
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                                <Button key='3' size="medium" type="primary" onClick={() => sendMessage(mess_id)}>
+                                    <MessageOutlined />
+                                </Button>
+                            </div>
+                    }
                 </div>
 
                 {!teacherList ? <Spin className="loading-table" /> :

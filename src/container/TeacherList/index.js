@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip } from 'antd';
-import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities } from '../../services/Teacher'
+import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities, sendMessageAvailability } from '../../services/Teacher'
+
 import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade, deleteAvailabilities } from '../../services/Student'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
@@ -13,6 +14,7 @@ import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutli
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import {MessageOutlined} from '@ant-design/icons'
 
 const customStyles = {
     content: {
@@ -35,6 +37,7 @@ function TeacherList() {
     })
     const [teacherList, setTeacherList] = useState();
     const [teacherId, setTeacherId] = useState(0);
+    const [mess_id, setMess_id] = useState("t1");
     const [sortingName, setSortingName] = useState("createDate");
     const [studentList, setStudentList] = useState();
     const [sortingType, setSortingType] = useState("desc");
@@ -635,6 +638,12 @@ function TeacherList() {
         }
     }
 
+    const sendMessage = (messId) => {
+        sendMessageAvailability(messId).then(res => {
+            console.log(res);
+        })
+    }
+
     return (
         <React.Fragment>
             <PageHeader
@@ -657,11 +666,20 @@ function TeacherList() {
                             <DeleteOutlined />
                         </Button>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
-                        <Button key='3' size="medium" type="primary" onClick={() => history.push('teacherlist/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
+                    {
+                        (selectedRow.length == 0) ? 
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                                <Button key='3' size="medium" type="primary" onClick={() => history.push("/teacherlist/add")}>
+                                    <PlusOutlined />
+                                </Button>
+                            </div> 
+                            : 
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                                <Button key='3' size="medium" type="primary" onClick={() => sendMessage(mess_id)}>
+                                    <MessageOutlined />
+                                </Button>
+                            </div>
+                    }
                 </div>
                 {!teacherList ? <Spin className="loading-table" /> :
                     <Table

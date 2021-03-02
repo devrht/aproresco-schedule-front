@@ -5,7 +5,7 @@ import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
-import { createSchedule, createTeacher } from '../../services/Teacher';
+import { createSchedule, createTeacher} from '../../services/Teacher';
 import React, { useEffect, useState, useReducer } from 'react'
 import { getCountry, getSchedule } from '../../services/Student';
 

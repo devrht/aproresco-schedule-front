@@ -4,18 +4,20 @@ import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
-import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles } from '../../services/Student'
+import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles, sendStudentsMessage} from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCircle, faCoffee, faCommentAlt } from '@fortawesome/free-solid-svg-icons'
+import {MessageOutlined} from '@ant-design/icons'
 
 function StudentProfile() {
     const history = useHistory();
     const [studentList, setStudentList] = useState();
     const [sortingName, setSortingName] = useState("createDate");
     const [sortingType, setSortingType] = useState("desc");
+    const [mess_id, setMess_id] = useState("s1");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -290,6 +292,12 @@ function StudentProfile() {
         setStudentList([]);
     };
 
+    const sendMessage = (messId) => {
+        sendStudentsMessage(messId).then(res => {
+            console.log(res);
+        })
+    }
+
 
     return (
 
@@ -313,11 +321,20 @@ function StudentProfile() {
                             <DeleteOutlined />
                         </Button>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
-                        <Button key='3' size="medium" type="primary" onClick={() => history.push('/studentprofiles/add')}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
+                    {
+                        (selectedRow.length == 0) ? 
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                                <Button key='3' size="medium" type="primary" onClick={() => history.push('/studentprofiles/add')}>
+                                    <PlusOutlined />
+                                </Button>
+                            </div> 
+                            : 
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                                <Button key='3' size="medium" type="primary" onClick={() => sendMessage(mess_id)}>
+                                    <MessageOutlined />
+                                </Button>
+                            </div>
+                    }
                 </div>
 
                 {!studentList ? <Spin className="loading-table" /> :

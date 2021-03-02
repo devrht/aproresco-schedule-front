@@ -421,3 +421,15 @@ export const deleteBookings = (ids) => {
         return res;
     }).catch(err => console.log(err));
 }
+
+export const sendStudentsMessage = (message_id) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message​/student/${message_id}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const sendMessageBooking = (message_id) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message/booking/${message_id}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}

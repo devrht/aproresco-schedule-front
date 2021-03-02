@@ -479,3 +479,15 @@ export const createMessage = (type, startDate, endDate, message, subject, async,
         return res;
     }).catch(err => console.log(err));
 }
+
+export const sendTeachersMessage = (message_id) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message​/teacher/${message_id}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const sendMessageAvailability = (message_id) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message/availability/${message_id}`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
