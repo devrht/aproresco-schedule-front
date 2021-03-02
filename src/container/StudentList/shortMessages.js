@@ -228,11 +228,7 @@ function ShortMessageList(props) {
                             <DeleteOutlined />
                         </Button>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
-                        <Button key='3' size="medium" type="primary" onClick={() => history.push('/messages/add/' + params.id)}>
-                            <PlusOutlined />
-                        </Button>
-                    </div>
+                    
                 </div>
 
                 {!studentList ? <Spin className="loading-table" /> :
