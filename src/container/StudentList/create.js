@@ -4,7 +4,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { createBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, getSchedule, findStudentProfileByFirstNameAndLastName } from '../../services/Student'
+import { getStudentProfileByDate, getSchedule, findStudentProfileByFirstNameAndLastName,getStudentDetail } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -71,7 +71,7 @@ function CreateBooking() {
     const changeSubject = (subject) => {
         setSubjec(subject);
         setDat(null);
-        setDates(schedules.filter(s => s.subject == subject));
+        setDates(schedules.filter(s => s.subject == subject).filter(s => s.grades.includes(children.grade)));
     }
 
     const changeDate = (date) => {
