@@ -36,13 +36,13 @@ function TeacherProfile() {
     const [selectedRow, setSelectedRow] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const rowSelection = {
+     const rowSelection = {
         selectedRow,
         onChange: (selectedrow, records) => {
             console.log('selectedRowKeys changed: ', records);
             setSelectedRow(records);
         }
-    };
+    }; 
 
     const deleteRows = () => {
         let ids = [];
@@ -298,6 +298,9 @@ function TeacherProfile() {
     const sendMessage = (messId) => {
         sendTeachersMessage(messId).then(res => {
             console.log(res);
+            setSelectedRow([]);
+            setTeacherList([]);
+            getListView()
         })
     }
 

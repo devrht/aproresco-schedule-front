@@ -91,7 +91,7 @@ function CreateSchedule() {
         // let d = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
         let d = (date.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours().toString().padStart(2, '0') + ':' + date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
 
-        date = new Date(formData.endDate + "T" + formData.endTime + ":00");
+        date = new Date(formData.endDate + "T" + formData.duration + ":00");
 
         // let f = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
         let f = (date.getUTCMonth() + 1).toString().padStart(2, '0') + '/' + date.getUTCDate().toString().padStart(2, '0') + '/' + date.getUTCFullYear() + ' ' + date.getUTCHours().toString().padStart(2, '0') + ':' + date.getUTCMinutes().toString().padStart(2, '0') + ':00 +0000';
@@ -195,7 +195,7 @@ function CreateSchedule() {
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
                             <Input type="date" name="startDate" onChange={handleChange} />
                         </Form.Item>
-                        <Form.Item label="Start time" required style={{ flex: 1, marginLeft: '10px' }}>
+                        <Form.Item label="Start time" required style={{ flex: 1, marginRight: '10px' }}>
                             <Input type="time" name="startTime" onChange={handleChange} />
                         </Form.Item>
                     </div>
@@ -206,34 +206,43 @@ function CreateSchedule() {
                         <Form.Item label="End date" required style={{ flex: 1, marginRight: '10px' }}>
                             <Input type="date" name="endDate" onChange={handleChange} />
                         </Form.Item>
-                        <Form.Item label="End time" required style={{ flex: 1, marginLeft: '10px' }}>
-                            <Input type="time" name="endTime" onChange={handleChange} />
+                        <Form.Item label="Duration (in minutes)" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="number" name="duration" step={10} onChange={handleChange} />
                         </Form.Item>
                     </div>
                     {/* <Form.Item label="Description" required>
                         <Input type="text" name="description" onChange={handleChange} />
                     </Form.Item> */}
-                    <Form.Item label="Grades" required
-                        onClick={() => setOpen2(open2 ? false : true)}>
-                        <Select
-                            mode="multiple"
-                            allowClear
-                            open={open2}
-                            value={grades}
-                            onFocus={() => setOpen2(true)}
-                            onBlur={() => setOpen2(false)}
-                            style={{ width: '100%' }}
-                            onSelect={() => setOpen2(false)}
-                            placeholder="Please select grades"
-                            onChange={handleChangeSelect}
-                        >
-                            {filteredOptions.map(item => (
-                                <Select.Option key={item} value={item}>
-                                    {item}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Grades" required
+                            onClick={() => setOpen2(open2 ? false : true)}
+                            style={{ flex: 1, marginRight: '10px' }}>
+                            <Select
+                                mode="multiple"
+                                allowClear
+                                open={open2}
+                                value={grades}
+                                onFocus={() => setOpen2(true)}
+                                onBlur={() => setOpen2(false)}
+                                //style={{ width: '100%' }}
+                                onSelect={() => setOpen2(false)}
+                                placeholder="Please select grades"
+                                onChange={handleChangeSelect}
+                            >
+                                {filteredOptions.map(item => (
+                                    <Select.Option key={item} value={item}>
+                                        {item}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="Repeat period (in days)" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Input type="number" name="repeatPeriod" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

@@ -641,6 +641,7 @@ function TeacherList() {
     const sendMessage = (messId) => {
         sendMessageAvailability(messId).then(res => {
             console.log(res);
+            setSelectedRow(0);
         })
     }
 
