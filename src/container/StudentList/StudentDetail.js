@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer} from 'react'
 import { getStudentDetail } from '../../services/Student'
 import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
 import { Form, Input } from 'antd';
 import { useLocation, useHistory } from "react-router-dom";
-import { assignStudentToAnotherTeacher, getBooking } from '../../services/Student'
+import { assignStudentToAnotherTeacher, getBooking, sendMessageToBooking } from '../../services/Student'
 import { createComment, updateComment, approveComment } from '../../services/Teacher'
 import Moment from 'react-moment';
 import {
     CheckOutlined
 } from '@ant-design/icons';
+
+const formReducer = (state, event) => {
+    return {
+        ...state,
+        [event.name]: event.value
+    }
+}
 
 function StudentDetail(props) {
 
@@ -18,22 +25,35 @@ function StudentDetail(props) {
     const [studentDetail, setStudentDetail] = useState(location.state.student);
     const [content, setContent] = useState('');
     const [comment, setComment] = useState(null);
+    const [form] = Form.useForm();
+    const [message, setMessage] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [formData, setFormData] = useReducer(formReducer, {});
 
     useEffect(() => {
         // getDetailView();
-        console.log(location.state.student);
+        console.log('STUDENT==> ',location.state.student);
     }, []);
+
+    const handleChange = event => {
+        console.log(event.target.value)
+        setFormData({
+            name: event.target.name,
+            value: event.target.value,
+        });
+    }
 
     const getDetailView = () => {
         getStudentDetail(params.id).then(data => {
             console.log('DATA ==> ', data)
             setStudentDetail(data)
+            history.push(`/studentlist/studentDetail/${data.id}`)
         })
     }
 
     const getStudentBooking = () => {
         getBooking(studentDetail.id).then(data => {
-            console.log(data)
+            console.log('BOOKING ==>',data)
             setStudentDetail(data.data)
         })
     }
@@ -47,7 +67,27 @@ function StudentDetail(props) {
         } else {
             updateComment(comment.id, content).then(data => {
                 // history.push('/studentlist')
-                getStudentBooking();;
+                getStudentBooking();
+            })
+        }
+    }
+
+    const handleSubmitSendMessage = () => {
+        if (message == null) 
+        {
+            alert("Please, enter a message");
+            return
+        }
+        else {
+            setMessage(formData.message);
+            setSubmitting(true);
+            getBooking(studentDetail.id).then(result => {
+                sendMessageToBooking(result.id, message).then(result => {
+                    console.log(result);
+                    setSubmitting(false);
+                    setMessage('');
+                    setFormData([]);
+                })
             })
         }
     }
@@ -97,7 +137,6 @@ function StudentDetail(props) {
                         </div>
                     ]}
                 >
-
                     <Row gutter={24} style={{ marginBottom: '3%' }}>
                         <Card title="Student informations" hoverable={true} bordered={true} style={{ width: "48%", marginLeft: '2%' }}>
                             <Row gutter={16}>
@@ -264,6 +303,25 @@ function StudentDetail(props) {
                             </Row>
                         </Card>
                     </Row>
+
+                    <Row gutter={24} style={{ marginBottom: '3%' }}>
+                        <Card title="Send a message" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
+                            <Row gutter={16}>
+                                <Form.Item label="Message" required style={{ flex: 1, marginRight: '10px' }}>
+                                    <Input type="text" name="message"  /* onChange={(e) => setMessage(e.target.value)} */ onChange={handleChange}/>
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Button disabled={submitting} type="primary" size="medium" htmlType="submit" onClick={() => handleSubmitSendMessage()}>
+                                        {
+                                            submitting ? 'Loading...' : 'SEND'
+                                        }
+                                    </Button>
+                                </Form.Item>
+                            </Row>
+                        </Card>
+                    </Row>
+
                     <Row gutter={24} style={{ marginBottom: '3%' }}>
                         <Card title="Feedback section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
                             <Row gutter={16}>
@@ -281,8 +339,7 @@ function StudentDetail(props) {
                                     </Button>
                                 </Form.Item>
                             </Row>
-                            {
-                                studentDetail.teacherComments ?
+                            {studentDetail.teacherComments ?
                                     studentDetail.teacherComments.map(c => (
                                         <>
                                             <Row gutter={16} style={{ height: 50 }}>
@@ -295,8 +352,7 @@ function StudentDetail(props) {
                                             </Row>
                                         </>
                                     ))
-                                    : null
-                            }
+                            : null}
 
                         </Card>
                     </Row>

@@ -423,13 +423,19 @@ export const deleteBookings = (ids) => {
 }
 
 export const sendStudentsMessage = (message_id) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/message​/student/${message_id}`).then(res => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message​/${message_id}/students`).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
 
-export const sendMessageBooking = (message_id) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/message/booking/${message_id}`).then(res => {
+export const sendMessageBookings = (message_id) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message/${message_id}/bookings`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const sendMessageToBooking = (booking_id, message) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message/booking/${booking_id}`, message).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

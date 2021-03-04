@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, PageHeader, Card, Table, Spin, Tooltip, Button } from 'antd';
 import { useLocation } from "react-router-dom";
-import { getStudentListById } from '../../services/Student'
+import { getStudentListById, getBooking } from '../../services/Student'
 import Moment from 'react-moment';
 import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,7 +17,10 @@ function StudentDetail(props) {
     const [studentDetail, setStudentDetail] = useState(location.state.student);
 
     useEffect(() => {
-        console.log(studentDetail)
+        getBooking(studentDetail.id).then(data => {
+            console.log('All Booking ==>', data);
+        })
+        //console.log(studentDetail)
         getDetailView();
     }, []);
 

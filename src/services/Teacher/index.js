@@ -481,13 +481,13 @@ export const createMessage = (type, startDate, endDate, message, subject, async,
 }
 
 export const sendTeachersMessage = (message_id) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/message​/teacher/${message_id}`).then(res => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message​/${message_id}/teachers`).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
 
 export const sendMessageAvailability = (message_id) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/message/availability/${message_id}`).then(res => {
+    return axios.post(`${routes.SERVER_ADDRESS}/message/${message_id}/availabilities`).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

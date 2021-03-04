@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, editSubject, assignStudentToAnotherTeacher, deleteBookings } from '../../services/Student'
 import { findTeacherListByFirstNameAndLastName } from '../../services/Teacher'
-import { sendMessageBooking } from '../../services/Student'
+import { sendMessageBookings } from '../../services/Student'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import Moment from 'react-moment';
@@ -523,7 +523,7 @@ function StudentList() {
     }
 
     const sendMessage = (messId) => {
-        sendMessageBooking(messId).then(res => {
+        sendMessageBookings(messId).then(res => {
             console.log(res);
         })
     }

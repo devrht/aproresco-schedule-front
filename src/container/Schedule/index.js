@@ -95,15 +95,20 @@ function Schedule() {
                     }
                 };
             },
-            render: (record) => (
-                <div>
-                    {
-                        <Moment local format="D MMM YYYY HH:MM">
-                            {record.startDate}
-                        </Moment>
-                    }
-                </div>
-            ),
+            render: (record) => {
+                let s = record.startDate.replaceAll('/', '-').split(' ')[0].split('-');
+                let st = record.startDate.replaceAll('/', '-').split(' ')[1].split(':');
+                let eDate= s[2]+'-'+s[0]+'-'+s[1];
+                let sTime= st[0]+':'+st[1];
+
+                let date = new Date(eDate + "T" + sTime + ":00");
+                let startD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0');
+                return (
+                    <span>
+                        {startD}
+                    </span>
+                )
+            },
             key: 'startDate',
         },
         {
@@ -123,15 +128,29 @@ function Schedule() {
                 };
             },
             render: (record) => {
+                let f = record.endDate.replaceAll('/', '-').split(' ')[0].split('-');
+                let eDate= f[2]+'-'+f[0]+'-'+f[1];
+
+                let date = new Date(eDate);
+                let endD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear();
                 return (
                     <span>
-                        <Moment local format="D MMM YYYY HH:MM">
-                            {record.endDate}
-                        </Moment>
+                        {endD}
                     </span>
                 )
             },
             key: 'endDate',
+        },
+        {
+            title: 'Duration (min)',
+            key: 'durationInMinutes',
+            render: (record) => {
+                return (
+                    <div>
+                        {record.durationInMinutes}
+                    </div>
+                )
+            }
         },
         {
             title: 'Grades',
