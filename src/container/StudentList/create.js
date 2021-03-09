@@ -4,7 +4,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Table, Spin } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { createBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, getSchedule, findStudentProfileByFirstNameAndLastName,findScheduleByGrade, getScheduleByDate } from '../../services/Student'
+import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -70,14 +70,17 @@ function CreateBooking() {
         });
     }
 
-    const changeChildren = (id) => {
+    const changeChildren = (value) => {
         setDates([]);
         setSubjects([]);
         setDat(null);
         setSubjec(null);
-        let _children = studentList.filter(c => c.id == id)[0];
+        if(value == null){
+            setChildren(null)
+        }
+        let _children = studentList.filter(c => c.id == value.id)[0];
         setChildren(_children);
-        getSchedule(1).then(data => {
+        getScheduleByDate(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             setSchedules(data.content)
             var obj = {};
             for (var i = 0, len = data.content.length; i < len; i++)
@@ -283,7 +286,7 @@ function CreateBooking() {
             render: (record) => {
                 return (
                     <div>
-                        {record.price}
+                        {record.price +' '+ record.currency }
                     </div>
                 )
             }
@@ -359,6 +362,7 @@ function CreateBooking() {
             <PageHeader
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Booking</p>}
+                style={{ width: '100%'}}
                 extra={[
                 ]}
             >
@@ -367,13 +371,12 @@ function CreateBooking() {
                     autoComplete="off"
                     onFinish={handleSubmit}
                     layout="vertical"
-                    style={{ width: '80%', marginLeft: '10%' }}
                 >
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px' }}>
+                        <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}}>
                             <Autocomplete
                                 id="asynchronous-search"
                                 options={studentList}
@@ -384,7 +387,7 @@ function CreateBooking() {
                                     getStudents(newInputValue);
                                 }}
                                 onChange={(__, newValue) => {
-                                    changeChildren(newValue.id);
+                                    changeChildren(newValue);
                                 }}
                                 open={open}
                                 onOpen={() => {
@@ -402,7 +405,7 @@ function CreateBooking() {
                                             ...params.InputProps,
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {loadingS ? <CircularProgress color="inherit" /> : null}
+                                                    {loadingS ? <CircularProgress color="inherit" size={20} /> : null}
                                                     {params.InputProps.endAdornment}
                                                 </React.Fragment>
                                             ),
@@ -411,17 +414,15 @@ function CreateBooking() {
                                 }
                             />
                         </Form.Item>
-                        <Form.Item label="Comment" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="comment" onChange={(e) => setComment(e.target.value)} />
+                        <Form.Item label="Comment" required style={{ flex: 1, marginRight: '10px',marginLeft: '10px' }}>
+                            <Input type="text" name="comment" style={{ marginTop: '3px', padding: '8px 8px', lineHeight: '14px' }} onChange={(e) => setComment(e.target.value)} />
                         </Form.Item>
                     </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
+                    
                         {!schedules ? <Spin className="loading-table" /> :
                         <Table
                             className="table-padding"
+                            style={{  marginLeft: '10px', marginRight: '10px'}}
                             columns={columns}
                             loading={loading}
                             dataSource={schedules}
@@ -434,7 +435,7 @@ function CreateBooking() {
                             rowSelection={rowSelection}
                             rowKey="id"
                         />}
-                    </div>
+
                     <Form.Item>
                         <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

@@ -142,12 +142,12 @@ function Schedule() {
             key: 'endDate',
         },
         {
-            title: 'Duration (min)',
+            title: 'Duration',
             key: 'durationInMinutes',
             render: (record) => {
                 return (
                     <div>
-                        {record.durationInMinutes}
+                        {record.durationInMinutes + ' min'}
                     </div>
                 )
             }
@@ -159,6 +159,39 @@ function Schedule() {
                 return (
                     <div>
                         {gradesToPrint(record)}
+                    </div>
+                )
+            }
+        },
+        {
+            title: 'Price',
+            key: 'price',
+            render: (record) => {
+                return (
+                    <div>
+                        {record.price +' '+ record.currency }
+                    </div>
+                )
+            }
+        },
+        {
+            title: 'Repeat',
+            key: 'repeatPeriodInDays',
+            render: (record) => {
+                return (
+                    <div>
+                        {record.repeatPeriodInDays + ' d'}
+                    </div>
+                )
+            }
+        },
+        {
+            title: 'Language',
+            key: 'language',
+            render: (record) => {
+                return (
+                    <div>
+                        {record.language}
                     </div>
                 )
             }
