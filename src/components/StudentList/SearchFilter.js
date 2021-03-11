@@ -19,16 +19,23 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
     });
 
     const convertDate = (date, status) => {
-        let tmp = new Date(date.target.value+" UTC");
-        console.log(tmp)
-        let result = new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
-        if (tmp) {
+        
+        let tmp = new Date(date.target.value);
+        console.log("Date from the input ==> ",tmp)
 
-            let day = tmp.getDate().toString().padStart(2, '0');
-            let month = (tmp.getMonth() + 1).toString().padStart(2, '0');
-            let year = tmp.getFullYear();
-            let hours = tmp.getHours().toString().padStart(2, '0');
-            let minutes = tmp.getMinutes().toString().padStart(2, '0');
+        let result = new Date(tmp.getFullYear(), tmp.getMonth(), tmp.getDate());
+        console.log("Date converted to local time ==>  ", result)
+
+        let result1 = new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
+        console.log("Date converted to  UTC time ==>  ", result1) 
+       
+        if (result) {
+
+            let day = result.getDate().toString().padStart(2, '0');
+            let month = (result.getMonth() + 1).toString().padStart(2, '0');
+            let year = result.getFullYear();
+            let hours = result.getHours().toString().padStart(2, '0');
+            let minutes = result.getMinutes().toString().padStart(2, '0');
 
             if (status) {
                 localStorage.setItem('startDate', year + '-' + month + '-' + day)
@@ -46,13 +53,13 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
         time = time.target.value;
         if (time) {
             if (status) {
-                setStartDate(time)
+                setStartTime(time)
                 localStorage.setItem('startTime', time);
                 let tmp = localStorage.getItem('toStart').split('%20');
                 tmp[1] = time + tmp[1].substr(5, tmp[1].length);
                 localStorage.setItem('toStart', tmp.join('%20'));
             } else {
-                setEndDate(time)
+                setEndTime(time)
                 localStorage.setItem('endTime', time);
                 let tmp = localStorage.getItem('toEnd').split('%20');
                 tmp[1] = time + tmp[1].substr(5, tmp[1].length);
