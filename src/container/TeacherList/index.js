@@ -295,16 +295,23 @@ function TeacherList() {
                     }
                 };
             },
-            render: (record) => (
-                <div
-                    style={{ display: "flex", flexDirection: 'row', alignItems: "center", width: '150px' }}>
-                    {
-                        <Moment local format="D MMM YYYY HH:MM" withTitle>
-                            {record.startDate}
-                        </Moment>
-                    }
-                </div>
-            ),
+            render: (record) => {
+                let tmp = new Date(record.schedule.startDate);
+                let result = new Date(tmp.getFullYear(), tmp.getMonth(), tmp.getDate());
+
+                /* let f = record.schedule.startDate.replaceAll('/', '-').split(' ')[0].split('-');
+                let sDate= f[2]+'-'+f[0]+'-'+f[1];
+
+                let date = new Date(sDate);
+                let startD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear(); */
+
+                let startD = (result.getMonth()+1).toString().padStart(2, '0') + '/' + result.getDate().toString().padStart(2, '0') + '/' + result.getFullYear();
+                return (
+                    <span>
+                        {startD}
+                    </span>
+                )
+            },
             key: 'startDate',
         },
         {

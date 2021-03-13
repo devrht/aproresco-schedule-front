@@ -19,6 +19,7 @@
         "axios": "^0.20.0",
         "moment": "^2.29.1",
         "react": "^16.13.1",
+        "react-datepicker": "^3.6.0",
         "react-dom": "^16.13.1",
         "react-facebook-login": "^4.1.1",
         "react-google-login": "^5.1.21",
