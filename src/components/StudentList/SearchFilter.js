@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Select, Input, Button } from 'antd'
+import { Form, Select, Input, Button, DatePicker } from 'antd'
 import { SearchOutlined } from "@ant-design/icons"
+import moment from 'moment';
 
 const { Option } = Select;
 const SearchFilter = ({ changeInput, searchList, type }) => {
@@ -11,23 +12,47 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
     const [startTime, setStartTime] = useState();
     const [endTime, setEndTime] = useState();
 
-    useEffect(() => {
+    const [formDate, setFormDate] = useState({
+        startDate: localStorage.getItem('startDate') ?? "",
+        endDate: localStorage.getItem('endDate') ?? "",
+        startTime: localStorage.getItem('startTime') ?? "",
+        endTime: localStorage.getItem('endTime') ?? "",
+    });
+
+   /*  useEffect(() => {
         setStartDate(localStorage.getItem('startDate'));
         setEndDate(localStorage.getItem('endDate'));
         setStartTime(localStorage.getItem('startTime'));
         setEndTime(localStorage.getItem('endTime'));
     });
-
-    const convertDate = (date, status) => {
+ */
+    const handleChange = (event, status) =>{
+        const {name, value, type} = event.target
+        const labelDuration = status ? "Start" : "End";
+        if (type === "date") {
+            const duration = new Date(value)
+            const toDurationStr = `${duration.getMonth()+1}%2F${duration.getDay()}%2F${duration.getFullYear()}%20${duration.getHours()}:${duration.getMinutes()}:00 -0500`
         
+            localStorage.setItem(`to${labelDuration}`, toDurationStr)
+        } else if (type === "time") {
+            let tmp = localStorage.getItem('toStart').split('%20');
+            tmp[1] = value + tmp[1].substr(5, tmp[1].length);
+            localStorage.setItem(`to${labelDuration}`, tmp.join('%20'));
+        } 
+        localStorage.setItem(`${labelDuration.toLocaleLowerCase()}${(type === "date")?"Date":"Time"}`,value)
+        setFormDate({...formDate, [name]: value})
+    }
+
+    /* const convertDate = (date, status) => {
+
         let tmp = new Date(date.target.value);
         console.log("Date from the input ==> ",tmp)
 
         let result = new Date(tmp.getFullYear(), tmp.getMonth(), tmp.getDate());
         console.log("Date converted to local time ==>  ", result)
 
-        let result1 = new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
-        console.log("Date converted to  UTC time ==>  ", result1) 
+        // let result1 = new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
+        // console.log("Date converted to  UTC time ==>  ", result1)  
        
         if (result) {
 
@@ -66,7 +91,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                 localStorage.setItem('toEnd', tmp.join('%20'));
             }
         }
-    }
+    } */
 
     const onKeyEnter = (e) => {
         //alert("not enter")
@@ -112,34 +137,40 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                 <Input
                     type='date'
                     placeholder="Min search date"
-                    value={startDate}
-                    onChange={(value) => convertDate(value, true)}
+                    name="startDate"
+                    value={formDate.startDate}
+                    onChange={(event) => handleChange(event, true)}
                 />
-            </Form.Item>
+            </Form.Item> 
             <Form.Item>
                 <Input
                     type='time'
                     placeholder="Time"
-                    value={startTime}
-                    onChange={(value) => convertTime(value, true)}
+                    name="startTime"
+                    value={formDate.startTime}
+                    onChange={(event) => handleChange(event, true)}
                 />
             </Form.Item>
             <Form.Item>
                 <Input
                     type='date'
                     placeholder="Max search date"
-                    value={endDate}
-                    onChange={(value) => convertDate(value, false)}
+                    name="endDate"
+                    value={formDate.endDate}
+                    onChange={(event) => handleChange(event, false)}
                 />
             </Form.Item>
             <Form.Item>
                 <Input
                     type='time'
                     placeholder="Time"
-                    value={endTime}
-                    onChange={(value) => convertTime(value, false)}
+                    name="endTime"
+                    value={formDate.endTime}
+                    onChange={(event) => handleChange(event, false)}
                 />
             </Form.Item>
+            
+            
             <Button onClick={searchList} type="primary">
                 <SearchOutlined />
             </Button>
