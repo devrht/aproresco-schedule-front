@@ -33,7 +33,6 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
             const duration = new Date(value)
             const toDurationStr = `${(duration.getMonth()+1).toString().padStart(2, '0')}/${(duration.getDate()).toString().padStart(2, '0')}/${duration.getFullYear()} ${(duration.getHours()).toString().padStart(2, '0')}:${(duration.getMinutes()).toString().padStart(2, '0')}:00 -0500`
             //const toDurationStr = `${duration.getMonth()+1}/${duration.getDay()}/${duration.getFullYear()} ${duration.getHours()}:${duration.getMinutes()}:00 -0500`
-            console.log("DATE ==>", toDurationStr) 
             localStorage.setItem(`to${labelDuration}`, toDurationStr)
         } else if (type === "time") {
             let tmp = localStorage.getItem('toStart').split(' ');
