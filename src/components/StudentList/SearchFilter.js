@@ -31,6 +31,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
         const labelDuration = status ? "Start" : "End";
         if (type === "date") {
             const duration = new Date(value)
+            
             const toDurationStr = `${(duration.getMonth()+1).toString().padStart(2, '0')}/${(duration.getDate()).toString().padStart(2, '0')}/${duration.getFullYear()} ${(duration.getHours()).toString().padStart(2, '0')}:${(duration.getMinutes()).toString().padStart(2, '0')}:00 -0500`
             //const toDurationStr = `${duration.getMonth()+1}/${duration.getDay()}/${duration.getFullYear()} ${duration.getHours()}:${duration.getMinutes()}:00 -0500`
             localStorage.setItem(`to${labelDuration}`, toDurationStr)
