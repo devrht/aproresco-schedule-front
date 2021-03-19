@@ -98,10 +98,10 @@ function Schedule() {
             render: (record) => {
                 let s = record.startDate.replaceAll('/', '-').split(' ')[0].split('-');
                 let st = record.startDate.replaceAll('/', '-').split(' ')[1].split(':');
-                let eDate= s[2]+'-'+s[0]+'-'+s[1];
+                let sDate= s[2]+'-'+s[0]+'-'+s[1];
                 let sTime= st[0]+':'+st[1];
 
-                let date = new Date(eDate + "T" + sTime + ":00");
+                let date = new Date(sDate + "T" + sTime + ":00");
                 let startD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0');
                 return (
                     <span>

@@ -31,6 +31,7 @@ function CreateBooking() {
     const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
     const [schedules, setSchedules] = useState([]);
+    const [schedule, setSchedule] = useState(null);
     const [subjects, setSubjects] = useState([]);
     const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,6 +55,19 @@ function CreateBooking() {
         onChange: (selectedrow, records) => {
             console.log('selectedRowKeys changed: ', records);
             setSelectedRow(records);
+            let record = records[0]
+            let sch = {
+                id: record.id,
+                subject: record.subject,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                grades: record.grades,
+                durationInMinutes: record.durationInMinutes,
+                repeatPeriodInDays: record.repeatPeriodInDays,
+                price: record.price,
+            }
+            console.log(sch)
+            setSchedule(sch)
         },
         type: 'radio'
     };
@@ -104,11 +118,12 @@ function CreateBooking() {
     }
 
     const handleSubmit = () => {
-        let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
-        if (comment == null || s == null || children == null)
+        //let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
+        if (comment == null || schedule == null)
             alert('Fill the form');
         setSubmitting(true);
-        createBooking(children, s, comment).then(data => {
+        createBooking(children, schedule, comment).then(data => {
+            console.log("BOOKING CREATED ==> ", data)
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
