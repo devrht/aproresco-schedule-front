@@ -228,16 +228,15 @@ function CreateBooking() {
                 };
             },
             render: (record) => {
-                let s = record.startDate.replaceAll('/', '-').split(' ')[0].split('-');
-                let st = record.startDate.replaceAll('/', '-').split(' ')[1].split(':');
-                let eDate= s[2]+'-'+s[0]+'-'+s[1];
-                let sTime= st[0]+':'+st[1];
+                let s = record.startDate;
+                let date = (new Date(s)).toLocaleDateString();
+                let sTime= ((new Date(s)).toLocaleTimeString()).split(':');
 
-                let date = new Date(eDate + "T" + sTime + ":00");
-                let startD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear()+' '+date.getHours().toString().padStart(2, '0') +':'+ date.getMinutes().toString().padStart(2, '0');
+                let sst= sTime[0]+':'+sTime[1];
+
                 return (
                     <span>
-                        {startD}
+                        {date +" "+ sst}
                     </span>
                 )
             },
@@ -260,14 +259,11 @@ function CreateBooking() {
                 };
             },
             render: (record) => {
-                let f = record.endDate.replaceAll('/', '-').split(' ')[0].split('-');
-                let eDate= f[2]+'-'+f[0]+'-'+f[1];
-
-                let date = new Date(eDate);
-                let endD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear();
+                let f = record.endDate;
+                let date = (new Date(f)).toLocaleDateString();
                 return (
                     <span>
-                        {endD}
+                        {date}
                     </span>
                 )
             },
