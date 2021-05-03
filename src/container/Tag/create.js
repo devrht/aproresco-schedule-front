@@ -28,10 +28,6 @@ const CreateTag = () => {
         });
     }
 
-    /* const onChangeEnabled = e => {
-        setEnabled(e.target.value);
-      };
- */
     const handleSubmit = () => {
         if (formData.name && formData.enabled) {
             if (formData.name.toString().length <= 0) {

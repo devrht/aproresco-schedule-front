@@ -449,7 +449,7 @@ export const getTags = (page, size, sortName, sortType) => {
 }
 
 export const addTag = (data) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/tag`)
+    return axios.post(`${routes.SERVER_ADDRESS}/tag`,data)
         .then(res => {
             return res.data;
         })
@@ -457,7 +457,7 @@ export const addTag = (data) => {
 }
 
 export const updateTag = (id,data) => {
-    return axios.patch(`${routes.SERVER_ADDRESS}/tag/${id}`)
+    return axios.patch(`${routes.SERVER_ADDRESS}/tag/${id}`, data)
         .then(res => {
             return res.data;
         })
