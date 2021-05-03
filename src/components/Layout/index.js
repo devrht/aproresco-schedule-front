@@ -12,7 +12,8 @@ import {
   LogoutOutlined,
   SafetyOutlined,
   CalendarOutlined,
-  BookOutlined
+  BookOutlined,
+  TagsOutlined
 } from '@ant-design/icons';
 
 const { Sider, Content } = Layout;
@@ -146,6 +147,9 @@ function LayoutOfApp({ children }, props) {
               </SubMenu>
               <Menu.Item key="schedules" icon={<CalendarOutlined />} onClick={() => { history.push('/schedules') }}>
                 Schedules
+              </Menu.Item>
+              <Menu.Item key="tags" icon={<TagsOutlined />} onClick={() => { history.push('/tagList') }}>
+                Tags
               </Menu.Item>
             </Menu>
           </Sider> : null

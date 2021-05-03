@@ -60,6 +60,7 @@ function StudentListOfTeacher(props) {
     const history = useHistory();
     const [active, setActive] = useState(true);
     const [present, setPresent] = useState(true);
+    const [startDate, setStartDate] = useState('');
     const [effectiveStartDate, setEffectiveStartDate] = useState('');
     const [selectedRow, setSelectedRow] = useState([]);
     const assignStudentList = useSelector((state) => {
@@ -84,8 +85,14 @@ function StudentListOfTeacher(props) {
 
     useEffect(() => {
         console.log(teacher)
+        let sd = teacher.createDate;
+        let date = (new Date(sd)).toLocaleDateString();
+        
+        setStartDate(date);
+
         setPresent(teacher.effectiveStartDate ? false : true);
-        setEffectiveStartDate(teacher.effectiveStartDate);
+        //setEffectiveStartDate(teacher.effectiveStartDate);
+        setEffectiveStartDate(date);
         getListView();
     }, []);
 
@@ -212,9 +219,13 @@ function StudentListOfTeacher(props) {
                 setTeacher(teacher);
                 setEffectiveStartDate('');
             } else {
-                teacher.effectiveStartDate = new Date();
+                let esd = teacher.effectiveStartDate;
+                let date1 = (new Date(esd)).toLocaleDateString();
+                let sTime1= ((new Date(esd)).toLocaleTimeString()).split(':');
+
+                //teacher.effectiveStartDate = new Date();
                 setTeacher(teacher);
-                setEffectiveStartDate(new Date());
+                setEffectiveStartDate(date1+' '+sTime1);
             }
             setPresent(teacher.effectiveStartDate ? false : true);
             //history.push('/teacherlist');
@@ -347,9 +358,7 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>
-                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
-                                        {teacher.startDate}
-                                    </Moment>
+                                    {startDate}
                                 </h4>
                             </Col>
                         </Row>
@@ -359,9 +368,7 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>
-                                    <Moment local format="D MMM YYYY HH:MM" withTitle>
-                                        {effectiveStartDate}
-                                    </Moment>
+                                     {effectiveStartDate}
                                 </h4>
                             </Col>
                         </Row>

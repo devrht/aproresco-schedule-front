@@ -33,6 +33,10 @@ const UpdateTeacher = React.lazy(() => import('./container/TeacherProfile/update
 const UpdateBooking = React.lazy(() => import('./container/StudentList/update'))
 const UpdateAvailibility = React.lazy(() => import('./container/TeacherList/update'))
 
+const TagList = React.lazy(() => import('./container/Tag'))
+const CreateTag = React.lazy(() => import('./container/Tag/create'))
+const UpdateTag = React.lazy(() => import('./container/Tag/update'))
+
 addToken();
 
 function App() {
@@ -70,6 +74,9 @@ function App() {
             <Route exact path="/schedules/add" name="Create Schedule Page" render={props => <CreateSchedule {...props} />} />
             <Route exact path="/schedules/:id/update" name="Create Schedule Page" render={props => <UpdateSchedule {...props} />} />
             <Route exact path="/studentlist/studentDetail/:id" name="Student Page" render={props => <StudentDetail {...props} />} />
+            <Route exact path="/tagList" name="Tag Page" render={props => <TagList {...props} />} />
+            <Route exact path="/tag/add" name="Create Tag Page" render={props => <CreateTag {...props} />} />
+            <Route exact path="/tag/:id/update" name="Update Tag Page" render={props => <UpdateTag {...props} />} />
             <Redirect from="/" to="/login" />
           </React.Suspense>
         </LayoutOfApp>

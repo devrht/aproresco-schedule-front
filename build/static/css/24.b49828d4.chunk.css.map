@@ -1,1 +1,0 @@
-{"version":3,"sources":["StudentList.css"],"names":[],"mappings":"AAAA,uBACI,WAAW,CACX,UACJ,CACA,eACI,WAEJ,CACA,8BAFI,gBAIJ","file":"24.b49828d4.chunk.css","sourcesContent":[".grade-coloumn-tooltip{\n    padding:3px;\n    color:black;\n}\n.loading-table{\n    margin: auto;\n    padding-top: 20px\n}\n.table-padding{\n    padding-top: 20px;\n}"]}

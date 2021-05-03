@@ -10,11 +10,11 @@ import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, ApiOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined,MessageOutlined, ApiOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import {MessageOutlined} from '@ant-design/icons'
+
 
 const customStyles = {
     content: {

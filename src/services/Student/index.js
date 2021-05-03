@@ -439,3 +439,27 @@ export const sendMessageToBooking = (booking_id, message) => {
         return res;
     }).catch(err => console.log(err));
 }
+
+export const getTags = (page, size, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tags?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}
+
+export const addTag = (data) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/tag`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}
+
+export const updateTag = (id,data) => {
+    return axios.patch(`${routes.SERVER_ADDRESS}/tag/${id}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}
