@@ -463,3 +463,27 @@ export const updateTag = (id,data) => {
         })
         .catch(err => console.log(err))
 }
+
+export const enableTags = (data) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/tag/enable`,data)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}
+
+export const disableTags = (data) => {
+    return axios.post(`${routes.SERVER_ADDRESS}/tag/disable`,data)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}
+
+export const getTagByDate = (page, size, sortName, sortType, name, date) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tags?page=${page}&size=${size}&sort=${sortName},${sortType}&name=${name}&createDate=${date}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}

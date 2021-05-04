@@ -18,7 +18,6 @@ const CreateTag = () => {
     
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
-    //const [enabled, setEnabled] = useState("true");
     const [submitting, setSubmitting] = useState(false);
 
     const handleChange = event => {
@@ -29,7 +28,7 @@ const CreateTag = () => {
     }
 
     const handleSubmit = () => {
-        if (formData.name && formData.enabled) {
+        if (formData.name) {
             if (formData.name.toString().length <= 0) {
                 alert("Please, fill the form 1!");
                 return
@@ -41,8 +40,7 @@ const CreateTag = () => {
         setSubmitting(true)
 
         let data = {
-            name:formData.name,
-            enabled:formData.enabled,
+            name:formData.name
         }
         console.log("Tag to register ===>", data)
         addTag(data).then(result => {
@@ -79,20 +77,15 @@ const CreateTag = () => {
                         <Form.Item label="Name" required style={{ flex: 1, marginRight: '40px' }}>
                             <Input type="text" name="name" onChange={handleChange} />
                         </Form.Item>
-                        <Form.Item label="Enabled" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Radio.Group onChange={handleChange} name="enabled">
-                                <Radio value={"true"}>True</Radio>
-                                <Radio value={"false"}>False</Radio>
-                            </Radio.Group>
+                        
+                        <Form.Item style={{ flex: 1, marginRight: '40px', marginTop: '20px' }}>
+                            <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+                                {
+                                    submitting ? 'Loading...' : 'Create a Tag'
+                                }
+                            </Button>
                         </Form.Item>
                     </div>
-                    <Form.Item>
-                        <Button disabled={submitting} type="primary" size="large" htmlType="submit">
-                            {
-                                submitting ? 'Loading...' : 'Create a Tag'
-                            }
-                        </Button>
-                    </Form.Item>
                 </Form>
             </PageHeader>
         </div>
