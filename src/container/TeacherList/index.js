@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip } from 'antd';
+import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip , Typography} from 'antd';
 import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities, sendMessageAvailability } from '../../services/Teacher'
 
 import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade, deleteAvailabilities } from '../../services/Student'
@@ -14,6 +14,8 @@ import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutli
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
+
+const { Text } = Typography;
 
 
 const customStyles = {
@@ -49,6 +51,7 @@ function TeacherList() {
 
     const [editableSubject, setEditableSubject] = useState([])
     const [editableGrade, setEditableGrade] = useState([])
+    const [editableTag, setEditableTag] = useState([])
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -148,9 +151,8 @@ function TeacherList() {
 
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
-            //getTeacherList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
             getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
+                console.log('DATA 11 ==> ', data)
                 if (data) {
                     if (data.content) {
                         setTeacherList(data.content)
@@ -181,6 +183,7 @@ function TeacherList() {
         }
         else {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {
                         setTeacherList(data.content)
@@ -299,12 +302,6 @@ function TeacherList() {
                 let tmp = new Date(record.schedule.startDate);
                 let result = new Date(tmp.getFullYear(), tmp.getMonth(), tmp.getDate());
 
-                /* let f = record.schedule.startDate.replaceAll('/', '-').split(' ')[0].split('-');
-                let sDate= f[2]+'-'+f[0]+'-'+f[1];
-
-                let date = new Date(sDate);
-                let startD = (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear(); */
-
                 let startD = (result.getMonth()+1).toString().padStart(2, '0') + '/' + result.getDate().toString().padStart(2, '0') + '/' + result.getFullYear();
                 return (
                     <span>
@@ -354,6 +351,36 @@ function TeacherList() {
                             </Form>}
                     </div>
                 )
+            }
+        },
+        {
+            title: <div><span>Tags </span></div>,
+            key: 'tags',
+            render: (record) => {
+
+                let tags= []
+                if(record.tags){
+                    record.tags.map(tag => tags.push(tag.name))
+                }
+
+                return(
+                    <div>
+                        {
+                            !record.tags ?
+                            (<Text strong>no tags</Text>)
+                                :
+                            (
+                            <Tooltip title={(tags.join(', '))}>
+                                {(tags.join(', ')).length <= 20 ?
+                                    (tags.join(', ')) :
+                                    (tags.join(', ')).substring(0, 19) + '...'}
+                            </Tooltip>
+                            )
+                        }
+                        
+                    </div>
+                )
+                
             }
         },
         {
@@ -469,6 +496,7 @@ function TeacherList() {
     const getStudentList = () => {
         if (studentSearch.firstName === "" && studentSearch.lastName === "") {
             getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
+    
                 if (data) {
                     if (data) {
                         setStudentList(data)
@@ -702,10 +730,6 @@ function TeacherList() {
                             pageSize: tableProps.pageSize,
                             showTotal: (total, range) => `${range[0]}-${range[1]} out of ${total}`,
                         }}
-                        // onRow={(record) => ({
-                        //     onClick: () => history.push(`/studentlist/teacher/${record.id}`,
-                        //     { teacher: record })
-                        // })}
                         rowSelection={rowSelection}
                         rowKey="id"
                     />}

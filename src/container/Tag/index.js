@@ -176,9 +176,9 @@ export default function TagsList() {
 
         selectedRow.forEach(tag => {
             if(tag.enabled == true){
-                tagsToDisable.push(tag.name)
+                tagsToDisable.push(tag.id)
             }else{
-                tagsToEnable.push(tag.name)
+                tagsToEnable.push(tag.id)
             }
         });
         console.log("Tags to enable ===>", tagsToEnable);

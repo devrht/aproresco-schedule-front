@@ -414,20 +414,22 @@ export const updateBooking = (id, studentProfile, schedule, studentComment) => {
 }
 
 
-export const createAvailibility = (teacherProfile, schedule) => {
+export const createAvailibility = (teacherProfile, schedule, tags) => {
     let data = {
         teacherProfile,
         schedule,
+        tags
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-availability`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
 
-export const updateAvailibility = (id, teacherProfile, schedule) => {
+export const updateAvailibility = (id, teacherProfile, schedule, tags) => {
     let data = {
         teacherProfile,
         schedule,
+        tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-availability/${id}`, data).then(res => {
         return res;

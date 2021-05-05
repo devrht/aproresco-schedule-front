@@ -4,7 +4,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { createAvailibility } from '../../services/Teacher';
-import { getTeacherProfileByDate, getSchedule, findTeacherProfileByFirstNameAndLastName } from '../../services/Student'
+import { getTeacherProfileByDate, getSchedule, findTeacherProfileByFirstNameAndLastName, getTags, getTagByDate } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -21,9 +21,12 @@ function CreateAvailibility() {
 
     const history = useHistory();
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState('');
     const [studentList, setStudentList] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [tagsList, setTagsList] = useState([]);
     const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
     const [schedules, setSchedules] = useState([]);
@@ -34,8 +37,18 @@ function CreateAvailibility() {
     const [subjec, setSubjec] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
+    const [sortingName, setSortingName] = useState("name");
+    const [sortingType, setSortingType] = useState("desc");
+
+    const [listProps, setListProps] = useState({
+        totalCount: 0,
+        index: 0,
+        size: 10,
+    });
+
     useEffect(() => {
         getStudents();
+        getEnabledTags();
     }, []);
     const changeChildren = (id) => {
         setDates([]);
@@ -43,11 +56,8 @@ function CreateAvailibility() {
         setSubjec(null);
         let _children = studentList.filter(c => c.id == id)[0];
         setChildren(_children);
-        // console.log(_children)
         getSchedule(1).then(data => {
             setSchedules(data.content);
-            // console.log(data.content);
-            // console.log(data.content.filter(s => _children.subjects.includes(s.subject)));
             setDat(null);
             setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['createDate'], item])).values()]);
         });
@@ -69,7 +79,10 @@ function CreateAvailibility() {
             return
         }
         setSubmitting(true);
-        createAvailibility(children, s).then(data => {
+        let tgs=[]
+        tags.map(res => tgs.push({"id": res}))
+        console.log(tgs)
+        createAvailibility(children, s, tgs).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -99,6 +112,21 @@ function CreateAvailibility() {
         }
     }
 
+    const getEnabledTags = () => {
+        setLoadingS(true);
+        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagsList(data.content.filter(t => t.enabled == true));
+                }
+            }
+        }).finally(() => setLoadingS(false))
+    }
+
+    const handleChangeTags = (value) =>{
+        setTags(value);
+    }
+
     return (
 
         <div>
@@ -122,7 +150,6 @@ function CreateAvailibility() {
                             options={studentList}
                             size="small"
                             inputValue={student}
-                            // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
                             onInputChange={(__, newInputValue) => {
                                 if (newInputValue != null) {
                                     setStudent(newInputValue);
@@ -145,7 +172,6 @@ function CreateAvailibility() {
                             }}
                             loading={loadingS}
                             getOptionLabel={(record) => record.firstName + " " + record.lastName}
-                            // style={{ minWidth: 450, marginLeft: -250 }}
                             renderInput={(params) =>
                                 <TextField {...params}
                                     variant="outlined"
@@ -162,18 +188,25 @@ function CreateAvailibility() {
                             }
                         />
                     </Form.Item>
-                    {/* <Form.Item label="Subject" required>
-                        <Select onChange={(e) => changeSubject(e)}>
-                            <option value={null}>Select a subject</option>
+                    <Form.Item label="Tags" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
+                        <Select mode="multiple"
+                            allowClear
+                            open={open1}
+                            onFocus={() => setOpen1(true)}
+                            onBlur={() => setOpen1(false)}
+                            style={{ width: '100%' }}
+                            onSelect={() => setOpen1(false)}
+                            placeholder="Please select tags"
+                            onChange={handleChangeTags}>
                             {
-                                subjects.map(subject => {
+                                tagsList.map(tag => {
                                     return (
-                                        <option value={subject.subject} key={subject.id}>{subject.subject}</option>
+                                        <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
                                     )
                                 })
                             }
                         </Select>
-                    </Form.Item> */}
+                    </Form.Item>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'

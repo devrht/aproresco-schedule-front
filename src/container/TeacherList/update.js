@@ -5,7 +5,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { updateAvailibility } from '../../services/Teacher';
-import { getTeacherProfileByDate, getSchedule } from '../../services/Student'
+import { getTeacherProfileByDate, getSchedule, getTags } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -23,9 +23,12 @@ function CreateAvailibility() {
     const history = useHistory();
     const location = useLocation();
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState(null);
     const [studentList, setStudentList] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [tagsList, setTagsList] = useState([]);
     const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
     const [schedules, setSchedules] = useState([]);
@@ -37,6 +40,15 @@ function CreateAvailibility() {
     const [submitting, setSubmitting] = useState(false);
     const [teacher, setTeacher] = useState(location.state.teacher);
 
+    const [sortingName, setSortingName] = useState("name");
+    const [sortingType, setSortingType] = useState("desc");
+
+    const [listProps, setListProps] = useState({
+        totalCount: 0,
+        index: 0,
+        size: 10,
+    });
+
     useEffect(() => {
         setChildren(teacher.teacherProfile);
         setDat(teacher.schedule.startDate)
@@ -46,6 +58,7 @@ function CreateAvailibility() {
             setSchedules(data.content);
             setDates([...new Map(data.content.filter(s => teacher.teacherProfile.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
         });
+        getEnabledTags();
     }, []);
 
     const changeChildren = (id) => {
@@ -74,7 +87,9 @@ function CreateAvailibility() {
             return
         }
         setSubmitting(true);
-        updateAvailibility(teacher.id, children, s).then(data => {
+        let tgs=[]
+        tags.map(res => tgs.push({"id": res}))
+        updateAvailibility(teacher.id, children, s, tgs).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -92,6 +107,21 @@ function CreateAvailibility() {
                 }
             }
         }).finally(() => setLoadingS(false))
+    }
+
+    const getEnabledTags = () => {
+        setLoadingS(true);
+        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagsList(data.content.filter(t => t.enabled == true));
+                }
+            }
+        }).finally(() => setLoadingS(false))
+    }
+
+    const handleChangeTags = (value) =>{
+        setTags(value);
     }
 
     return (
@@ -150,6 +180,26 @@ function CreateAvailibility() {
                                 />
                             }
                         />
+                    </Form.Item>
+                    <Form.Item label="Tags" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
+                        <Select mode="multiple"
+                            allowClear
+                            defaultValue={teacher.tags}
+                            open={open1}
+                            onFocus={() => setOpen1(true)}
+                            onBlur={() => setOpen1(false)}
+                            style={{ width: '100%' }}
+                            onSelect={() => setOpen1(false)}
+                            placeholder="Please select tags"
+                            onChange={handleChangeTags}>
+                            {
+                                tagsList.map(tag => {
+                                    return (
+                                        <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                    )
+                                })
+                            }
+                        </Select>
                     </Form.Item>
                     <div style={{
                         display: 'flex',
