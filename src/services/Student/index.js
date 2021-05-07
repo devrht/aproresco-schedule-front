@@ -447,6 +447,13 @@ export const getTags = (page, size, sortName, sortType) => {
         })
         .catch(err => console.log(err))
 }
+export const getTagByName = (name) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tags?name=${name}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => console.log(err))
+}
 
 export const addTag = (data) => {
     return axios.post(`${routes.SERVER_ADDRESS}/tag`,data)

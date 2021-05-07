@@ -5,18 +5,11 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { updateAvailibility } from '../../services/Teacher';
-import { getTeacherProfileByDate, getSchedule, getTags } from '../../services/Student'
+import { getTeacherProfileByDate, getSchedule, getTags ,getTagByName} from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Moment from 'react-moment';
-
-const formReducer = (state, event) => {
-    return {
-        ...state,
-        [event.name]: event.value
-    }
-}
 
 function CreateAvailibility() {
 
@@ -28,6 +21,7 @@ function CreateAvailibility() {
     const [student, setStudent] = useState(null);
     const [studentList, setStudentList] = useState([]);
     const [tags, setTags] = useState([]);
+    const [defaulttags, setDefaultTags] = useState([]);
     const [tagsList, setTagsList] = useState([]);
     const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
@@ -53,6 +47,9 @@ function CreateAvailibility() {
         setChildren(teacher.teacherProfile);
         setDat(teacher.schedule.startDate)
         setEndDate(teacher.schedule.endDate)
+        if(teacher.tags){
+            teacher.tags.map(tag=> defaulttags.push(tag.name))
+        }
         getStudents();
         getSchedule(1).then(data => {
             setSchedules(data.content);
@@ -88,7 +85,14 @@ function CreateAvailibility() {
         }
         setSubmitting(true);
         let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
+        //console.log("tags ===>", tags)
+        tags.map(res => {
+            getTagByName(res).then(data => {
+                //console.log("data ===>", data)
+                data.content.map(rs => {tgs.push({"id": rs.id})}) 
+            })
+        })   
+        console.log("tags to save===>", tgs)
         updateAvailibility(teacher.id, children, s, tgs).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
@@ -184,7 +188,7 @@ function CreateAvailibility() {
                     <Form.Item label="Tags" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
                         <Select mode="multiple"
                             allowClear
-                            defaultValue={teacher.tags}
+                            defaultValue={defaulttags}
                             open={open1}
                             onFocus={() => setOpen1(true)}
                             onBlur={() => setOpen1(false)}
@@ -195,12 +199,13 @@ function CreateAvailibility() {
                             {
                                 tagsList.map(tag => {
                                     return (
-                                        <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                        <Select.Option value={tag.name} key={tag.id}>{tag.name}</Select.Option>
                                     )
                                 })
                             }
                         </Select>
                     </Form.Item>
+                    
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'

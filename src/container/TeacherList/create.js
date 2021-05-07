@@ -83,6 +83,7 @@ function CreateAvailibility() {
         tags.map(res => tgs.push({"id": res}))
         console.log(tgs)
         createAvailibility(children, s, tgs).then(data => {
+            setSubmitting(false)
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")

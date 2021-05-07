@@ -4,7 +4,7 @@ import { SearchOutlined } from "@ant-design/icons"
 import moment from 'moment';
 
 const { Option } = Select;
-const SearchFilter = ({ changeInput, searchList, type }) => {
+const SearchFilter = ({ changeInput, searchList, type}) => {
 
 
     const [startDate, setStartDate] = useState();
@@ -105,7 +105,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
             {
                 type != 'schedule' ?
                 <>
-                    <Form.Item>
+                    <Form.Item style={{ width: '130px' }}>
                         <Input
                             type="text"
                             placeholder="Enter Name"
@@ -114,19 +114,11 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                             onChange={changeInput}
                         />
                     </Form.Item> 
-                    <Form.Item>
-                        <Input
-                            type="text"
-                            placeholder="Enter Tag name"
-                            name="tag"
-                            onKeyDown={onKeyEnter}
-                            onChange={changeInput}
-                        />
-                    </Form.Item>
+                    
                 </>
                     :
                     <>
-                        <Form.Item style={{ width: '120px' }}>
+                        <Form.Item style={{ width: '130px' }}>
                             <Input
                                 type="number"
                                 placeholder="Grade Min"
@@ -135,7 +127,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                                 onChange={changeInput}
                             />
                         </Form.Item>
-                        <Form.Item style={{ width: '120px' }}>
+                        <Form.Item style={{ width: '130px' }}>
                             <Input
                                 type="number"
                                 placeholder="Grade Max"
@@ -146,7 +138,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                         </Form.Item>
                     </>
             }
-            <Form.Item>
+            <Form.Item style={{ width: '150px' }}>
                 <Input
                     type='date'
                     placeholder="Min search date"
@@ -155,7 +147,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                     onChange={(event) => handleChange(event, true)}
                 />
             </Form.Item> 
-            <Form.Item>
+            <Form.Item style={{ width: '120px' }}>
                 <Input
                     type='time'
                     placeholder="Time"
@@ -164,7 +156,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                     onChange={(event) => handleChange(event, true)}
                 />
             </Form.Item>
-            <Form.Item>
+            <Form.Item style={{ width: '150px' }}>
                 <Input
                     type='date'
                     placeholder="Max search date"
@@ -173,7 +165,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                     onChange={(event) => handleChange(event, false)}
                 />
             </Form.Item>
-            <Form.Item>
+            <Form.Item style={{ width: '120px' }}>
                 <Input
                     type='time'
                     placeholder="Time"

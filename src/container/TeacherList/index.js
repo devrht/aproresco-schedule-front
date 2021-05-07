@@ -76,8 +76,7 @@ function TeacherList() {
     const [search, setSearch] = useState({
         name: "",
         firstName: "",
-        lastName: "",
-        tag: ""
+        lastName: ""
     })
 
     const [studentSearch, setStudentSearch] = useState({
@@ -142,6 +141,7 @@ function TeacherList() {
 
     useEffect(() => {
         getListView();
+        
         // getStudentList();
     }, [tableProps.pageIndex]);
     
@@ -150,9 +150,10 @@ function TeacherList() {
         // getStudentList();
     }, [sortingType, sortingName]);
 
+
     const getListView = () => {
-        if (search.firstName === "" && search.lastName === "" && search.tag === "") {
-            getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+        if (search.firstName === "" && search.lastName === "" && localStorage.getItem('currentTag') !== "" ) {
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(),localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 console.log('DATA 11 ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -182,8 +183,8 @@ function TeacherList() {
                 setLoading(false);
             })
         }
-        else {
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, search.tag, sortingName, sortingType).then(data => {
+        else if (search.firstName !== "" && search.lastName !== ""){
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -211,6 +212,36 @@ function TeacherList() {
                 }
                 setLoading(false);
             })
+        } else{
+            getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                console.log('DATA 12 ==> ', data)
+                if (data) {
+                    if (data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalCount,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                setLoading(false);
+            })
+
         }
     }
 
@@ -620,8 +651,6 @@ function TeacherList() {
 
     const changeSearch = (e) => {
         const { name, value } = e.target;
-        setSearch({ ...search, [name]: value.trim() });
-        console.log("Enter:", e.target)
         if (e.target.name === "name") {
             var nameData = value.trim().split(" ");
             if (nameData.length > 1) {
@@ -631,6 +660,7 @@ function TeacherList() {
                 setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
+        
     };
 
     const searchList = () => {

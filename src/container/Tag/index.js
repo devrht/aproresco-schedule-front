@@ -15,6 +15,11 @@ export default function TagsList() {
     const [sortingType, setSortingType] = useState("desc");
     const [selectedRow, setSelectedRow] = useState([]);
 
+    const [tagOpen, setTagOpen] = useState(false);
+    const [tag, setTag] = useState('');
+    const [tagList1, setTagList1] = useState([]);
+    const [tagLoading, setTagLoading] = useState(false);
+
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
@@ -119,6 +124,7 @@ export default function TagsList() {
 
     useEffect(() => {
         getListView();
+        getTagList();
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const getListView = () => {
@@ -216,6 +222,30 @@ export default function TagsList() {
         setSearch({ ...search, [name]: value });
     }
 
+    
+    const getTagList = () => {
+        setTagLoading(true);
+        getTags(tableProps.pageIndex, tableProps.pageSize, "name", "desc").then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagList1(data.content);
+                }
+            }
+        }).finally(() => setTagLoading(false))
+    }
+
+    const changeTagInput = (__, newInputValue) => {
+        if (newInputValue != null) {
+            setTag(newInputValue);
+        }
+    }
+
+    const changeTag = (__, newValue) => {
+        if (newValue != null) {
+            localStorage.setItem(`currentTag`, newValue.name);
+        }
+    }
+
     return (
         <React.Fragment>
             <PageHeader
@@ -229,6 +259,14 @@ export default function TagsList() {
                         <SearchFilter 
                             changeInput={changeSearch}
                             searchList={searchList}
+                            tagList={tagList1}
+                            tag={tag}
+                            changeTag={changeTag}
+                            changeTagInput={changeTagInput}
+                            tagOpen={tagOpen}
+                            setOpenTrue={() => { setTagOpen(true); }}
+                            setOpenFalse={() => { setTagOpen(false); }}
+                            tagToading={tagLoading}
                         />
                     </div>
                     {
