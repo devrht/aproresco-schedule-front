@@ -77,6 +77,7 @@ function TeacherList() {
         name: "",
         firstName: "",
         lastName: "",
+        tag: ""
     })
 
     const [studentSearch, setStudentSearch] = useState({
@@ -150,7 +151,7 @@ function TeacherList() {
     }, [sortingType, sortingName]);
 
     const getListView = () => {
-        if (search.firstName === "" && search.lastName === "") {
+        if (search.firstName === "" && search.lastName === "" && search.tag === "") {
             getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA 11 ==> ', data)
                 if (data) {
@@ -182,7 +183,7 @@ function TeacherList() {
             })
         }
         else {
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, search.tag, sortingName, sortingType).then(data => {
                 console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {

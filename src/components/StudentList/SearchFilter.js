@@ -104,6 +104,7 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
         <Form layout="inline" style={{ marginRight: '20px' }}>
             {
                 type != 'schedule' ?
+                <>
                     <Form.Item>
                         <Input
                             type="text"
@@ -112,7 +113,18 @@ const SearchFilter = ({ changeInput, searchList, type }) => {
                             onKeyDown={onKeyEnter}
                             onChange={changeInput}
                         />
-                    </Form.Item> :
+                    </Form.Item> 
+                    <Form.Item>
+                        <Input
+                            type="text"
+                            placeholder="Enter Tag name"
+                            name="tag"
+                            onKeyDown={onKeyEnter}
+                            onChange={changeInput}
+                        />
+                    </Form.Item>
+                </>
+                    :
                     <>
                         <Form.Item style={{ width: '120px' }}>
                             <Input
