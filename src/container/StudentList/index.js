@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Row, Form, Input } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip, Row, Form, Input, Typography } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
@@ -22,6 +22,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import {MessageOutlined} from '@ant-design/icons'
+
+const { Text } = Typography;
 
 function StudentList() {
     const dispatch = useDispatch();
@@ -232,7 +234,37 @@ function StudentList() {
                 )
             },
             key: 'grade',
-        }
+        },
+        {
+            title: <div><span>Tags </span></div>,
+            key: 'tags',
+            render: (record) => {
+
+                let tags= []
+                if(record.tags){
+                    record.tags.map(tag => tags.push(tag.name))
+                }
+
+                return(
+                    <div>
+                        {
+                            !record.tags ?
+                            (<Text strong>no tags</Text>)
+                                :
+                            (
+                            <Tooltip title={(tags.join(', '))}>
+                                {(tags.join(', ')).length <= 20 ?
+                                    (tags.join(', ')) :
+                                    (tags.join(', ')).substring(0, 19) + '...'}
+                            </Tooltip>
+                            )
+                        }
+                        
+                    </div>
+                )
+                
+            }
+        },
         ,
         {
             title: 'Teacher Name',

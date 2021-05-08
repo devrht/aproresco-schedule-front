@@ -1,10 +1,10 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button, Table, Spin } from 'antd';
+import { PageHeader, Form, Input, Button, Table, Spin, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { createBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate } from '../../services/Student'
+import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate, getTags } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -44,6 +44,10 @@ function CreateBooking() {
     const [gradeMin, setGradeMin] = useState("0");
     const [gradeMax, setGradeMax] = useState("100");
 
+    const [open1, setOpen1] = useState(false);
+    const [tagsList, setTagsList] = useState([]);
+    const [tags, setTags] = useState([]);
+
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
         pageIndex: 0,
@@ -72,9 +76,26 @@ function CreateBooking() {
         type: 'radio'
     };
 
+    const getEnabledTags = () => {
+        setLoadingS(true)
+        setSortingName("name")
+        getTags(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagsList(data.content.filter(t => t.enabled == true));
+                }
+            }
+        }).finally(() => setLoadingS(false))
+    }
+
+    const handleChangeTags = (value) =>{
+        setTags(value);
+    }
+
     useEffect(() => {
         getStudents();
         getListView();
+        getEnabledTags();
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const handleChange = event => {
@@ -122,7 +143,10 @@ function CreateBooking() {
         if (comment == null || schedule == null)
             alert('Fill the form');
         setSubmitting(true);
-        createBooking(children, schedule, comment).then(data => {
+        let tgs=[]
+        tags.map(res => tgs.push({"id": res}))
+
+        createBooking(children, schedule, comment, tgs).then(data => {
             console.log("BOOKING CREATED ==> ", data)
             history.push(`/studentlist`)
         }).catch(err => {
@@ -427,6 +451,31 @@ function CreateBooking() {
                         </Form.Item>
                         <Form.Item label="Comment" required style={{ flex: 1, marginRight: '10px',marginLeft: '10px' }}>
                             <Input type="text" name="comment" style={{ marginTop: '3px', padding: '8px 8px', lineHeight: '14px' }} onChange={(e) => setComment(e.target.value)} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                            <Select mode="multiple"
+                                allowClear
+                                loading={loadingS}
+                                open={open1}
+                                onFocus={() => setOpen1(true)}
+                                onBlur={() => setOpen1(false)}
+                                style={{ width: '100%' }}
+                                onSelect={() => setOpen1(false)}
+                                placeholder="Please select tags"
+                                onChange={handleChangeTags}>
+                                {
+                                    tagsList.map(tag => {
+                                        return (
+                                            <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                        )
+                                    })
+                                }
+                            </Select>
                         </Form.Item>
                     </div>
                     

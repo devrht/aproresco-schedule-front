@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import { createStudent } from '../../services/Teacher';
-import { getParentProfile, findParentProfileByEmail } from '../../services/Student';
+import { getParentProfile, findParentProfileByEmail, getTags } from '../../services/Student';
 import React, { useEffect, useState, useReducer } from 'react'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -30,8 +30,36 @@ function CreateStudent() {
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
 
+    const [sortingName, setSortingName] = useState("name");
+    const [sortingType, setSortingType] = useState("desc");
+
+    const [listProps, setListProps] = useState({
+        index: 0,
+        size: 10,
+    });
+
+    const [open1, setOpen1] = useState(false);
+    const [tagsList, setTagsList] = useState([]);
+    const [tags, setTags] = useState([]);
+
+    const getEnabledTags = () => {
+        setLoading(true)
+        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagsList(data.content.filter(t => t.enabled == true));
+                }
+            }
+        }).finally(() => setLoading(false))
+    }
+
+    const handleChangeTags = (value) =>{
+        setTags(value);
+    }
+
     useEffect(() => {
         getListView();
+        getEnabledTags();
     }, []);
 
     const getListView = (search = '') => {
@@ -95,7 +123,11 @@ function CreateStudent() {
 
         setSubmitting(true);
 
-        createStudent(formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent).then(data => {
+        let tgs=[]
+        tags.map(res => tgs.push({"id": res}))
+
+        createStudent(formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent, tgs).then(data => {
+            
             history.push(`/studentprofiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -196,6 +228,31 @@ function CreateStudent() {
                         </Form.Item>
                         <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
                             <Input type="text" name="schoolBoard" onChange={handleChange} />
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Tags" required style={{ flex: 1}} onClick={() => setOpen1(open1 ? false : true)}>
+                            <Select mode="multiple"
+                                allowClear
+                                loading={loading}
+                                open={open1}
+                                onFocus={() => setOpen1(true)}
+                                onBlur={() => setOpen1(false)}
+                                style={{ width: '100%' }}
+                                onSelect={() => setOpen1(false)}
+                                placeholder="Please select tags"
+                                onChange={handleChangeTags}>
+                                {
+                                    tagsList.map(tag => {
+                                        return (
+                                            <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                        )
+                                    })
+                                }
+                            </Select>
                         </Form.Item>
                     </div>
                     <Form.Item>

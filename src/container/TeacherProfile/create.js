@@ -7,7 +7,7 @@ import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
 import { createSchedule, createTeacher} from '../../services/Teacher';
 import React, { useEffect, useState, useReducer } from 'react'
-import { getCountry, getSchedule } from '../../services/Student';
+import { getCountry, getSchedule, getTags } from '../../services/Student';
 
 const formReducer = (state, event) => {
     return {
@@ -31,11 +31,40 @@ function CreateTeacher() {
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
 
+    const [sortingName, setSortingName] = useState("name");
+    const [sortingType, setSortingType] = useState("desc");
+
+    const [listProps, setListProps] = useState({
+        index: 0,
+        size: 10,
+    });
+
+    const [open1, setOpen1] = useState(false);
+    const [tagsList, setTagsList] = useState([]);
+    const [tags, setTags] = useState([]);
+
+    const getEnabledTags = () => {
+        setLoading(true)
+        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagsList(data.content.filter(t => t.enabled == true));
+                }
+            }
+        }).finally(() => setLoading(false))
+    }
+
+    const handleChangeTags = (value) =>{
+        setTags(value);
+    }
+
+
     useEffect(() => {
         getSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
         })
+        getEnabledTags();
 
     }, []);
 
@@ -86,10 +115,13 @@ function CreateTeacher() {
             // return
         }
 
+        let tgs=[]
+        tags.map(res => tgs.push({"id": res}))
+
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone).then(data => {
-            // console.log(data)
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs).then(data => {
+            
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
@@ -212,6 +244,31 @@ function CreateTeacher() {
                                     </Select>
                                 </Form.Item>
                                 : null}
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Tags" required style={{ flex: 1}} onClick={() => setOpen1(open1 ? false : true)}>
+                            <Select mode="multiple"
+                                allowClear
+                                loading={loading}
+                                open={open1}
+                                onFocus={() => setOpen1(true)}
+                                onBlur={() => setOpen1(false)}
+                                style={{ width: '100%' }}
+                                onSelect={() => setOpen1(false)}
+                                placeholder="Please select tags"
+                                onChange={handleChangeTags}>
+                                {
+                                    tagsList.map(tag => {
+                                        return (
+                                            <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
                     </div>
                     <div style={{
                         display: 'flex',

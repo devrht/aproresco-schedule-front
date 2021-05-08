@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
@@ -8,6 +8,8 @@ import { findScheduleByGrade, getScheduleByDate, deleteSchedule } from '../../se
 import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
+
+const { Text } = Typography;
 
 function Schedule() {
     const history = useHistory();
@@ -158,6 +160,36 @@ function Schedule() {
                         {gradesToPrint(record)}
                     </div>
                 )
+            }
+        },
+        {
+            title: <div><span>Tags </span></div>,
+            key: 'tags',
+            render: (record) => {
+
+                let tags= []
+                if(record.tags){
+                    record.tags.map(tag => tags.push(tag.name))
+                }
+
+                return(
+                    <div>
+                        {
+                            !record.tags ?
+                            (<Text strong>no tags</Text>)
+                                :
+                            (
+                            <Tooltip title={(tags.join(', '))}>
+                                {(tags.join(', ')).length <= 20 ?
+                                    (tags.join(', ')) :
+                                    (tags.join(', ')).substring(0, 19) + '...'}
+                            </Tooltip>
+                            )
+                        }
+                        
+                    </div>
+                )
+                
             }
         },
         {

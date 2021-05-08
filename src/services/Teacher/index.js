@@ -280,7 +280,7 @@ export const updateSchedule = (id, data) => {
     }).catch(err => console.log(err));
 }
 
-export const createStudent = (firstName, lastName, email, schoolName, schoolBoard, grade, parent) => {
+export const createStudent = (firstName, lastName, email, schoolName, schoolBoard, grade, parent, tags) => {
     let data = {
         firstName,
         lastName,
@@ -288,7 +288,8 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
         schoolName,
         schoolBoard,
         grade,
-        parent: { email: parent }
+        parent: { email: parent },
+        tags: tags
     }
     return axios.post(`${routes.SERVER_ADDRESS}/student-profile`, data).then(res => {
         return res;
@@ -326,7 +327,7 @@ export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPe
     }).catch(err => console.log(err));
 }
 
-export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone) => {
+export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone, tags) => {
     let data = {
         firstName,
         lastName,
@@ -335,7 +336,8 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
         schoolBoard,
         grades: grades,
         phoneNumber: phone,
-        subjects: subjects
+        subjects: subjects,
+        tags: tags
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/register`, data).then(res => {
         return res;
@@ -391,11 +393,12 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
     }).catch(err => console.log(err));
 }
 
-export const createBooking = (studentProfile, schedule, studentComment) => {
+export const createBooking = (studentProfile, schedule, studentComment, tags) => {
     let data = {
         studentProfile,
         schedule,
-        studentComment
+        studentComment,
+        tags
     }
     return axios.post(`${routes.SERVER_ADDRESS}/student-booking`, data).then(res => {
         return res;
@@ -415,11 +418,16 @@ export const updateBooking = (id, studentProfile, schedule, studentComment) => {
 
 
 export const createAvailibility = (teacherProfile, schedule, tags) => {
-    let data = {
-        teacherProfile,
-        schedule,
-        tags
-    }
+   /* let data = {
+        teacherProfile: teacherProfile,
+        schedule: schedule
+    } */ 
+     let data = {
+        teacherProfile: teacherProfile,
+        schedule: schedule,
+        tags: tags
+    } 
+    console.log("availability data to save ===>", data);
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-availability`, data).then(res => {
         return res;
     }).catch(err => console.log(err));

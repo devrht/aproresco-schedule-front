@@ -10,13 +10,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Moment from 'react-moment';
 
-const formReducer = (state, event) => {
-    return {
-        ...state,
-        [event.name]: event.value
-    }
-}
-
 function CreateAvailibility() {
 
     const history = useHistory();
@@ -50,6 +43,7 @@ function CreateAvailibility() {
         getStudents();
         getEnabledTags();
     }, []);
+    
     const changeChildren = (id) => {
         setDates([]);
         setDat(null);
@@ -81,14 +75,14 @@ function CreateAvailibility() {
         setSubmitting(true);
         let tgs=[]
         tags.map(res => tgs.push({"id": res}))
-        console.log(tgs)
+
         createAvailibility(children, s, tgs).then(data => {
+            console.log("availability registered ===>", data)
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
             console.log(err)
-        })
-            .finally(() => setSubmitting(false));
+        }).finally(() => setSubmitting(false));
     }
 
     const getStudents = (newInputValue = '') => {
@@ -121,6 +115,7 @@ function CreateAvailibility() {
                 }
             }
         }).finally(() => setLoadingS(false))
+       
     }
 
     const handleChangeTags = (value) =>{
@@ -188,9 +183,10 @@ function CreateAvailibility() {
                             }
                         />
                     </Form.Item>
-                    <Form.Item label="Tags" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
+                    <Form.Item label="Tags" required style={{ flex: 1 }} onClick={() => setOpen1(open1 ? false : true)}>
                         <Select mode="multiple"
                             allowClear
+                            loading={loadingS}
                             open={open1}
                             onFocus={() => setOpen1(true)}
                             onBlur={() => setOpen1(false)}
@@ -213,15 +209,15 @@ function CreateAvailibility() {
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
                             <Select onChange={(e) => changeDate(e)}>
-                                <option value={null}>Select a start date</option>
+                                <Select.Option value={null}>Select a start date</Select.Option>
                                 {
                                     dates.map(date => {
                                         return (
-                                            <option value={date.startDate} key={date.id}>
+                                            <Select.Option value={date.startDate} key={date.id}>
                                                 <Moment local format="D MMM YYYY HH:MM" withTitle>
                                                     {date.startDate}
                                                 </Moment>
-                                            </option>
+                                            </Select.Option>
                                         )
                                     })
                                 }
@@ -229,15 +225,15 @@ function CreateAvailibility() {
                         </Form.Item>
                         <Form.Item label="End date" required style={{ flex: 1, marginLeft: '10px' }}>
                             <Select onChange={(e) => changeEndDate(e)}>
-                                <option value={null}>Select an end date</option>
+                                <Select.Option value={null}>Select an end date</Select.Option>
                                 {
                                     ends.map(date => {
                                         return (
-                                            <option value={date.endDate} key={date.id}>
+                                            <Select.Option value={date.endDate} key={date.id}>
                                                 <Moment local format="D MMM YYYY HH:MM" withTitle>
                                                     {date.endDate}
                                                 </Moment>
-                                            </option>
+                                            </Select.Option>
                                         )
                                     })
                                 }

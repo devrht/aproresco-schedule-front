@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
+import { Table, PageHeader, Button, Spin, Tooltip, Typography} from 'antd';
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
@@ -11,6 +11,8 @@ import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, De
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faCoffee, faCommentAlt } from '@fortawesome/free-solid-svg-icons'
 import {MessageOutlined} from '@ant-design/icons'
+
+const { Text } = Typography;
 
 function StudentProfile() {
     const history = useHistory();
@@ -172,6 +174,36 @@ function StudentProfile() {
                 )
             },
             key: 'grade',
+        },
+        {
+            title: <div><span>Tags </span></div>,
+            key: 'tags',
+            render: (record) => {
+
+                let tags= []
+                if(record.tags){
+                    record.tags.map(tag => tags.push(tag.name))
+                }
+
+                return(
+                    <div>
+                        {
+                            !record.tags ?
+                            (<Text strong>no tags</Text>)
+                                :
+                            (
+                            <Tooltip title={(tags.join(', '))}>
+                                {(tags.join(', ')).length <= 20 ?
+                                    (tags.join(', ')) :
+                                    (tags.join(', ')).substring(0, 19) + '...'}
+                            </Tooltip>
+                            )
+                        }
+                        
+                    </div>
+                )
+                
+            }
         },
         {
             title: <div><span>Action </span>
