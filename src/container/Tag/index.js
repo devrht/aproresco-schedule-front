@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
 import { Table, PageHeader,Button,Spin } from 'antd';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
-import {getTags,getTagByDate, enableTags, disableTags} from '../../services/Student'
+import {getTags,getTagByDate, enableTags, disableTags, getTagByName} from '../../services/Student'
 import SearchFilter from '../../components/Tag/SearchFilter'
 
 export default function TagsList() {
@@ -17,6 +17,7 @@ export default function TagsList() {
 
     const [tagOpen, setTagOpen] = useState(false);
     const [tag, setTag] = useState('');
+    const [defaultChecked, setDefaultChecked] = useState('');
     const [tagList1, setTagList1] = useState([]);
     const [tagLoading, setTagLoading] = useState(false);
 
@@ -125,6 +126,13 @@ export default function TagsList() {
     useEffect(() => {
         getListView();
         getTagList();
+        
+        if(localStorage.getItem('currentTag')){
+            getTagByName(localStorage.getItem('currentTag')).then(res => {
+                setTag(res.content[0].name)
+                
+            })
+        }
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const getListView = () => {

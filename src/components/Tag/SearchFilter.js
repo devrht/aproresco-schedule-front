@@ -31,6 +31,7 @@ function SearchFilter ({ changeInput, searchList, tagList, tag, changeTagInput, 
                             name="tag"
                             options={tagList}
                             size="small"
+                            
                             inputValue={tag}
                             onChange={changeTag}
                             onInputChange={changeTagInput}
