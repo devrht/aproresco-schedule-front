@@ -236,7 +236,7 @@ function StudentProfile() {
 
     const getListView = () => {
         console.log(search);
-        if (search.firstName === "" && search.lastName === "") {
+        if (search.firstName === "" && search.lastName === ""&& (localStorage.getItem('currentTag') === "no tag" || localStorage.getItem('currentTag') === "")) {
             getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
@@ -266,8 +266,37 @@ function StudentProfile() {
                 setLoading(false);
             })
         }
-        else {
-            findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+        else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag") {
+            findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
+                console.log('DATA ==> ', data)
+                if (data) {
+                    if (data.content) {
+                        setStudentList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalCount,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setStudentList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setStudentList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                setLoading(false);
+            })
+        } else{
+            findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {

@@ -26,37 +26,37 @@ function SearchFilter ({ changeInput, searchList, tagList, tag, changeTagInput, 
                 />
             </Form.Item>
             <Form.Item style={{ width: '200px'}}>
-                        <Autocomplete
-                            id="asynchronous-search"
-                            name="tag"
-                            options={tagList}
-                            size="small"
-                            
-                            inputValue={tag}
-                            onChange={changeTag}
-                            onInputChange={changeTagInput}
-                            open={tagOpen}
-                            onOpen={setOpenTrue}
-                            onClose={setOpenFalse}
-                            loading={tagToading}
-                            getOptionLabel={(record) => record.name}
-                            renderInput={(params) =>
-                                <TextField {...params}
-                                    variant="outlined"
-                                    placeholder="Current tag"
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {tagToading ? <CircularProgress color="inherit" size={10} /> : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
-                                    }}
-                                />
-                            }
-                            />
-                    </Form.Item>
+                <Autocomplete
+                    id="asynchronous-search"
+                    name="tag"
+                    options={tagList}
+                    size="small"
+                    
+                    inputValue={ tag }
+                    onChange={changeTag}
+                    onInputChange={changeTagInput}
+                    open={tagOpen}
+                    onOpen={setOpenTrue}
+                    onClose={setOpenFalse}
+                    loading={tagToading}
+                    getOptionLabel={(record) =>record.name}
+                    renderInput={(params) =>
+                        <TextField {...params}
+                            variant="outlined"
+                            placeholder="Current tag"
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                    <React.Fragment>
+                                        {tagToading ? <CircularProgress color="inherit" size={10} /> : null}
+                                        {params.InputProps.endAdornment}
+                                    </React.Fragment>
+                                ),
+                            }}
+                        />
+                    }
+                    />
+            </Form.Item>
 
             <Button onClick={searchList} type="primary">
                 <SearchOutlined />

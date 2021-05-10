@@ -238,8 +238,7 @@ function TeacherProfile() {
     }
 
     const getListView = () => {
-        if (search.firstName === "" && search.lastName === "") {
-            //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+        if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "no tag" || localStorage.getItem('currentTag') === "")) {
             getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
@@ -269,8 +268,37 @@ function TeacherProfile() {
                 setLoading(false);
             })
         }
-        else {
-            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+        else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag") {
+            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
+                console.log('DATA ==> ', data)
+                if (data) {
+                    if (data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalCount,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                setLoading(false);
+            })
+        } else {
+            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {

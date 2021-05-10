@@ -453,31 +453,37 @@ function CreateBooking() {
                             <Input type="text" name="comment" style={{ marginTop: '3px', padding: '8px 8px', lineHeight: '14px' }} onChange={(e) => setComment(e.target.value)} />
                         </Form.Item>
                     </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
-                            <Select mode="multiple"
-                                allowClear
-                                loading={loadingS}
-                                open={open1}
-                                onFocus={() => setOpen1(true)}
-                                onBlur={() => setOpen1(false)}
-                                style={{ width: '100%' }}
-                                onSelect={() => setOpen1(false)}
-                                placeholder="Please select tags"
-                                onChange={handleChangeTags}>
-                                {
-                                    tagsList.map(tag => {
-                                        return (
-                                            <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </div>
+                        {
+                            !tagsList ? 
+                            (<></>)
+                            :
+                            (<div style={{
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}>
+                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                                    <Select mode="multiple"
+                                        allowClear
+                                        loading={loadingS}
+                                        open={open1}
+                                        onFocus={() => setOpen1(true)}
+                                        onBlur={() => setOpen1(false)}
+                                        style={{ width: '100%' }}
+                                        onSelect={() => setOpen1(false)}
+                                        placeholder="Please select tags"
+                                        onChange={handleChangeTags}>
+                                        {
+                                            tagsList.map(tag => {
+                                                return (
+                                                    <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </div>)
+                        }
+                    
                     
                         {!schedules ? <Spin className="loading-table" /> :
                         <Table

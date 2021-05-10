@@ -152,8 +152,8 @@ function TeacherList() {
 
 
     const getListView = () => {
-        if (search.firstName === "" && search.lastName === "" && localStorage.getItem('currentTag') !== "" ) {
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(),localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
+        if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "" || localStorage.getItem('currentTag') === "no tag")) {
+            getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 console.log('DATA 11 ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -183,8 +183,8 @@ function TeacherList() {
                 setLoading(false);
             })
         }
-        else if (search.firstName !== "" && search.lastName !== ""){
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
+        else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag"){
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
                 console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -213,7 +213,7 @@ function TeacherList() {
                 setLoading(false);
             })
         } else{
-            getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {

@@ -245,31 +245,36 @@ function CreateTeacher() {
                                 </Form.Item>
                                 : null}
                     </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="Tags" required style={{ flex: 1}} onClick={() => setOpen1(open1 ? false : true)}>
-                            <Select mode="multiple"
-                                allowClear
-                                loading={loading}
-                                open={open1}
-                                onFocus={() => setOpen1(true)}
-                                onBlur={() => setOpen1(false)}
-                                style={{ width: '100%' }}
-                                onSelect={() => setOpen1(false)}
-                                placeholder="Please select tags"
-                                onChange={handleChangeTags}>
-                                {
-                                    tagsList.map(tag => {
-                                        return (
-                                            <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </div>
+                    {
+                            !tagsList ? 
+                            (<></>)
+                            :
+                            (<div style={{
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}>
+                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                                    <Select mode="multiple"
+                                        allowClear
+                                        loading={loading}
+                                        open={open1}
+                                        onFocus={() => setOpen1(true)}
+                                        onBlur={() => setOpen1(false)}
+                                        style={{ width: '100%' }}
+                                        onSelect={() => setOpen1(false)}
+                                        placeholder="Please select tags"
+                                        onChange={handleChangeTags}>
+                                        {
+                                            tagsList.map(tag => {
+                                                return (
+                                                    <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </div>)
+                        }
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'

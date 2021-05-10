@@ -3,7 +3,7 @@ import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { createSchedule } from '../../services/Teacher'
-import { getSchedule, getTags } from '../../services/Student'
+import { getSchedule } from '../../services/Student'
 import { useHistory } from 'react-router-dom'
 
 const { TextArea } = Input;
@@ -19,7 +19,6 @@ const OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8','9','10','11','12'];
 function CreateSchedule() {
 
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [isCreation, setIsCreation] = useState(true);
@@ -41,23 +40,10 @@ function CreateSchedule() {
     const [price, setPrice] = useState('');
     const [imageUrl, setImageUrl] = useState('');
 
-    const [sortingName, setSortingName] = useState("name");
-    const [sortingType, setSortingType] = useState("desc");
-
-    const [listProps, setListProps] = useState({
-        index: 0,
-        size: 10,
-    });
-
-    const [open1, setOpen1] = useState(false);
-    const [tagsList, setTagsList] = useState([]);
-    const [tags, setTags] = useState([]);
-
     useEffect(() => {
         getSubjects();
         setCurrency("USD");
         setLanguage("fr");
-        getEnabledTags();
     }, []);
 
     const handleChange = event => {
@@ -130,9 +116,6 @@ function CreateSchedule() {
         let data = [];
         let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
 
-        let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
-
         if (isCreation) {
             data.push(
                 {
@@ -148,7 +131,6 @@ function CreateSchedule() {
                     language: language,
                     price: price,
                     imageUrl: imageUrl,
-                    tags: tgs,
                     tenant: {
                         "key": tenant
                     }
@@ -168,7 +150,6 @@ function CreateSchedule() {
                     language: language,
                     price: price,
                     imageUrl: imageUrl,
-                    tags: tgs,
                     tenant: {
                         "key": tenant
                     }
@@ -178,22 +159,7 @@ function CreateSchedule() {
         createSchedule(data).then(result => {
             console.log("schedule registered ===>", result);
             history.push(`/schedules`)
-
         }).finally(() => setSubmitting(false));
-    }
-
-    const getEnabledTags = () => {
-        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
-            if (data) {
-                if (data.content) {
-                    setTagsList(data.content.filter(t => t.enabled == true));
-                }
-            }
-        })
-    }
-
-    const handleChangeTags = (value) =>{
-        setTags(value);
     }
 
     return (
@@ -335,31 +301,6 @@ function CreateSchedule() {
                                 <Select.Option value={"en"} name="language">English</Select.Option>
                                 <Select.Option value={"de"} name="language">German</Select.Option>
                                 <Select.Option value={"es"} name="language">Spanish</Select.Option>
-                            </Select>
-                        </Form.Item>
-                    </div>
-
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="Tags" required style={{ flex: 1}} onClick={() => setOpen1(open1 ? false : true)}>
-                            <Select mode="multiple"
-                                allowClear
-                                open={open1}
-                                onFocus={() => setOpen1(true)}
-                                onBlur={() => setOpen1(false)}
-                                style={{ width: '100%' }}
-                                onSelect={() => setOpen1(false)}
-                                placeholder="Please select tags"
-                                onChange={handleChangeTags}>
-                                {
-                                    tagsList.map(tag => {
-                                        return (
-                                            <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                        )
-                                    })
-                                }
                             </Select>
                         </Form.Item>
                     </div>

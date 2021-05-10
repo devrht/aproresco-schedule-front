@@ -16,8 +16,7 @@ export default function TagsList() {
     const [selectedRow, setSelectedRow] = useState([]);
 
     const [tagOpen, setTagOpen] = useState(false);
-    const [tag, setTag] = useState('');
-    const [defaultChecked, setDefaultChecked] = useState('');
+    const [tag, setTag] = useState("no tag");
     const [tagList1, setTagList1] = useState([]);
     const [tagLoading, setTagLoading] = useState(false);
 
@@ -100,17 +99,7 @@ export default function TagsList() {
                 
             },
             key: 'enabled',
-        }/* ,
-        {
-            title: <div><span>Action </span>
-            </div>,
-            render: (record) => {
-                return (
-                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/tag/${record.id}/update`, { schedule: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
-                )
-            },
-            key: 'action',
-        } */
+        }
     ]
 
     const handleTableChange = (pagination) => {
@@ -127,12 +116,14 @@ export default function TagsList() {
         getListView();
         getTagList();
         
-        if(localStorage.getItem('currentTag')){
+        if(localStorage.getItem('currentTag') && localStorage.getItem('currentTag') != "no tag"){
             getTagByName(localStorage.getItem('currentTag')).then(res => {
                 setTag(res.content[0].name)
-                
             })
+        }else{
+            setTag("no tag")
         }
+        
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const getListView = () => {
@@ -236,7 +227,7 @@ export default function TagsList() {
         getTags(tableProps.pageIndex, tableProps.pageSize, "name", "desc").then(data => {
             if (data) {
                 if (data.content) {
-                    setTagList1(data.content);
+                    setTagList1([...data.content,{name: "no tag"}]);
                 }
             }
         }).finally(() => setTagLoading(false))

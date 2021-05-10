@@ -91,7 +91,7 @@ export const getCountry = () => {
 }
 
 export const getStudentProfileByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/student-profiles?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -101,7 +101,7 @@ export const getStudentProfileByDate = (start, end, page, size, sortName, sortTy
 }
 
 export const getTeacherProfileByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-profiles?page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-profiles?startDate=${start}&endDate=${end}page=${page}&size=${size}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -140,8 +140,8 @@ export const getBookings = (studentId) => {
         })
 }
 
-export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size,tag, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -170,8 +170,8 @@ export const findScheduleByGrade = (gradeMin, gradeMax, start, end, page, size, 
         })
 }
 
-export const findStudentProfileByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/student-profiles?firstName=${firstName}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+export const findStudentProfileByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/student-profiles?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
@@ -180,9 +180,9 @@ export const findStudentProfileByFirstNameAndLastName = (firstName, start, end, 
         })
 }
 
-export const findTeacherProfileByFirstNameAndLastName = (firstName, start, end, page, size, sortName, sortType) => {
+export const findTeacherProfileByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-profiles?firstName=${firstName}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-profiles?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType}`)
         .then(res => {
             return res.data;
         })
