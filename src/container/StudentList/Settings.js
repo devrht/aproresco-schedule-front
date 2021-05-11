@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
 import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
-import { getTeacherProfile, newTenant } from '../../services/Teacher'
+import { getTeacherProfile, newTenant, getTenants, getTenantByName} from '../../services/Teacher'
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
@@ -26,6 +26,8 @@ function Settings(props) {
   const [deleting, setDeleting] = useState(false);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [assigning, setAssigning] = useState(false);
   const [bridge, setBridge] = useState(false);
   const [persist, setPersist] = useState(false);
@@ -55,6 +57,25 @@ function Settings(props) {
     return state.Student.enableAssigning;
   })
 
+    const [tenantsList, setTenantsList] = useState([]);
+    const [tenants, setTenants] = useState([]);
+    const [defaultTenants, setDefaultTenants] = useState([]);
+
+    const getTenantsList = () => {
+        setLoading(true)
+        getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'),0, 10, "displayName", "desc").then(data => {
+            if(data){
+                if(data.content){
+                    setTenantsList(data.content)
+                }
+            }
+        }).finally(() => setLoading(false))
+    } 
+
+    const handleChangeTenants = (value) =>{
+        setTenants(value);
+    }
+
   const getRole = (role, data) => {
     let result = false;
     if (data.tenants) {
@@ -76,11 +97,13 @@ function Settings(props) {
       setCountry(data.countryCode.toString().toLowerCase());
       getTeacher();
     })
+    getTenantsList();
   }, []);
 
   const getTeacher = () => {
     getTeacherProfile().then(data => {
       setTeacher(data);
+      console.log("teacher informations ===>",data)
       localStorage.setItem('user', JSON.stringify(data));
       setAdmin(getRole('admin', data))
       setLastName(data.lastName);
@@ -91,6 +114,13 @@ function Settings(props) {
       setEmail(data.externalEmail);
       setGrades(data.grades ? data.grades : []);
       setSubjects(data.subjects ? data.subjects : []);
+
+      if(data.tenants){
+        data.tenants.map(element => {
+          defaultTenants.push(element.tenant.displayName)
+        });
+      }
+      
     });
   }
 
@@ -172,9 +202,17 @@ function Settings(props) {
 
     setSubmitting(true);
 
-    updateTeacher(teacher.id, firstName, lastName, email, grades, subjects, phone, school, board).then(data => {
+    let tnts=[]
+        tenants.map(res => {
+            getTenantByName((res.split(' '))[0], 0, 30).then(tenant => {
+                tnts.push(tenant.content)
+            })
+        })
+
+    updateTeacher(teacher.id, firstName, lastName, email, grades, subjects, phone, school, board, tnts).then(data => {
       setUpdated(true);
-      getTeacher();
+      //getTeacher();
+      history.push(`/teacherlist`);
     }).catch(err => {
       alert("Error occured when saving data, please retry!")
       console.log(err)
@@ -240,7 +278,7 @@ function Settings(props) {
 
         </div>
 
-        {
+        {/* {
           teacher != null && !isCreation ?
             <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>
               <h1>My Organizations</h1>
@@ -274,18 +312,52 @@ function Settings(props) {
                 <Button type="primary" size="large" htmlType="submit" style={{ height: '50px' }}>Submit</Button>
               </Form.Item>
             </Form>
-        }
+        } */}
+        
 
-        <h2 style={{
-          marginTop: '30px',
-          marginBottom: '30px'
-        }}>My personnals informations:</h2>
+        
         <Form
           form={form2}
           autoComplete="off"
           onFinish={handleSubmitUpdate}
           layout="vertical"
         >
+          <h2 style={{
+          marginTop: '30px',
+          marginBottom: '30px'
+          }}>My Organizations:</h2>
+
+          <div style={{
+              display: 'flex',
+              flexDirection: 'row'
+          }}>
+            <Form.Item required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen3(open3 ? false : true)}>
+                    <Select mode="multiple"
+                        allowClear
+                        loading={loading}
+                        open={open3}
+                        defaultValue={ defaultTenants }
+                        onFocus={() => setOpen3(true)}
+                        onBlur={() => setOpen3(false)}
+                        style={{ width: '100%' }}
+                        onSelect={() => setOpen3(false)}
+                        placeholder="Please select tenants"
+                        onChange={handleChangeTenants}>
+                        {
+                            tenantsList.map(tenant => {
+                                return (
+                                    <Select.Option value={tenant.displayName} key={tenant.id}>{tenant.displayName}</Select.Option>
+                                )
+                            })
+                        }
+                    </Select>
+                </Form.Item>
+          </div>
+
+          <h2 style={{
+          marginTop: '30px',
+          marginBottom: '30px'
+          }}>My personnals informations:</h2>
 
           <div style={{
             display: 'flex',

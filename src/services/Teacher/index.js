@@ -126,6 +126,20 @@ export const deleteTenant = (value) => {
         })
 }
 
+export const getTenants = (start, end,page,size,sortName,sortType) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    .then(res => {
+        return res.data;
+    })
+}
+
+export const getTenantByName = (displayName,page,size) => {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?displayName=${displayName}&size=${size}&page=${page}`)
+    .then(res => {
+        return res.data;
+    })
+}
+
 export const getTeacherListByDate = (start, end, page, size, sortName = 'firstName', sortType = 'asc') => {
     if (start == null || end == null) {
         let today = new Date();
@@ -327,7 +341,7 @@ export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPe
     }).catch(err => console.log(err));
 }
 
-export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone, tags) => {
+export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone, tags, tenants) => {
     let data = {
         firstName,
         lastName,
@@ -337,7 +351,8 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
         grades: grades,
         phoneNumber: phone,
         subjects: subjects,
-        tags: tags
+        tags: tags,
+        tenants:tenants
     }
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-profile/register`, data).then(res => {
         return res;
@@ -377,7 +392,7 @@ export const approveComment = (c) => {
 
 
 
-export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard) => {
+export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard, tenants) => {
     let data = {
         firstName,
         lastName,
@@ -386,7 +401,8 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         externalEmail: email,
         grades: grades,
         phoneNumber: phone,
-        subjects: subjects
+        subjects: subjects,
+        tenants:tenants
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/update/${id}`, data).then(res => {
         return res;
@@ -418,10 +434,6 @@ export const updateBooking = (id, studentProfile, schedule, studentComment) => {
 
 
 export const createAvailibility = (teacherProfile, schedule, tags) => {
-   /* let data = {
-        teacherProfile: teacherProfile,
-        schedule: schedule
-    } */ 
      let data = {
         teacherProfile: teacherProfile,
         schedule: schedule,

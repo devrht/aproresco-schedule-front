@@ -6,7 +6,7 @@ import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
-import { updateTeacher, createTeacher } from '../../services/Teacher';
+import { updateTeacher, createTeacher, getTenantByName, getTenants } from '../../services/Teacher';
 import React, { useEffect, useState, useReducer } from 'react'
 import { getCountry, getSchedule } from '../../services/Student';
 
@@ -32,10 +32,33 @@ function CreateTeacher() {
     const [submitting, setSubmitting] = useState(false);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [open3, setOpen3] = useState(false);
     const [teacher, setTeacher] = useState(location.state.teacher);
+
+    const [tenantsList, setTenantsList] = useState([]);
+    const [tenants, setTenants] = useState([]);
+    const [defaultTenants, setDefaultTenants] = useState([]);
+
+    const getTenantsList = () => {
+        setLoading(true)
+        //setSortingName("displayName")
+        getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'),0, 10, "displayName", "desc").then(data => {
+            if(data){
+                if(data.content){
+                    console.log("List of tenants ===>",data.content)
+                    setTenantsList(data.content)
+                }
+            }
+        }).finally(() => setLoading(false))
+    } 
+
+    const handleChangeTenants = (value) =>{
+        setTenants(value);
+    }
 
     useEffect(() => {
         console.log(teacher)
+        getTenantsList();
         getSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
@@ -48,7 +71,12 @@ function CreateTeacher() {
             setSubjects(teacher.subjects)
             setPhone(teacher.phoneNumber)
         })
-
+        
+        if(teacher.tenants){
+            teacher.tenants.map(element => {
+                defaultTenants.push(element.tenant.displayName)
+            });    
+        }
     }, []);
 
     const handleChange = event => {
@@ -98,7 +126,14 @@ function CreateTeacher() {
 
         setSubmitting(true);
 
-        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects, phone, formData.schoolName, formData.schoolBoard).then(data => {
+        let tnts=[]
+        tenants.map(res => {
+            getTenantByName((res.split(' '))[0], 0, 30).then(tenant => {
+                tnts.push(tenant.content)
+            })
+        })
+
+        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects, phone, formData.schoolName, formData.schoolBoard, tnts).then(data => {
             // console.log(data)
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
@@ -124,6 +159,33 @@ function CreateTeacher() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="My Organizations" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen3(open3 ? false : true)}>
+                                <Select mode="multiple"
+                                    allowClear
+                                    loading={loading}
+                                    open={open3}
+                                    defaultValue={ defaultTenants }
+                                    onFocus={() => setOpen3(true)}
+                                    onBlur={() => setOpen3(false)}
+                                    style={{ width: '100%' }}
+                                    onSelect={() => setOpen3(false)}
+                                    placeholder="Please select tenants"
+                                    onChange={handleChangeTenants}>
+                                    {
+                                        tenantsList.map(tenant => {
+                                            return (
+                                                <Select.Option value={tenant.displayName} key={tenant.id}>{tenant.displayName}</Select.Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                    </div>
+
 
                     <div style={{
                         display: 'flex',
