@@ -402,7 +402,7 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         grades: grades,
         phoneNumber: phone,
         subjects: subjects,
-        tenants:tenants
+        tenants: tenants
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/update/${id}`, data).then(res => {
         return res;

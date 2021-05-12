@@ -74,6 +74,7 @@ function Settings(props) {
 
     const handleChangeTenants = (value) =>{
         setTenants(value);
+        //localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(value));
     }
 
   const getRole = (role, data) => {
@@ -91,7 +92,12 @@ function Settings(props) {
   }
 
   useEffect(() => {
-    setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
+    //setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
+
+    /* localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id).forEach(tenant =>{
+      defaultTenants.push(tenant)
+    }); */
+
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
@@ -116,7 +122,7 @@ function Settings(props) {
       setSubjects(data.subjects ? data.subjects : []);
 
       if(data.tenants){
-        data.tenants.map(element => {
+        data.tenants.forEach(element => {
           defaultTenants.push(element.tenant.displayName)
         });
       }
@@ -143,12 +149,12 @@ function Settings(props) {
     });
   }
 
-  const handleChange = event => {
+ /*  const handleChange = event => {
     setFormData({
       name: event.target.name,
       value: event.target.value,
     });
-  }
+  }*/
 
   const handleChangeSelect = (value) => {
     setGrades(value.toString().split(',').map(i => Number(i)));
@@ -158,7 +164,7 @@ function Settings(props) {
     setSubjects(value);
   }
 
-  const handleSubmit = () => {
+ /* const handleSubmit = () => {
 
     if (formData.tenant) {
       if (
@@ -180,7 +186,7 @@ function Settings(props) {
       console.log(err)
     });
 
-  }
+  } */
 
   const handleSubmitUpdate = () => {
 
@@ -203,13 +209,15 @@ function Settings(props) {
     setSubmitting(true);
 
     let tnts=[]
-        tenants.map(res => {
-            getTenantByName((res.split(' '))[0], 0, 30).then(tenant => {
-                tnts.push(tenant.content)
-            })
+    tenants.map(res => {
+         getTenantByName((res.split(' '))[0], 0, 30).then(tenant => {
+           //console.log("tenant found ===>", tenant.content[0])
+            tnts.push(tenant.content[0])
         })
-
+    })
+console.log("tenants ===>", tnts)
     updateTeacher(teacher.id, firstName, lastName, email, grades, subjects, phone, school, board, tnts).then(data => {
+      console.log("teacher updated ===>", data)
       setUpdated(true);
       //getTeacher();
       history.push(`/teacherlist`);
@@ -237,10 +245,10 @@ function Settings(props) {
     });
   }
 
-  const changeTenant = (e) => {
+  /* const changeTenant = (e) => {
     setTenant(e);
     localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
-  }
+  } */
 
   return (
     <div>
@@ -346,7 +354,7 @@ function Settings(props) {
                         {
                             tenantsList.map(tenant => {
                                 return (
-                                    <Select.Option value={tenant.displayName} key={tenant.id}>{tenant.displayName}</Select.Option>
+                                    <Select.Option value={tenant.displayName} key={tenant.key}>{tenant.displayName}</Select.Option>
                                 )
                             })
                         }
