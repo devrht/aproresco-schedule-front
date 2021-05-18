@@ -392,7 +392,7 @@ export const approveComment = (c) => {
 
 
 
-export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard, tenants) => {
+export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard) => {
     let data = {
         firstName,
         lastName,
@@ -401,8 +401,7 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         externalEmail: email,
         grades: grades,
         phoneNumber: phone,
-        subjects: subjects,
-        tenants: tenants
+        subjects: subjects
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/update/${id}`, data).then(res => {
         return res;

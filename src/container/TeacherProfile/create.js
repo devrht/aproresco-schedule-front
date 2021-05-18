@@ -140,10 +140,13 @@ function CreateTeacher() {
         tags.map(res => tgs.push({"id": res}))
 
         let tnts=[]
-        tenants.map(res => {
+       /*  tenants.map(res => {
             getTenantByName((res.split(' '))[0], 0, 30).then(tenant => {
                 tnts.push(tenant.content)
             })
+        }) */
+        tenants.map(res => {
+           tnts.push({"id":res})
         })
 
         console.log("tenants ==>",tnts)
