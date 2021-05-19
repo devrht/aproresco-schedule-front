@@ -28,23 +28,24 @@ function Login() {
                   localStorage.removeItem('tenant'+data.id);
                 }
             }
-            if (data.tenants) {
-              if (data.tenants.length > 0) {
-                if (localStorage.getItem("tenant"+data.id)) {
-                  if (data.tenants.filter(t => t.key == localStorage.getItem("tenant"+data.id)).length == 0) {
-                    localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
-                  } else {
-                    localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
-                  }
-                } else {
-                  localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
-                }
-              } else {
-                localStorage.removeItem('tenant'+data.id);
-              }
-            } else {
-              localStorage.removeItem('tenant'+data.id);
-            }
+            // if (data.tenants) {
+            //   if (data.tenants.length > 0) {
+                // if (localStorage.getItem("tenant"+data.id)) {
+                //   if (data.tenants.filter(t => t.key == localStorage.getItem("tenant"+data.id)).length == 0) {
+                //     localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
+                //   } else {
+                //     localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
+                //   }
+                // } else {
+                //   localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
+                // }
+            //  } 
+            //   else {
+            //     localStorage.removeItem('tenant'+data.id);
+            //   }
+            // } else {
+            //   localStorage.removeItem('tenant'+data.id);
+            // }
             localStorage.setItem('email', JSON.stringify(data.externalEmail));
             localStorage.setItem('id', JSON.stringify(data.id));
             history.push(`/teacherlist`);
