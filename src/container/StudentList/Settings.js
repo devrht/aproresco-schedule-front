@@ -9,7 +9,7 @@ import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
 import { getCountry, getSchedule } from '../../services/Student';
-import { updateTeacher } from '../../services/Teacher';
+import { updateTeacher, getTenants, getTenantByName } from '../../services/Teacher';
 const { Option } = Select;
 
 const formReducer = (state, event) => {
@@ -75,7 +75,8 @@ function Settings(props) {
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
       getTeacher();
-    })
+    });
+    getTenantsList();
   }, []);
 
   const getTeacher = () => {
@@ -142,7 +143,6 @@ function Settings(props) {
       return
     }
     newTenant(formData.tenant).then(data => {
-      console.log("tenant : ", data)
       setTenant(formData.tenant); localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
       history.push(`/teacherlist`)
     }).catch(err => {
@@ -194,10 +194,22 @@ function Settings(props) {
 
   const onBridgeAction = (status) => {
     bridgeManagement(status).then(data => {
-      console.log(data);
       setBridge(status);
     });
   }
+
+  const [tenants, setTenants] = useState([]);
+  const [defaultTenants, setDefaultTenants] = useState([]);
+
+  const getTenantsList = () => {
+      getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'),0, 10, "displayName", "desc").then(data => {
+          if(data){
+              if(data.content){
+                setTenants(data.content)
+              }
+          }
+      })
+  } 
 
   const changeTenant = (e) => {
     setTenant(e);
@@ -239,42 +251,6 @@ function Settings(props) {
             onClick={() => onBridgeAction(bridge ? 0 : 1)}> {!bridge ? 'Open' : 'Close'} the bridge </Button>
 
         </div>
-
-        {
-          teacher != null && !isCreation ?
-            <div style={{ display: "flex", flexDirection: "column", flex: 1, marginTop: '50px' }}>
-              <h1>My Organizations</h1>
-              <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
-                <Select defaultValue={tenant} size={'large'} style={{ width: '100%' }} onChange={(e) => { e == '000' ? setIsCreation(true) : changeTenant(e) }}>
-                  <Option value={'000'}>Add new organization</Option>
-                  {teacher.tenants ? teacher.tenants.map(tenant => {
-                    return (
-                      <Option value={tenant.tenant.key}>{tenant.tenant.displayName}</Option>
-                    )
-                  }) : null
-                  }
-                </Select>
-              </div>
-            </div> :
-            <Form
-              form={form}
-              onFinish={handleSubmit}
-              layout="vertical"
-              style={{ width: '100%', marginTop: '2%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Form.Item label="Enter the key of the organization you want to join (press Escape to select existing organization)" size={'large'} style={{ width: '80%' }}>
-                <Input type="tenant" name="tenant" onKeyUp={(e) => {
-                  if (e.key === 'Escape') {
-                    setIsCreation(false);
-                  }
-                }} onChange={handleChange} style={{ height: '50px' }} />
-              </Form.Item>
-
-              <Form.Item label=" " style={{ width: '20%', marginLeft: '30px' }}>
-                <Button type="primary" size="large" htmlType="submit" style={{ height: '50px' }}>Submit</Button>
-              </Form.Item>
-            </Form>
-        }
 
         <h2 style={{
           marginTop: '30px',
@@ -399,6 +375,25 @@ function Settings(props) {
             <Form.Item label="School Board" required style={{ flex: 1, marginLeft: '10px' }}>
               <Input type="text" name="schoolBoard" value={board} onChange={(e) => setBoard(e.target.value)} />
             </Form.Item>
+          </div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            {
+              teacher != null && !isCreation && (
+                <Form.Item label="My Organizations" required style={{ flex: 1, marginRight: '10px' }}>
+                  <Select defaultValue={tenant} style={{ width: '100%' }} onChange={(e) => { changeTenant(e) }}>
+                    {/* <Option value={'000'}>Add new organization</Option> */}
+                    {tenants ? tenants.map(tenant => {
+                      return (
+                        <Option value={tenant.key}>{tenant.displayName}</Option>
+                      )
+                    }) : null
+                    }
+                  </Select>
+                </Form.Item>
+              )}
           </div>
           <Form.Item>
             <Button disabled={submitting} type="primary" size="large" htmlType="submit">
