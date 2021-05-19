@@ -5,7 +5,7 @@ import '../../Assets/container/StudentList.css'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState, useReducer } from 'react'
 import { updateBooking, findTeacherListByFirstNameAndLastName } from '../../services/Teacher';
-import { getStudentProfileByDate, getSchedule, assignStudentToAnotherTeacher } from '../../services/Student'
+import { getStudentProfileByDate, getSchedule, assignStudentToAnotherTeacher, getTags } from '../../services/Student'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -24,6 +24,7 @@ function UpdateBooking() {
     const location = useLocation();
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState(null);
     const [data, setData] = useState(location.state.student);
@@ -42,6 +43,9 @@ function UpdateBooking() {
     const [teacher, setTeacher] = useState(null);
     const [teacherName, setTeacherName] = useState(null);
     const [list, setList] = useState([]);
+    const [tagsList, setTagsList] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [defaulttags, setDefaultTags] = useState([]);
     const [teacherSearch, setTeacherSearch] = useState({
         name: "",
         firstName: "",
@@ -52,6 +56,10 @@ function UpdateBooking() {
         firstName: "",
         lastName: "",
     })
+    const [listProps, setListProps] = useState({
+        index: 0,
+        size: 10,
+    });
     const [sortingName, setSortingName] = useState("createDate");
     const [sortingType, setSortingType] = useState("desc");
 
@@ -74,6 +82,10 @@ function UpdateBooking() {
                 data.content.push(obj[key]);
             setSubjects(data.content)
         });
+        if(data.tags){
+            data.tags.map(tag=> defaulttags.push(tag.name))
+        }
+        getEnabledTags();
     }, []);
 
     const handleChange = event => {
@@ -113,6 +125,21 @@ function UpdateBooking() {
         setDat(date);
     }
 
+    const getEnabledTags = () => {
+        setLoading(true)
+        getTags(listProps.index, listProps.size, "name", sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTagsList(data.content.filter(t => t.enabled == true));
+                }
+            }
+        }).finally(() => setLoading(false))
+    }
+
+    const handleChangeTags = (value) =>{
+        setTags(value);
+    }
+
     const handleSubmit = () => {
         let s = schedules.filter(s => s.startDate == dat).filter(s => s.subject == subjec)[0];
         if (s == null || children == null) {
@@ -120,7 +147,12 @@ function UpdateBooking() {
             return;
         }
         setSubmitting(true);
-        updateBooking(data.id, children, s, comment).then(data => {
+
+        let tgs=[]
+        tags.map(res => tgs.push({"id": res}))
+
+        updateBooking(data.id, children, s, comment, tgs).then(data => {
+            console.log("booking updated ===>", data)
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -342,6 +374,32 @@ function UpdateBooking() {
                             />
                         </Form.Item>
                     </div>
+                    <div style={{
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}>
+                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                                    <Select mode="multiple"
+                                        allowClear
+                                        defaultValue={defaulttags}
+                                        loading={loading}
+                                        open={open1}
+                                        onFocus={() => setOpen1(true)}
+                                        onBlur={() => setOpen1(false)}
+                                        style={{ width: '100%' }}
+                                        onSelect={() => setOpen1(false)}
+                                        placeholder="Please select tags"
+                                        onChange={handleChangeTags}>
+                                        {
+                                            tagsList.map(tag => {
+                                                return (
+                                                    <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </div>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

@@ -83,16 +83,15 @@ function CreateAvailibility() {
             alert('Fill the form');
             return
         }
+
         setSubmitting(true);
+
         let tgs=[]
-        //console.log("tags ===>", tags)
         tags.map(res => {
-            getTagByName(res).then(data => {
-                //console.log("data ===>", data)
-                data.content.map(rs => {tgs.push({"id": rs.id})}) 
-            })
+           tgs.push({"id": res}) 
         })   
-        console.log("tags to save===>", tgs)
+        console.log("tags===>", tgs)
+
         updateAvailibility(teacher.id, children, s, tgs).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
@@ -185,7 +184,8 @@ function CreateAvailibility() {
                             }
                         />
                     </Form.Item>
-                    <Form.Item label="Tags" required style={{ flex: 1, marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
+                    
+                    <Form.Item label="Tags" required style={{ flex: 1}} onClick={() => setOpen1(open1 ? false : true)}>
                         <Select mode="multiple"
                             allowClear
                             defaultValue={defaulttags}
@@ -199,7 +199,7 @@ function CreateAvailibility() {
                             {
                                 tagsList.map(tag => {
                                     return (
-                                        <Select.Option value={tag.name} key={tag.id}>{tag.name}</Select.Option>
+                                        <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
                                     )
                                 })
                             }
