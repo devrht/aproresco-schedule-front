@@ -45,7 +45,7 @@ function Settings(props) {
   const [email, setEmail] = useState('');
   const [tenant, setTenant] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [country, setCountry] = useState(null);
+  const [country, setCountry] = useState('ca');
   const [grades, setGrades] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const deletingStatus = useSelector((state) => {
@@ -74,8 +74,7 @@ function Settings(props) {
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
-      getTeacher();
-    });
+    }).finally(() => getTeacher());
     getTenantsList();
   }, []);
 
