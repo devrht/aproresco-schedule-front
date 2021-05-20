@@ -112,7 +112,7 @@ function CreateSchedule() {
         let date = new Date(formData.startDate + "T" + formData.startTime + ":00");
         let d = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear() + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0') + ':00 -0500';
 
-        let f = null;
+        let f = d;
         if (advanceSchedule) {
             let date1 = new Date(formData.endDate + "T" + formData.startTime + ":00");
             f = (date1.getMonth() + 1).toString().padStart(2, '0') + '/' + date1.getDate().toString().padStart(2, '0') + '/' + date1.getFullYear() + ' ' + date1.getHours().toString().padStart(2, '0') + ':' + date1.getMinutes().toString().padStart(2, '0') + ':00 -0500';

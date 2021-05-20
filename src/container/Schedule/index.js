@@ -112,34 +112,34 @@ function Schedule() {
             },
             key: 'startDate',
         },
-        {
-            title: <div><span>End Date </span>
-                {sortingName === "endDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "endDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "endDate" && sortingType === "" && ""}
-            </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("endDate");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("endDate"); }
-                    }
-                };
-            },
-            render: (record) => {
-                let f = record.endDate;
-                let date = (new Date(f)).toLocaleDateString();
+        // {
+        //     title: <div><span>End Date </span>
+        //         {sortingName === "endDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+        //         {sortingName === "endDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+        //         {sortingName === "endDate" && sortingType === "" && ""}
+        //     </div>,
+        //     onHeaderCell: (column) => {
+        //         return {
+        //             onClick: () => {
+        //                 setSortingName("endDate");
+        //                 if (sortingType == "") { setSortingType("asc") }
+        //                 else if (sortingType == "asc") { setSortingType("desc") }
+        //                 else if (sortingType == "desc") { setSortingType("asc"); setSortingName("endDate"); }
+        //             }
+        //         };
+        //     },
+        //     render: (record) => {
+        //         let f = record.endDate;
+        //         let date = (new Date(f)).toLocaleDateString();
                 
-                return (
-                    <span>
-                        {date}
-                    </span>
-                )
-            },
-            key: 'endDate',
-        },
+        //         return (
+        //             <span>
+        //                 {date}
+        //             </span>
+        //         )
+        //     },
+        //     key: 'endDate',
+        // },
         {
             title: 'Duration',
             key: 'durationInMinutes',
