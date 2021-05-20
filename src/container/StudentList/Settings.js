@@ -44,6 +44,7 @@ function Settings(props) {
   const [board, setBoard] = useState('');
   const [email, setEmail] = useState('');
   const [tenant, setTenant] = useState(null);
+  const [advanceSchedule, setAdvanceSchedule] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [country, setCountry] = useState('ca');
   const [grades, setGrades] = useState([]);
@@ -71,6 +72,7 @@ function Settings(props) {
 
   useEffect(() => {
     setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
+    setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
@@ -142,7 +144,7 @@ function Settings(props) {
       return
     }
     newTenant(formData.tenant).then(data => {
-      setTenant(formData.tenant); 
+      setTenant(formData.tenant);
       localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
       history.push(`/teacherlist`)
     }).catch(err => {
@@ -199,21 +201,25 @@ function Settings(props) {
   }
 
   const [tenants, setTenants] = useState([]);
-  const [defaultTenants, setDefaultTenants] = useState([]);
 
   const getTenantsList = () => {
-      getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'),0, 10, "displayName", "desc").then(data => {
-          if(data){
-              if(data.content){
-                setTenants(data.content)
-              }
-          }
-      })
-  } 
+    getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 10, "displayName", "desc").then(data => {
+      if (data) {
+        if (data.content) {
+          setTenants(data.content)
+        }
+      }
+    })
+  }
 
   const changeTenant = (e) => {
     setTenant(e);
     localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
+  }
+
+  const changeAdvanceSchedule = (e) => {
+    setAdvanceSchedule(e);
+    localStorage.setItem("advanceSchedule" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
   }
 
   return (
@@ -394,6 +400,12 @@ function Settings(props) {
                   </Select>
                 </Form.Item>
               )}
+            <Form.Item label="Advance Schedules" required style={{ flex: 1, marginRight: '10px' }}>
+              <Select value={advanceSchedule} style={{ width: '100%' }} onChange={(e) => { changeAdvanceSchedule(e) }}>
+                <Option value={false}>False</Option>
+                <Option value={true}>True</Option>
+              </Select>
+            </Form.Item>
           </div>
           <Form.Item>
             <Button disabled={submitting} type="primary" size="large" htmlType="submit">

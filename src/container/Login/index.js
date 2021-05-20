@@ -28,6 +28,8 @@ function Login() {
                   localStorage.removeItem('tenant'+data.id);
                 }
             }
+            if(!JSON.parse(localStorage.getItem("advanceSchedule" + data.id)))
+              localStorage.setItem("advanceSchedule" + data.id, JSON.stringify(false));
             // if (data.tenants) {
             //   if (data.tenants.length > 0) {
                 // if (localStorage.getItem("tenant"+data.id)) {
