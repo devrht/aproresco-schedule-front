@@ -110,7 +110,7 @@ function LayoutOfApp({ children }, props) {
     localStorage.removeItem("token");
     localStorage.removeItem("expireAt");
     localStorage.removeItem("user");
-    localStorage.removeItem("tenant" + JSON.parse(localStorage.getItem("id")));
+    //localStorage.removeItem("tenant" + JSON.parse(localStorage.getItem("id")));
 
     localStorage.removeItem("id");
     localStorage.removeItem("currentTag");
