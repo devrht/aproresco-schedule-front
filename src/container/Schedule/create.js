@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useReducer } from 'react'
 import { PageHeader, Form, Input, Button, Select } from 'antd';
+import CreatableSelect from 'react-select/creatable';
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css'
 import { createSchedule } from '../../services/Teacher'
@@ -21,7 +22,7 @@ function CreateSchedule() {
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
-    const [isCreation, setIsCreation] = useState(true);
+    const [isCreation, setIsCreation] = useState(false);
     const [subjects, setSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [filteredOptions, setFilteredOptions] = useState(OPTIONS);
@@ -43,8 +44,8 @@ function CreateSchedule() {
 
     useEffect(() => {
         getSubjects();
-        setCurrency( advanceSchedule ? "USD" : '');
-        setLanguage( advanceSchedule ? "fr" : '');
+        setCurrency("USD");
+        setLanguage("fr");
         setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
     }, []);
 
@@ -111,7 +112,7 @@ function CreateSchedule() {
         let date = new Date(formData.startDate + "T" + formData.startTime + ":00");
         let d = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear() + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0') + ':00 -0500';
 
-        let f = null;
+        let f = d;
         if (advanceSchedule) {
             let date1 = new Date(formData.endDate + "T" + formData.startTime + ":00");
             f = (date1.getMonth() + 1).toString().padStart(2, '0') + '/' + date1.getDate().toString().padStart(2, '0') + '/' + date1.getFullYear() + ' ' + date1.getHours().toString().padStart(2, '0') + ':' + date1.getMinutes().toString().padStart(2, '0') + ':00 -0500';
@@ -123,7 +124,7 @@ function CreateSchedule() {
         if (isCreation) {
             data.push(
                 {
-                    subject: subject,
+                    subject: subject.value,
                     startDate: d,
                     endDate: f,
                     grades: grades,
@@ -142,7 +143,7 @@ function CreateSchedule() {
         } else {
             selectedSubjects.forEach(s => data.push(
                 {
-                    subject: s,
+                    subject: s.value,
                     startDate: d,
                     endDate: f,
                     grades: grades,
@@ -163,6 +164,15 @@ function CreateSchedule() {
             history.push(`/schedules`)
         }).finally(() => setSubmitting(false));
     }
+
+    const handleSubjectChange = (newValue, __) => {
+        setSelectedSubjects([...newValue.map(s => (
+            {
+                ...s,
+                id: s.id ? s.id : subjects.length + 1
+            }
+        ))]);
+    };
 
     return (
 
@@ -189,8 +199,14 @@ function CreateSchedule() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-
-                        {
+                        <Form.Item label="Subjects" required style={{ flex: 1, marginRight: '10px' }}>
+                            <CreatableSelect
+                                isMulti
+                                onChange={handleSubjectChange}
+                                options={subjects.map(s => ({ value: s.subject, label: s.subject }))}
+                            />
+                        </Form.Item>
+                        {/* {
                             !isCreation ?
                                 <Form.Item label="Subjects" required
                                     onClick={() => setOpen(open ? false : true)} style={{ flex: 1, marginRight: '10px' }}>
@@ -226,7 +242,7 @@ function CreateSchedule() {
                                         }
                                     }} onChange={(e) => setSubject(e.target.value)} />
                                 </Form.Item>
-                        }
+                        } */}
                         <Form.Item label="Name" required style={{ flex: 1, marginRight: '10px' }}>
                             <Input type="text" name="name" onChange={(e) => setName(e.target.value)} />
                         </Form.Item>
