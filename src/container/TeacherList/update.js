@@ -214,15 +214,15 @@ function CreateAvailibility() {
                             <Select onChange={(e) => changeDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
                                 {teacher.schedule.startDate}
                             </Moment>}>
-                                <option value={null}>Select a start date</option>
+                                <Select.Option value={null}>Select a start date</Select.Option>
                                 {
                                     dates.map(date => {
                                         return (
-                                            <option value={date.startDate} key={date.id}>
+                                            <Select.Option value={date.startDate} key={date.id}>
                                                 <Moment local format="D MMM YYYY HH:MM" withTitle>
                                                     {date.startDate}
                                                 </Moment>
-                                            </option>
+                                            </Select.Option>
                                         )
                                     })
                                 }
@@ -232,15 +232,15 @@ function CreateAvailibility() {
                             <Select onChange={(e) => changeEndDate(e)} defaultValue={<Moment local format="D MMM YYYY HH:MM" withTitle>
                                 {teacher.schedule.endDate}
                             </Moment>}>
-                                <option value={null}>Select an end date</option>
+                                <Select.Option value={null}>Select an end date</Select.Option>
                                 {
                                     ends.map(date => {
                                         return (
-                                            <option value={date.endDate} key={date.id}>
+                                            <Select.Option value={date.endDate} key={date.id}>
                                                 <Moment local format="D MMM YYYY HH:MM" withTitle>
                                                     {date.endDate}
                                                 </Moment>
-                                            </option>
+                                            </Select.Option>
                                         )
                                     })
                                 }
