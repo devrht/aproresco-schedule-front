@@ -140,7 +140,7 @@ export const getBookings = (studentId) => {
         })
 }
 
-export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size,tag, sortName, sortType) => {
+export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/student-bookings?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;

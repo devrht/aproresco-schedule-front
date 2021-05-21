@@ -111,6 +111,7 @@ function CreateTeacher() {
     }
 
     const handleSubmit = () => {
+        console.log(formData)
         if (formData.firstName && formData.lastName && formData.iemail && formData.schoolName && formData.schoolBoard && phone) {
             if (formData.firstName.toString().length <= 0
                 || formData.lastName.toString().length <= 0

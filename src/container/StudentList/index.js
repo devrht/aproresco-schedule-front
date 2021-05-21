@@ -397,7 +397,7 @@ function StudentList() {
 
     const getTeacherListView = () => {
         setLoadingTeacher(true);
-        findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, sortingName, sortingType).then(data => {
+        findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, null, sortingName, sortingType).then(data => {
             if (data) {
                 if (data.content) {
                     setTeacherList(data.content)
@@ -489,7 +489,7 @@ function StudentList() {
             })
         }
         else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag") {
-            findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
+            findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)

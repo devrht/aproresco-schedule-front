@@ -181,7 +181,7 @@ function UpdateBooking() {
 
     const getTeacherListView = () => {
         setLoading(true);
-        findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, sortingName, sortingType).then(data => {
+        findTeacherListByFirstNameAndLastName(teacherSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 500, null, sortingName, sortingType).then(data => {
             if (data) {
                 if (data.content) {
                     setList(data.content)

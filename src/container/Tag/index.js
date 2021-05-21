@@ -237,7 +237,7 @@ export default function TagsList() {
 
     const changeTag = (__, newValue) => {
         if (newValue != null) {
-            localStorage.setItem(`currentTag`, newValue.name);
+            localStorage.setItem(`currentTag`, newValue.name ? newValue.name : null);
         }
     }
 

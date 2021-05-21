@@ -189,7 +189,7 @@ function StudentProfile() {
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong>no tags</Text>)
+                            (<Text strong></Text>)
                                 :
                             (
                             <Tooltip title={(tags.join(', '))}>
@@ -235,10 +235,8 @@ function StudentProfile() {
     }
 
     const getListView = () => {
-        console.log(search);
         if (search.firstName === "" && search.lastName === ""&& (localStorage.getItem('currentTag') === "no tag" || localStorage.getItem('currentTag') === "")) {
             getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)
@@ -267,7 +265,7 @@ function StudentProfile() {
             })
         }
         else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag") {
-            findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
+            findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {

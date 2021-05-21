@@ -58,15 +58,16 @@ function Settings(props) {
 
   const getRole = (role, data) => {
     let result = false;
-    if (data.tenants) {
-      data.tenants.forEach(t => {
-        if (t.roles) {
-          if (t.roles.includes(role)) {
-            result = true;
+    if (data)
+      if (data.tenants) {
+        data.tenants.forEach(t => {
+          if (t.roles) {
+            if (t.roles.includes(role)) {
+              result = true;
+            }
           }
-        }
-      })
-    }
+        })
+      }
     return result;
   }
 

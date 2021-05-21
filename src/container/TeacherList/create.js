@@ -97,7 +97,7 @@ function CreateAvailibility() {
                 }
             }).finally(() => setLoadingS(false))
         } else {
-            findTeacherProfileByFirstNameAndLastName(newInputValue, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100,"", 'firstName', sortingType).then(data => {
+            findTeacherProfileByFirstNameAndLastName(newInputValue, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, null, 'firstName', sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content);
