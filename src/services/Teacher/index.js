@@ -9,7 +9,7 @@ const headers = {
 }
 
 export const getTeacherList = (page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`, {
         headers: {
             // AccessControlAllowOrigin: "*",
             AccessControlAllowHeaders: "Content-Type",
@@ -127,7 +127,7 @@ export const deleteTenant = (value) => {
 }
 
 export const getTenants = (start, end,page,size,sortName,sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
     .then(res => {
         return res.data;
     })
@@ -180,7 +180,7 @@ export const getTeacherListByDate = (start, end, page, size, sortName = 'firstNa
         }
 
     }
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`, {
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type",
@@ -229,7 +229,7 @@ export const getTeacherProfile = (email = null) => {
 }
 
 export const findTeacherListByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType}`, {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`, {
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type",

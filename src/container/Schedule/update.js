@@ -201,9 +201,11 @@ function UpdateSchedule() {
                                 options={subjects.map(s => ({ value: s.subject, label: s.subject }))}
                             />
                         </Form.Item>
-                        <Form.Item label="Name" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
-                        </Form.Item>
+                        {advanceSchedule && (
+                            <Form.Item label="Name" required style={{ flex: 1, marginRight: '10px' }}>
+                                <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
+                            </Form.Item>
+                        )}
 
                         <Form.Item label="Duration (in minutes)" required style={{ flex: 1, marginRight: '10px' }}>
                             <Input type="number" min={0} name="durationInMinutes" step={10} value={duration} onChange={(e) => setDuration(e.target.value)} />
