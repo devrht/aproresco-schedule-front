@@ -90,7 +90,6 @@ function CreateAvailibility() {
         tags.map(res => {
            tgs.push({"id": res}) 
         })   
-        console.log("tags===>", tgs)
 
         updateAvailibility(teacher.id, children, s, tgs).then(data => {
             history.push(`/teacherlist`)
@@ -248,9 +247,9 @@ function CreateAvailibility() {
                         </Form.Item>
                     </div>
                     <Form.Item>
-                        <Button disabled={submitting} onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">
+                        <Button disabled={submitting || schedules.length <= 0} onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Update Teacher Availability'
+                                submitting ? 'Loading...' : schedules.length <= 0 ? 'Fetching datas...' : 'Update Teacher Availability'
                             }
                         </Button>
                     </Form.Item>

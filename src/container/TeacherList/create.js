@@ -78,7 +78,6 @@ function CreateAvailibility() {
         tags.map(res => tgs.push({"id": res}))
 
         createAvailibility(children, s, tgs).then(data => {
-            console.log("availability registered ===>", data)
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -247,7 +246,7 @@ function CreateAvailibility() {
                         </Form.Item>
                     </div>
                     <Form.Item>
-                        <Button disabled={submitting} onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">
+                        <Button disabled={submitting || schedules.length <= 0} onClick={() => handleSubmit} type="primary" size="large" htmlType="submit">
                             {
                                 submitting ? 'Loading...' : 'Create a Teacher Availability'
                             }
