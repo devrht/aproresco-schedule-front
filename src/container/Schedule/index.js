@@ -19,6 +19,7 @@ function Schedule() {
     const [sortingType, setSortingType] = useState("desc");
     const [gradeMin, setGradeMin] = useState("0");
     const [gradeMax, setGradeMax] = useState("100");
+    const [advanceSchedule, setAdvanceSchedule] = useState(false);
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -54,7 +55,11 @@ function Schedule() {
         })
     }
 
-    const columns = [
+    useEffect(() => {
+        setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
+    }, []);
+
+    let columns = [
 
         {
             title: <div><span>Subject </span>
@@ -100,46 +105,46 @@ function Schedule() {
             render: (record) => {
                 let s = record.startDate;
                 let date = (new Date(s)).toLocaleDateString();
-                let sTime= ((new Date(s)).toLocaleTimeString()).split(':');
+                let sTime = ((new Date(s)).toLocaleTimeString()).split(':');
 
-                let sst= sTime[0]+':'+sTime[1];
-                
+                let sst = sTime[0] + ':' + sTime[1];
+
                 return (
                     <span>
-                        {date +" "+ sst}
+                        {date + " " + sst}
                     </span>
                 )
             },
             key: 'startDate',
         },
-        // {
-        //     title: <div><span>End Date </span>
-        //         {sortingName === "endDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-        //         {sortingName === "endDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-        //         {sortingName === "endDate" && sortingType === "" && ""}
-        //     </div>,
-        //     onHeaderCell: (column) => {
-        //         return {
-        //             onClick: () => {
-        //                 setSortingName("endDate");
-        //                 if (sortingType == "") { setSortingType("asc") }
-        //                 else if (sortingType == "asc") { setSortingType("desc") }
-        //                 else if (sortingType == "desc") { setSortingType("asc"); setSortingName("endDate"); }
-        //             }
-        //         };
-        //     },
-        //     render: (record) => {
-        //         let f = record.endDate;
-        //         let date = (new Date(f)).toLocaleDateString();
-                
-        //         return (
-        //             <span>
-        //                 {date}
-        //             </span>
-        //         )
-        //     },
-        //     key: 'endDate',
-        // },
+        {
+            title: <div><span>End Date </span>
+                {sortingName === "endDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "endDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "endDate" && sortingType === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("endDate");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("endDate"); }
+                    }
+                };
+            },
+            render: (record) => {
+                let f = record.endDate;
+                let date = (new Date(f)).toLocaleDateString();
+
+                return (
+                    <span>
+                        {date}
+                    </span>
+                )
+            },
+            key: 'endDate',
+        },
         {
             title: 'Duration',
             key: 'durationInMinutes',
@@ -166,9 +171,10 @@ function Schedule() {
             title: 'Price',
             key: 'price',
             render: (record) => {
+                let currency = record.currency ? record.currency : 'USD';
                 return (
                     <div>
-                        {record.price +' '+ record.currency }
+                        {record.price + ' ' + currency}
                     </div>
                 )
             }
@@ -188,9 +194,10 @@ function Schedule() {
             title: 'Language',
             key: 'language',
             render: (record) => {
+                let lang = record.language ? record.language : 'fr';
                 return (
                     <div>
-                        {record.language}
+                        {lang}
                     </div>
                 )
             }
@@ -207,6 +214,14 @@ function Schedule() {
         }
 
     ];
+
+    // Delete column if it's not advanced mode
+    if (!advanceSchedule) {
+        delete columns[2];
+        delete columns[5];
+        delete columns[6];
+        delete columns[7];
+    }
 
     const gradesToPrint = (profile) => {
         let i = 0;
@@ -311,7 +326,7 @@ function Schedule() {
                 }
                 setLoading(false);
             })
-        } 
+        }
     }
 
     const changeSearch = (e) => {

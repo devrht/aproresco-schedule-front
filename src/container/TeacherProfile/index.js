@@ -192,7 +192,7 @@ function TeacherProfile() {
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong>no tags</Text>)
+                            (<Text strong></Text>)
                                 :
                             (
                             <Tooltip title={(tags.join(', '))}>

@@ -105,7 +105,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
             {
                 type != 'schedule' ?
                 <>
-                    <Form.Item style={{ width: '130px' }}>
+                    <Form.Item style={{ width: '180px' }}>
                         <Input
                             type="text"
                             placeholder="Enter Name"
@@ -118,7 +118,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
                 </>
                     :
                     <>
-                        <Form.Item style={{ width: '130px' }}>
+                        <Form.Item style={{ width: '180px' }}>
                             <Input
                                 type="number"
                                 placeholder="Grade Min"
@@ -127,7 +127,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
                                 onChange={changeInput}
                             />
                         </Form.Item>
-                        <Form.Item style={{ width: '130px' }}>
+                        <Form.Item style={{ width: '180px' }}>
                             <Input
                                 type="number"
                                 placeholder="Grade Max"
@@ -138,7 +138,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
                         </Form.Item>
                     </>
             }
-            <Form.Item style={{ width: '150px' }}>
+            <Form.Item style={{ width: '200px' }}>
                 <Input
                     type='date'
                     placeholder="Min search date"
@@ -147,7 +147,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
                     onChange={(event) => handleChange(event, true)}
                 />
             </Form.Item> 
-            <Form.Item style={{ width: '120px' }}>
+            <Form.Item style={{ width: '170px' }}>
                 <Input
                     type='time'
                     placeholder="Time"
@@ -156,7 +156,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
                     onChange={(event) => handleChange(event, true)}
                 />
             </Form.Item>
-            <Form.Item style={{ width: '150px' }}>
+            <Form.Item style={{ width: '200px' }}>
                 <Input
                     type='date'
                     placeholder="Max search date"
@@ -165,7 +165,7 @@ const SearchFilter = ({ changeInput, searchList, type}) => {
                     onChange={(event) => handleChange(event, false)}
                 />
             </Form.Item>
-            <Form.Item style={{ width: '120px' }}>
+            <Form.Item style={{ width: '170px' }}>
                 <Input
                     type='time'
                     placeholder="Time"

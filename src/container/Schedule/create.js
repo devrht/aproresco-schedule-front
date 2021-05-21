@@ -44,8 +44,8 @@ function CreateSchedule() {
 
     useEffect(() => {
         getSubjects();
-        setCurrency(advanceSchedule ? "USD" : '');
-        setLanguage(advanceSchedule ? "fr" : '');
+        setCurrency("USD");
+        setLanguage("fr");
         setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
     }, []);
 
@@ -203,7 +203,7 @@ function CreateSchedule() {
                             <CreatableSelect
                                 isMulti
                                 onChange={handleSubjectChange}
-                                options={subjects.map(s => ({ value: s.subject, label: s.subject }) )}
+                                options={subjects.map(s => ({ value: s.subject, label: s.subject }))}
                             />
                         </Form.Item>
                         {/* {

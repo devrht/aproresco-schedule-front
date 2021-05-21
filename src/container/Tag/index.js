@@ -186,11 +186,8 @@ export default function TagsList() {
                 tagsToEnable.push(tag.id)
             }
         });
-        console.log("Tags to enable ===>", tagsToEnable);
-        console.log("Tags to disable ===>", tagsToDisable);
         if(tagsToEnable.length > 0){
             enableTags(tagsToEnable).then(res=>{
-                console.log("done")
             }).finally(() => {
                 history.push(`/tagList`)
                 setSelectedRow([])
@@ -198,7 +195,6 @@ export default function TagsList() {
         }
         if(tagsToDisable.length > 0){
             disableTags(tagsToDisable).then(res=>{
-                console.log("done")
                 history.push(`/tagList`)
             }).finally(() => {
                 history.push(`/tagList`)
