@@ -238,7 +238,7 @@ function CreateStudent() {
                                 display: 'flex',
                                 flexDirection: 'row'
                             }}>
-                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
                                     <Select mode="multiple"
                                         allowClear
                                         loading={loading}

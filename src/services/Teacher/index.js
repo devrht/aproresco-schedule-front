@@ -310,7 +310,7 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
     }).catch(err => console.log(err));
 }
 
-export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, parent) => {
+export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, parent, tags) => {
     let data = {
         firstName,
         lastName,
@@ -318,7 +318,8 @@ export const updateStudent = (id, firstName, lastName, email, schoolName, school
         schoolName,
         schoolBoard,
         grade,
-        parent: { email: parent }
+        parent: { email: parent },
+        tags: tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/student-profile/${id}`, data).then(res => {
         return res;
@@ -392,7 +393,7 @@ export const approveComment = (c) => {
 
 
 
-export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard) => {
+export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard, tags) => {
     let data = {
         firstName,
         lastName,
@@ -401,7 +402,8 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         externalEmail: email,
         grades: grades,
         phoneNumber: phone,
-        subjects: subjects
+        subjects: subjects,
+        tags:tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/update/${id}`, data).then(res => {
         return res;
@@ -420,11 +422,12 @@ export const createBooking = (studentProfile, schedule, studentComment, tags) =>
     }).catch(err => console.log(err));
 }
 
-export const updateBooking = (id, studentProfile, schedule, studentComment) => {
+export const updateBooking = (id, studentProfile, schedule, studentComment, tags) => {
     let data = {
         studentProfile,
         schedule,
-        studentComment
+        studentComment,
+        tags: tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/student-booking/${id}`, data).then(res => {
         return res;

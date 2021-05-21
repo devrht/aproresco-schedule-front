@@ -73,6 +73,7 @@ function CreateAvailibility() {
             return
         }
         setSubmitting(true);
+        
         let tgs=[]
         tags.map(res => tgs.push({"id": res}))
 
@@ -88,7 +89,7 @@ function CreateAvailibility() {
     const getStudents = (newInputValue = '') => {
         setLoadingS(true);
         if(newInputValue.length < 1) {
-            getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+            getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content);
@@ -96,7 +97,7 @@ function CreateAvailibility() {
                 }
             }).finally(() => setLoadingS(false))
         } else {
-            findTeacherProfileByFirstNameAndLastName(newInputValue, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+            findTeacherProfileByFirstNameAndLastName(newInputValue, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100,"", 'firstName', sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content);
@@ -115,7 +116,6 @@ function CreateAvailibility() {
                 }
             }
         }).finally(() => setLoadingS(false))
-       
     }
 
     const handleChangeTags = (value) =>{

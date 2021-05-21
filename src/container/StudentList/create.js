@@ -166,7 +166,7 @@ function CreateBooking() {
                 }
             }).finally(() => setLoadingS(false))
         } else {
-            findStudentProfileByFirstNameAndLastName(search, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
+            findStudentProfileByFirstNameAndLastName(search, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100,"", 'firstName', 'asc').then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content);

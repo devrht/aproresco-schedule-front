@@ -140,21 +140,17 @@ function CreateTeacher() {
         tags.map(res => tgs.push({"id": res}))
 
         let tnts=[]
-       /*  tenants.map(res => {
-            getTenantByName((res.split(' '))[0], 0, 30).then(tenant => {
-                tnts.push(tenant.content)
-            })
-        }) */
         tenants.map(res => {
            tnts.push({"id":res})
         })
 
         console.log("tenants ==>",tnts)
+        console.log("tags ==>",tgs)
 
         setSubmitting(true);
 
         createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs, tnts).then(data => {
-            
+            console.log("teacher registered ==>",data)
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
