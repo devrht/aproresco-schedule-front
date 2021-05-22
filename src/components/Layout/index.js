@@ -31,26 +31,34 @@ function LayoutOfApp({ children }, props) {
 
   useEffect(() => {
 
-    if (!logged) {
-      document.body.classList.remove("img-bg");
-      document.body.classList.remove("min-height-full");
-      document.body.style.backgroundImage = null;
-    }
-
-    document.getElementById('root').style.height = '100%';
-
-    if (localStorage.getItem('user')) {
-      let user = JSON.parse(localStorage.getItem('user'));
-      let tenant = localStorage.getItem('tenant' + user.id);
-      if (!tenant) {
-        history.push('/settings');
+    try {
+      if (!logged) {
+        document.body.classList.remove("img-bg");
+        document.body.classList.remove("min-height-full");
+        document.body.style.backgroundImage = null;
       }
-      if (!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
-        history.push('/settings');
+
+      document.getElementById('root').style.height = '100%';
+
+      if (localStorage.getItem('user')) {
+        let user = JSON.parse(localStorage.getItem('user'));
+        let tenant = localStorage.getItem('tenant' + user.id);
+        if (!tenant) {
+          history.push('/settings');
+        }
+        if (!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
+          history.push('/settings');
+        }
+      } else {
+        setLogged(false);
+        // history.push('/login');
       }
-    } else {
+    } catch (error) {
       setLogged(false);
-      // history.push('/login');
+      localStorage.removeItem("token");
+      localStorage.removeItem("expireAt");
+      localStorage.removeItem("user");
+      window.location.reload();
     }
 
     let today = new Date();
@@ -110,12 +118,7 @@ function LayoutOfApp({ children }, props) {
     localStorage.removeItem("token");
     localStorage.removeItem("expireAt");
     localStorage.removeItem("user");
-    //localStorage.removeItem("tenant" + JSON.parse(localStorage.getItem("id")));
 
-    localStorage.removeItem("id");
-    localStorage.removeItem("currentTag");
-    localStorage.removeItem("email"); 
-    
     window.location.reload();
   }
 

@@ -184,7 +184,7 @@ function TeacherList() {
             })
         }
         else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag"){
-            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
+            findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
                 console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {
@@ -214,7 +214,6 @@ function TeacherList() {
             })
         } else{
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
-                console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {
                         setTeacherList(data.content)
@@ -399,7 +398,7 @@ function TeacherList() {
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong>no tags</Text>)
+                            (<Text strong></Text>)
                                 :
                             (
                             <Tooltip title={(tags.join(', '))}>
@@ -556,7 +555,7 @@ function TeacherList() {
             })
         }
         else {
-            findStudentListByFirstNameAndLastName(studentSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
+            findStudentListByFirstNameAndLastName(studentSearch.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, null, sortingNameStudent, sortingTypeStudent).then(data => {
                 if (data) {
                     if (data) {
                         setStudentList(data)

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { Table, PageHeader,Button,Spin } from 'antd';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons"
-import {getTags,getTagByDate, enableTags, disableTags, getTagByName} from '../../services/Student'
 import SearchFilter from '../../components/Tag/SearchFilter'
+import {getTags,getTagByDate, enableTags, disableTags, getTagByName} from '../../services/Student'
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, EditOutlined } from "@ant-design/icons"
 
 export default function TagsList() {
 
@@ -68,6 +68,32 @@ export default function TagsList() {
             fixed: 'left',
         },
         {
+            title: <div><span>Url </span>
+                {sortingName === "url" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "url" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "url" && sortingType === "" && ""}
+            </div>,
+            onHeaderCell: (column) => {
+                return {
+                    onClick: () => {
+                        setSortingName("url");
+                        if (sortingType == "") { setSortingType("asc") }
+                        else if (sortingType == "asc") { setSortingType("desc") }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("url"); }
+                    }
+                };
+            },
+            render: (record) => {
+                return (
+                    <div>
+                        {record.url}
+                    </div>
+                )
+            },
+            key: 'url',
+            fixed: 'left',
+        },
+        {
             title: <div><span>Create Date </span></div>,
             render: (record) => {
                 let s = record.createDate;
@@ -99,6 +125,16 @@ export default function TagsList() {
                 
             },
             key: 'enabled',
+        },
+        {
+            title: <div><span>Action </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/tag/${record.id}/update`, { tag: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+                )
+            },
+            key: 'action',
         }
     ]
 
@@ -186,11 +222,8 @@ export default function TagsList() {
                 tagsToEnable.push(tag.id)
             }
         });
-        console.log("Tags to enable ===>", tagsToEnable);
-        console.log("Tags to disable ===>", tagsToDisable);
         if(tagsToEnable.length > 0){
             enableTags(tagsToEnable).then(res=>{
-                console.log("done")
             }).finally(() => {
                 history.push(`/tagList`)
                 setSelectedRow([])
@@ -198,7 +231,6 @@ export default function TagsList() {
         }
         if(tagsToDisable.length > 0){
             disableTags(tagsToDisable).then(res=>{
-                console.log("done")
                 history.push(`/tagList`)
             }).finally(() => {
                 history.push(`/tagList`)
@@ -241,7 +273,7 @@ export default function TagsList() {
 
     const changeTag = (__, newValue) => {
         if (newValue != null) {
-            localStorage.setItem(`currentTag`, newValue.name);
+            localStorage.setItem(`currentTag`, newValue.name ? newValue.name : null);
         }
     }
 

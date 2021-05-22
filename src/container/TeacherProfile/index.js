@@ -192,7 +192,7 @@ function TeacherProfile() {
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong>no tags</Text>)
+                            (<Text strong></Text>)
                                 :
                             (
                             <Tooltip title={(tags.join(', '))}>
@@ -269,8 +269,7 @@ function TeacherProfile() {
             })
         }
         else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag") {
-            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize,"", sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
+            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setTeacherList(data.content)
@@ -299,7 +298,6 @@ function TeacherProfile() {
             })
         } else {
             findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
                         setTeacherList(data.content)

@@ -9,7 +9,7 @@ const headers = {
 }
 
 export const getTeacherList = (page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`, {
         headers: {
             // AccessControlAllowOrigin: "*",
             AccessControlAllowHeaders: "Content-Type",
@@ -127,7 +127,7 @@ export const deleteTenant = (value) => {
 }
 
 export const getTenants = (start, end,page,size,sortName,sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
     .then(res => {
         return res.data;
     })
@@ -180,7 +180,7 @@ export const getTeacherListByDate = (start, end, page, size, sortName = 'firstNa
         }
 
     }
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType}`, {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`, {
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type",
@@ -229,7 +229,7 @@ export const getTeacherProfile = (email = null) => {
 }
 
 export const findTeacherListByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType}`, {
+    return axios.get(`${routes.SERVER_ADDRESS}/search/teacher-availabilities?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`, {
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type",
@@ -310,7 +310,7 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
     }).catch(err => console.log(err));
 }
 
-export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, parent) => {
+export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, parent, tags) => {
     let data = {
         firstName,
         lastName,
@@ -318,7 +318,8 @@ export const updateStudent = (id, firstName, lastName, email, schoolName, school
         schoolName,
         schoolBoard,
         grade,
-        parent: { email: parent }
+        parent: { email: parent },
+        tags: tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/student-profile/${id}`, data).then(res => {
         return res;
@@ -392,7 +393,7 @@ export const approveComment = (c) => {
 
 
 
-export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard) => {
+export const updateTeacher = (id, firstName, lastName, email, grades, subjects, phone, schoolName, schoolBoard, tags) => {
     let data = {
         firstName,
         lastName,
@@ -401,7 +402,8 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         externalEmail: email,
         grades: grades,
         phoneNumber: phone,
-        subjects: subjects
+        subjects: subjects,
+        tags:tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-profile/update/${id}`, data).then(res => {
         return res;
@@ -420,11 +422,12 @@ export const createBooking = (studentProfile, schedule, studentComment, tags) =>
     }).catch(err => console.log(err));
 }
 
-export const updateBooking = (id, studentProfile, schedule, studentComment) => {
+export const updateBooking = (id, studentProfile, schedule, studentComment, tags) => {
     let data = {
         studentProfile,
         schedule,
-        studentComment
+        studentComment,
+        tags: tags
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/student-booking/${id}`, data).then(res => {
         return res;
