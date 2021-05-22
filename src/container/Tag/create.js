@@ -1,8 +1,8 @@
 import React, { useState, useReducer } from 'react'
 
-import { PageHeader, Form, Input, Button,Radio } from 'antd'
+import { PageHeader, Form, Input, Button, Radio } from 'antd'
 import { useHistory } from 'react-router-dom'
-import {addTag} from '../../services/Student'
+import { addTag } from '../../services/Student'
 import 'antd/dist/antd.css';
 
 const formReducer = (state, event) => {
@@ -15,7 +15,7 @@ const formReducer = (state, event) => {
 const CreateTag = () => {
 
     const history = useHistory();
-    
+
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
@@ -33,18 +33,18 @@ const CreateTag = () => {
                 alert("Please, fill the form 1!");
                 return
             }
-        }else {
+        } else {
             alert("Please, fill the form 2!");
             return
         }
         setSubmitting(true)
 
         let data = {
-            name:formData.name
+            name: formData.name,
+            url: formData.url
         }
-        console.log("Tag to register ===>", data)
+        
         addTag(data).then(result => {
-            console.log("Tag registered ===>", result);
             history.push(`/tagList`)
         }).finally(() => setSubmitting(false));
 
@@ -77,18 +77,25 @@ const CreateTag = () => {
                         <Form.Item label="Name" required style={{ flex: 1, marginRight: '40px' }}>
                             <Input type="text" name="name" onChange={handleChange} />
                         </Form.Item>
-                        
-                        <Form.Item style={{ flex: 1, marginRight: '40px', marginTop: '20px' }}>
-                            <Button disabled={submitting} type="primary" size="large" htmlType="submit">
-                                {
-                                    submitting ? 'Loading...' : 'Create a Tag'
-                                }
-                            </Button>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Url" style={{ flex: 1, marginRight: '40px' }}>
+                            <Input type="url" name="url" onChange={handleChange} />
                         </Form.Item>
                     </div>
+                    <Form.Item style={{ flex: 1, marginRight: '40px', marginTop: '20px' }}>
+                        <Button disabled={submitting} type="primary" size="large" htmlType="submit">
+                            {
+                                submitting ? 'Loading...' : 'Create a Tag'
+                            }
+                        </Button>
+                    </Form.Item>
                 </Form>
             </PageHeader>
-        </div>
+        </div >
     )
 }
 export default CreateTag;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { PageHeader, Form, Input, Button,Radio } from 'antd'
+import { PageHeader, Form, Input, Button, Radio } from 'antd'
 import { useHistory, useLocation } from 'react-router-dom'
 import 'antd/dist/antd.css';
-import {updateTag} from '../../services/Student'
+import { updateTag } from '../../services/Student'
 
 
 const UpdateTag = () => {
@@ -10,8 +10,9 @@ const UpdateTag = () => {
     const history = useHistory();
     const location = useLocation();
 
-    const [tag, setTag] = useState(location.state.schedule);
+    const [tag, setTag] = useState(location.state.tag);
     const [name, setName] = useState("");
+    const [url, setUrl] = useState("");
     const [enabled, setEnabled] = useState("");
 
     const [form] = Form.useForm();
@@ -20,12 +21,12 @@ const UpdateTag = () => {
     useEffect(() => {
         setName(tag.name);
         setEnabled(tag.enabled);
-
+        setUrl(tag.url);
         return () => {
             setName("");
             setEnabled("");
         };
-    }, [name, enabled])
+    }, [tag])
 
     const handleSubmit = () => {
         if (name && enabled) {
@@ -33,15 +34,17 @@ const UpdateTag = () => {
                 alert("Please, fill the form 1!");
                 return
             }
-        }else {
+        } else {
             alert("Please, fill the form 2!");
             return
         }
         setSubmitting(true)
 
         let data = {
-            name:name,
-            enabled:enabled,
+            name: name,
+            enabled: enabled,
+            url: url,
+            id: tag.id
         }
         updateTag(tag.id, data).then(result => {
             history.push(`/tagList`)
@@ -49,7 +52,7 @@ const UpdateTag = () => {
 
     }
 
-    return(
+    return (
         <div>
             <PageHeader
                 ghost={false}
@@ -74,13 +77,26 @@ const UpdateTag = () => {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Name" required style={{ flex: 1, marginRight: '40px' }}>
-                            <Input type="text" name="name" value={name} onChange={e=> setName(e.target.value) } />
+                            <Input type="text" name="name" value={name} onChange={e => setName(e.target.value)} />
                         </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
                         <Form.Item label="Enabled" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Radio.Group onChange={e=> setEnabled(e.target.value)} name="enabled" defaultValue={enabled} >
+                            <Radio.Group onChange={e => setEnabled(e.target.value)} name="enabled" defaultValue={enabled} >
                                 <Radio value={"true"}>True</Radio>
                                 <Radio value={"false"}>False</Radio>
                             </Radio.Group>
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
+                        <Form.Item label="Url" style={{ flex: 1, marginRight: '40px' }}>
+                            <Input type="url" value={url} name="url" onChange={e => { setUrl(e.target.value); }} />
                         </Form.Item>
                     </div>
                     <Form.Item>

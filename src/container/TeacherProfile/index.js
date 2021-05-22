@@ -298,7 +298,6 @@ function TeacherProfile() {
             })
         } else {
             findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
                 if (data) {
                     if (data.content) {
                         setTeacherList(data.content)
