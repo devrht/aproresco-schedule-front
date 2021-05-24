@@ -17,15 +17,15 @@ function SearchFilter ({ changeInput, searchList, tagList, tag, changeTagInput, 
                     onChange={changeInput}
                 />
             </Form.Item>
-            <Form.Item>
+            {/* <Form.Item>
                 <Input
                     type='date'
                     placeholder="Create date"
                     name="createDate"
                     onChange={changeInput}
                 />
-            </Form.Item>
-            <Form.Item style={{ width: '200px'}}>
+            </Form.Item> */}
+            {/* <Form.Item style={{ width: '200px'}}>
                 <Autocomplete
                     id="asynchronous-search"
                     name="tag"
@@ -56,7 +56,7 @@ function SearchFilter ({ changeInput, searchList, tagList, tag, changeTagInput, 
                         />
                     }
                     />
-            </Form.Item>
+            </Form.Item> */}
 
             <Button onClick={searchList} type="primary">
                 <SearchOutlined />

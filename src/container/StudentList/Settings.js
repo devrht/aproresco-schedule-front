@@ -3,7 +3,7 @@ import { PageHeader, Button, Select, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
-import { bridgeManagement, persistManagement, bridgeStatus } from '../../services/Student'
+import { bridgeManagement, getTags, bridgeStatus } from '../../services/Student'
 import { getTeacherProfile, newTenant } from '../../services/Teacher'
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
@@ -31,6 +31,7 @@ function Settings(props) {
   const [persist, setPersist] = useState(false);
   const [teacher, setTeacher] = useState(null);
   const [subjectsList, setSubjectsList] = useState([]);
+  const [tags, setTags] = useState([{name: null, id: null}]);
   const [isCreation, setIsCreation] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
@@ -44,6 +45,7 @@ function Settings(props) {
   const [board, setBoard] = useState('');
   const [email, setEmail] = useState('');
   const [tenant, setTenant] = useState(null);
+  const [tag, setTag] = useState('no tag');
   const [advanceSchedule, setAdvanceSchedule] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [country, setCountry] = useState('ca');
@@ -73,12 +75,14 @@ function Settings(props) {
 
   useEffect(() => {
     setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
+    setTag(JSON.parse(localStorage.getItem('currentTag')) ? JSON.parse(localStorage.getItem('currentTag')) : 'no tag');
     setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
     }).finally(() => getTeacher());
     getTenantsList();
+    getTagList();
   }, []);
 
   const getTeacher = () => {
@@ -115,6 +119,14 @@ function Settings(props) {
       setSubjectsList(data.content)
     });
   }
+
+  const changeTag = (name) => {
+    if (name != 'no tag') {
+        localStorage.setItem(`currentTag`, tags.find(t => t.name == name).name);
+    } else {
+      localStorage.setItem(`currentTag`, null);
+    }
+}
 
   const handleChange = event => {
     setFormData({
@@ -153,6 +165,16 @@ function Settings(props) {
       console.log(err)
     });
 
+  }
+
+  const getTagList = () => {
+    getTags(0, 100000, "name", "desc").then(data => {
+      if (data) {
+        if (data.content) {
+          setTags([...data.content]);
+        }
+      }
+    })
   }
 
   const handleSubmitUpdate = () => {
@@ -405,6 +427,17 @@ function Settings(props) {
               <Select value={advanceSchedule} style={{ width: '100%' }} onChange={(e) => { changeAdvanceSchedule(e) }}>
                 <Option value={false}>False</Option>
                 <Option value={true}>True</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Current Tag" required style={{ flex: 1, marginRight: '10px' }}>
+              <Select value={tag} style={{ width: '100%' }} onChange={(e) => { changeTag(e) }}>
+                <Option value={'no tag'}>No tag</Option>
+                {tags ? tags.map(tag => {
+                  return (
+                    <Option value={tag.name}>{tag.name}</Option>
+                  )
+                }) : null
+                }
               </Select>
             </Form.Item>
           </div>

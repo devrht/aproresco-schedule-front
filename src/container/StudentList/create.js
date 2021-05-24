@@ -95,7 +95,6 @@ function CreateBooking() {
     useEffect(() => {
         getStudents();
         getListView();
-        getEnabledTags();
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const handleChange = event => {
@@ -143,11 +142,8 @@ function CreateBooking() {
         if (comment == null || schedule == null)
             alert('Fill the form');
         setSubmitting(true);
-        let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
 
-        createBooking(children, schedule, comment, tgs).then(data => {
-            console.log("BOOKING CREATED ==> ", data)
+        createBooking(children, schedule, comment).then(data => {
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")

@@ -55,7 +55,6 @@ function CreateAvailibility() {
             setSchedules(data.content);
             setDates([...new Map(data.content.filter(s => teacher.teacherProfile.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
         });
-        getEnabledTags();
     }, []);
 
     const changeChildren = (id) => {
@@ -86,12 +85,7 @@ function CreateAvailibility() {
 
         setSubmitting(true);
 
-        let tgs=[]
-        tags.map(res => {
-           tgs.push({"id": res}) 
-        })   
-
-        updateAvailibility(teacher.id, children, s, tgs).then(data => {
+        updateAvailibility(teacher.id, children, s).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -182,27 +176,6 @@ function CreateAvailibility() {
                                 />
                             }
                         />
-                    </Form.Item>
-                    
-                    <Form.Item label="Tags" required style={{ flex: 1}} onClick={() => setOpen1(open1 ? false : true)}>
-                        <Select mode="multiple"
-                            allowClear
-                            defaultValue={defaulttags}
-                            open={open1}
-                            onFocus={() => setOpen1(true)}
-                            onBlur={() => setOpen1(false)}
-                            style={{ width: '100%' }}
-                            onSelect={() => setOpen1(false)}
-                            placeholder="Please select tags"
-                            onChange={handleChangeTags}>
-                            {
-                                tagsList.map(tag => {
-                                    return (
-                                        <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                    )
-                                })
-                            }
-                        </Select>
                     </Form.Item>
                     
                     <div style={{
