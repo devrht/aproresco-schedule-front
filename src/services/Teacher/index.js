@@ -515,3 +515,9 @@ export const sendMessageAvailability = (message_id) => {
         return res;
     }).catch(err => console.log(err));
 }
+
+export const updateAvailabilityAssistants = (availability_id, assistants) => {
+    return axios.put(`${routes.SERVER_ADDRESS}/teacher-availability/${availability_id}/assistants`, assistants).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
