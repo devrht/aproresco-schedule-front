@@ -692,7 +692,6 @@ function TeacherList() {
             let ids = selectedrow.reduce((a, b) => {
                 return a + ',' + b.id;
             }, '')
-            console.log(ids.substring(1));
             deleteTeacherAvailabilities(ids.substring(1)).then(data => {
                 console.log(data);
                 setSelectedRow([]);
@@ -705,7 +704,6 @@ function TeacherList() {
 
     const sendMessage = (messId) => {
         sendMessageAvailability(messId).then(res => {
-            console.log(res);
             setSelectedRow(0);
         })
     }

@@ -410,24 +410,22 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
     }).catch(err => console.log(err));
 }
 
-export const createBooking = (studentProfile, schedule, studentComment, tags) => {
+export const createBooking = (studentProfile, schedule, studentComment) => {
     let data = {
         studentProfile,
         schedule,
-        studentComment,
-        tags
+        studentComment
     }
     return axios.post(`${routes.SERVER_ADDRESS}/student-booking`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
 
-export const updateBooking = (id, studentProfile, schedule, studentComment, tags) => {
+export const updateBooking = (id, studentProfile, schedule, studentComment) => {
     let data = {
         studentProfile,
         schedule,
-        studentComment,
-        tags: tags
+        studentComment
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/student-booking/${id}`, data).then(res => {
         return res;
@@ -435,23 +433,20 @@ export const updateBooking = (id, studentProfile, schedule, studentComment, tags
 }
 
 
-export const createAvailibility = (teacherProfile, schedule, tags) => {
+export const createAvailibility = (teacherProfile, schedule) => {
      let data = {
         teacherProfile: teacherProfile,
-        schedule: schedule,
-        tags: tags
+        schedule: schedule
     } 
-    console.log("availability data to save ===>", data);
     return axios.post(`${routes.SERVER_ADDRESS}/teacher-availability`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
 
-export const updateAvailibility = (id, teacherProfile, schedule, tags) => {
+export const updateAvailibility = (id, teacherProfile, schedule) => {
     let data = {
         teacherProfile,
-        schedule,
-        tags
+        schedule
     }
     return axios.patch(`${routes.SERVER_ADDRESS}/teacher-availability/${id}`, data).then(res => {
         return res;
@@ -512,6 +507,12 @@ export const sendTeachersMessage = (message_id) => {
 
 export const sendMessageAvailability = (message_id) => {
     return axios.post(`${routes.SERVER_ADDRESS}/message/${message_id}/availabilities`).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const updateAvailabilityAssistants = (availability_id, assistants) => {
+    return axios.put(`${routes.SERVER_ADDRESS}/teacher-availability/${availability_id}/assistants`, assistants).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

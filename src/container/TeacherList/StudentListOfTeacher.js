@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import 'antd/dist/antd.css';
-import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
-import { getStudentListById } from '../../services/Student'
-import { useSelector, useDispatch } from 'react-redux'
-import { assignStudents, enableAssigning } from '../../Action-Reducer/Student/action'
-import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher } from '../../services/Student'
-import { markTeacherAsPresent, markAsSupervisor, markAsAdmin, markAsApproved } from '../../services/Teacher'
-import { Form, Row, Col, Card, Input } from 'antd'
-import { useLocation } from "react-router-dom";
 import Moment from 'react-moment';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCrown, faShieldAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import { useHistory } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
+import { Form, Row, Col, Card, Input } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getStudentListById } from '../../services/Student';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { assignStudents } from '../../Action-Reducer/Student/action';
+import SearchFilter from '../../components/StudentList/SearchFilter';
+import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
+import { faCrown, faShieldAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { markTeacherAsPresent, markAsSupervisor, markAsAdmin, markAsApproved, updateAvailabilityAssistants } from '../../services/Teacher';
+import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher, findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate } from '../../services/Student';
+
+const { Text } = Typography;
 
 function StudentListOfTeacher(props) {
 
@@ -23,6 +27,34 @@ function StudentListOfTeacher(props) {
     const [studentList, setStudentList] = useState();
     const [confUrl, setConfUrl] = useState();
     const [editable, setEditable] = useState(false);
+    const [isAddingAssistants, setIsAddingAssistants] = useState(false);
+    const [assistants, setAssistants] = useState([]);
+    const [students, setStudents] = useState();
+    const [studentsTmp, setStudentsTmp] = useState([]);
+    const history = useHistory();
+    const [active, setActive] = useState(true);
+    const [present, setPresent] = useState(true);
+    const [startDate, setStartDate] = useState('');
+    const [effectiveStartDate, setEffectiveStartDate] = useState('');
+    const [selectedRow, setSelectedRow] = useState([]);
+    const [selectedRowProfile, setSelectedRowProfile] = useState([]);
+    const assignStudentList = useSelector((state) => {
+        return state.Student.assignStudent;
+    })
+    const [teacherList, setTeacherList] = useState();
+    const [sortingName, setSortingName] = useState("createDate");
+    const [sortingType, setSortingType] = useState("desc");
+    const [loading, setLoading] = useState(false);
+    const [tableProps, setTableProps] = useState({
+        totalCount: 0,
+        pageIndex: 0,
+        pageSize: 30,
+    });
+    const [search, setSearch] = useState({
+        name: "",
+        firstName: "",
+        lastName: "",
+    })
 
 
     const getRole = (role) => {
@@ -39,6 +71,142 @@ function StudentListOfTeacher(props) {
         return result;
     }
 
+    const computeLastName = (name) => {
+        let lastName = '';
+        for (let index = 1; index < name.length; index++) {
+            lastName = lastName.trim() + ' ' + name[index].trim();
+        }
+        return lastName
+    }
+
+    const updateAssistants = (datas, adding) => {
+        let newAssistants = assistants;
+        if (adding) {
+            newAssistants = [...newAssistants, ...datas];
+        } else {
+            newAssistants = newAssistants.filter(a => !datas.includes(a));
+        }
+        console.log(newAssistants);
+        updateAvailabilityAssistants(teacher.id, newAssistants.map(a => (a.id))).then(data => {
+            setAssistants([...newAssistants]);
+            setIsAddingAssistants(false);
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const changeSearch = (e) => {
+        const { name, value } = e.target;
+        setSearch({ ...search, [name]: value });
+        if (e.target.name === "name") {
+            var nameData = value.split(" ");
+            if (nameData.length > 1) {
+                setSearch({ ...search, firstName: nameData[0].trim(), lastName: computeLastName(nameData) });
+            }
+            else {
+                setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
+            }
+        }
+        searchList();
+    };
+
+    const searchList = () => {
+        getListProfiles();
+    }
+
+    const getListProfiles = () => {
+        if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "no tag" || !localStorage.getItem('currentTag'))) {
+            getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                if (data) {
+                    if (data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalCount,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                setLoading(false);
+            })
+        }
+        else if ((search.firstName !== "" || search.lastName !== "") && (localStorage.getItem('currentTag') === "no tag" || !localStorage.getItem('currentTag'))) {
+            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
+                if (data) {
+                    if (data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalCount,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                setLoading(false);
+            })
+        } else {
+            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
+                if (data) {
+                    if (data.content) {
+                        setTeacherList(data.content)
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: data.totalCount,
+                            pageSize: 30,
+                        });
+                    } else {
+                        setTeacherList([])
+                        setTableProps({
+                            ...tableProps,
+                            totalCount: 0,
+                            pageSize: 30,
+                        });
+                    }
+                } else {
+                    setTeacherList([])
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: 0,
+                        pageSize: 30,
+                    });
+                }
+                setLoading(false);
+            })
+        }
+    }
+
+    const removeAssistant = (data) => {
+        updateAssistants([data], false);
+    }
+
     const getApproved = () => {
         let result = false;
         if (teacher.tenants)
@@ -52,24 +220,14 @@ function StudentListOfTeacher(props) {
         return result;
     }
 
+
     const [supervisor, setSupervisor] = useState(getRole('supervisor'));
     const [admin, setAdmin] = useState(getRole('admin'));
     const [approved, setApproved] = useState(getApproved());
-    const [students, setStudents] = useState();
-    const [studentsTmp, setStudentsTmp] = useState([]);
-    const history = useHistory();
-    const [active, setActive] = useState(true);
-    const [present, setPresent] = useState(true);
-    const [startDate, setStartDate] = useState('');
-    const [effectiveStartDate, setEffectiveStartDate] = useState('');
-    const [selectedRow, setSelectedRow] = useState([]);
-    const assignStudentList = useSelector((state) => {
-        return state.Student.assignStudent;
-    })
-
     const assigningStatus = useSelector((state) => {
         return state.Student.enableAssigning;
     })
+
     const rowSelection = {
         selectedRow,
         onChange: (selectedrow, records) => {
@@ -84,17 +242,29 @@ function StudentListOfTeacher(props) {
     };
 
     useEffect(() => {
-        console.log(teacher)
+        setAssistants(teacher.assistants ? teacher.assistants : []);
         let sd = teacher.createDate;
         let date = (new Date(sd)).toLocaleDateString();
-        
+
         setStartDate(date);
 
         setPresent(teacher.effectiveStartDate ? false : true);
         //setEffectiveStartDate(teacher.effectiveStartDate);
         setEffectiveStartDate(date);
         getListView();
+        getListProfiles();
     }, []);
+
+    const rowSelectionProfile = {
+        selectedRowProfile,
+        onChange: (__, records) => {
+            var recordIdArray = [];
+            records.map(record => {
+                recordIdArray.push(record)
+            })
+            setSelectedRowProfile(recordIdArray);
+        }
+    };
 
 
     const columns = [
@@ -129,28 +299,166 @@ function StudentListOfTeacher(props) {
             key: 'name',
             fixed: 'left',
         },
-        // {
-        //     title: 'Start Date',
-        //     dataIndex: 'startDate',
-        //     key: 'startDate',
-        //     fixed: 'left',
-        // },
-        // {
-        //     title: 'Subject',
-        //     dataIndex: 'subject',
-        //     key: 'subjects',
-        // },
         {
             title: 'Grade',
             dataIndex: 'grade',
             key: 'grade',
+        }
+    ];
+
+    const assistantColumns = [
+        {
+            title: <div><span>Name </span>
+            </div>,
+            render: (record) =>
+                <div
+                    style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+                >
+                    <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
+                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
+                    </Tooltip>
+                    <Tooltip title={(record.firstName + " " + record.lastName)}>
+                        <Button
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                record.teacherProfile = record;
+                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
+                                // history.push(`/studentlist/studentDetail/${record.id}`)
+                            }}>
+                            <p style={{ width: "50%", textAlign: "left" }}>
+                                {(record.firstName + " " + record.lastName).length <= 20 ?
+                                    record.firstName + " " + record.lastName :
+                                    (record.firstName + " " + record.lastName).substring(0, 19) + '...'}
+                            </p>
+                        </Button>
+                    </Tooltip>
+                </div>,
+            key: 'name',
+            fixed: 'left',
         },
-        // {
-        //     title: 'Action',
-        //     key: 'operation',
-        //     fixed: 'right',
-        //     render: () => <Button>Edit</Button>,
-        // },
+        {
+            title: <div><span>Create Date </span>
+            </div>,
+            render: (record) => (
+                <div>
+                    {
+                        <Moment local format="D MMM YYYY HH:MM" withTitle>
+                            {record.createDate}
+                        </Moment>
+                    }
+                </div>
+            ),
+            key: 'createDate',
+        },
+        {
+            title: <div><span>Email </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div>
+                        {record.internalEmail ? record.internalEmail : record.externalEmail}
+                    </div>
+                )
+            },
+            key: 'internalEmail',
+        }
+        ,
+        {
+            title: <div><span>Phone </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <span>{record.phoneNumber}</span>
+                )
+            },
+            key: 'phoneNumber',
+        },
+        {
+            title: <div><span>Action </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div id="edit" onClick={() => { removeAssistant(record) }}><DeleteOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#ff1918' }} /></div>
+                )
+            },
+            key: 'action',
+        }
+
+    ];
+
+    const profileColumns = [
+        {
+            title: <div><span>Name </span>
+            </div>,
+            render: (record) =>
+                <div
+                    style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+                >
+                    <Tooltip title={record.lastSeenRoom != null ? record.lastSeenRoom : "No last seen room"}>
+                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.onlineStatus == 0 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.onlineStatus == 1 ? "block" : "none" }} />
+                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.onlineStatus == 2 ? "block" : "none" }} />
+                    </Tooltip>
+                    <Tooltip title={(record.firstName + " " + record.lastName)}>
+                        <Button
+                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer', width: "60%" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                record.teacherProfile = record;
+                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
+                            }}>
+                            <p style={{ width: "50%", textAlign: "left" }}>
+                                {(record.firstName + " " + record.lastName).length <= 20 ?
+                                    record.firstName + " " + record.lastName :
+                                    (record.firstName + " " + record.lastName).substring(0, 19) + '...'}
+                            </p>
+                        </Button>
+                    </Tooltip>
+                </div>,
+            key: 'name',
+            fixed: 'left',
+        },
+        {
+            title: <div><span>Create Date </span>
+            </div>,
+            render: (record) => (
+                <div>
+                    {
+                        <Moment local format="D MMM YYYY HH:MM" withTitle>
+                            {record.createDate}
+                        </Moment>
+                    }
+                </div>
+            ),
+            key: 'createDate',
+        },
+        {
+            title: <div><span>Email </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <div>
+                        {record.internalEmail ? record.internalEmail : record.externalEmail}
+                    </div>
+                )
+            },
+            key: 'internalEmail',
+        }
+        ,
+        {
+            title: <div><span>Phone </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <span>{record.phoneNumber}</span>
+                )
+            },
+            key: 'phoneNumber',
+        }
+
     ];
 
     const getListView = () => {
@@ -205,7 +513,6 @@ function StudentListOfTeacher(props) {
     };
 
     const setConferenceUrl = (url) => {
-        console.log(teacher)
         setConfUrl(url.target.value);
         if (url.target.value.length > 0)
             assignMeetingToAnotherTeacher(teacher.id, url.target.value);
@@ -221,11 +528,11 @@ function StudentListOfTeacher(props) {
             } else {
                 let esd = teacher.effectiveStartDate;
                 let date1 = (new Date(esd)).toLocaleDateString();
-                let sTime1= ((new Date(esd)).toLocaleTimeString()).split(':');
+                let sTime1 = ((new Date(esd)).toLocaleTimeString()).split(':');
 
                 //teacher.effectiveStartDate = new Date();
                 setTeacher(teacher);
-                setEffectiveStartDate(date1+' '+sTime1);
+                setEffectiveStartDate(date1 + ' ' + sTime1);
             }
             setPresent(teacher.effectiveStartDate ? false : true);
             //history.push('/teacherlist');
@@ -274,7 +581,7 @@ function StudentListOfTeacher(props) {
                     <div style={{ display: 'flex' }}>
                         <Button key='1' type="primary"
                             style={{ display: 'flex' }}
-                            onClick={(e) => { e.stopPropagation(); teacher.schedule ? history.push(`/teacherlist/${teacher.id}/update`, { teacher: teacher }) : history.push(`/teacherprofiles/${teacher.id}/update`, { teacher: {...teacher, ...teacher.teacherProfile} }) }}
+                            onClick={(e) => { e.stopPropagation(); teacher.schedule ? history.push(`/teacherlist/${teacher.id}/update`, { teacher: teacher }) : history.push(`/teacherprofiles/${teacher.id}/update`, { teacher: { ...teacher, ...teacher.teacherProfile } }) }}
                         >
                             Edit
                         </Button>
@@ -368,7 +675,7 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>
-                                     {effectiveStartDate}
+                                    {effectiveStartDate}
                                 </h4>
                             </Col>
                         </Row>
@@ -422,6 +729,56 @@ function StudentListOfTeacher(props) {
                         />
                     </>
                 }
+
+                {!isAddingAssistants && (
+                    <div style={{ marginTop: 40 }}>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between'
+                        }}>
+                            <h2>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}'s assistants </h2>
+                            <Button key='3' size="medium" type="primary" onClick={() => setIsAddingAssistants(true)}>
+                                < PlusOutlined />
+                            </Button>
+                        </div>
+                        <Table
+                            columns={assistantColumns}
+                            dataSource={assistants}
+                        />
+                    </div>
+                )}
+
+                {isAddingAssistants && (
+                    <div style={{ marginTop: 40 }}>
+                        <h2>Select new assistants </h2>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginBottom: 20
+                        }}>
+                            <SearchFilter
+                                changeInput={changeSearch}
+                                searchList={searchList}
+                            />
+                            <div>
+                                <Button key='3' size="medium" type="primary" onClick={() => updateAssistants(selectedRowProfile, true)}>
+                                    Add selected
+                                </Button>
+                                <Button key='3' size="medium" type="warning" style={{ marginLeft: 10 }} onClick={() => setIsAddingAssistants(false)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                        <Table
+                            columns={profileColumns}
+                            dataSource={teacherList}
+                            rowSelection={rowSelectionProfile}
+                            rowKey="id"
+                        />
+                    </div>
+                )}
             </PageHeader>
         </div>
     )

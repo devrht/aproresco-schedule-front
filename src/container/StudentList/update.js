@@ -82,10 +82,9 @@ function UpdateBooking() {
                 data.content.push(obj[key]);
             setSubjects(data.content)
         });
-        if(data.tags){
-            data.tags.map(tag=> defaulttags.push(tag.name))
+        if (data.tags) {
+            data.tags.map(tag => defaulttags.push(tag.name))
         }
-        getEnabledTags();
     }, []);
 
     const handleChange = event => {
@@ -136,7 +135,7 @@ function UpdateBooking() {
         }).finally(() => setLoading(false))
     }
 
-    const handleChangeTags = (value) =>{
+    const handleChangeTags = (value) => {
         setTags(value);
     }
 
@@ -148,11 +147,7 @@ function UpdateBooking() {
         }
         setSubmitting(true);
 
-        let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
-
-        updateBooking(data.id, children, s, comment, tgs).then(data => {
-            console.log("booking updated ===>", data)
+        updateBooking(data.id, children, s, comment).then(data => {
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -374,32 +369,6 @@ function UpdateBooking() {
                             />
                         </Form.Item>
                     </div>
-                    <div style={{
-                                display: 'flex',
-                                flexDirection: 'row'
-                            }}>
-                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
-                                    <Select mode="multiple"
-                                        allowClear
-                                        defaultValue={defaulttags}
-                                        loading={loading}
-                                        open={open1}
-                                        onFocus={() => setOpen1(true)}
-                                        onBlur={() => setOpen1(false)}
-                                        style={{ width: '100%' }}
-                                        onSelect={() => setOpen1(false)}
-                                        placeholder="Please select tags"
-                                        onChange={handleChangeTags}>
-                                        {
-                                            tagsList.map(tag => {
-                                                return (
-                                                    <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </Form.Item>
-                            </div>
                     <Form.Item>
                         <Button onClick={() => handleSubmit} disabled={submitting} type="primary" size="large" htmlType="submit">
                             {

@@ -287,7 +287,7 @@ function StudentList() {
                                         if (record.teacherAvailability.teacherProfile)
                                             history.push(`/studentlist/teacher/${record.teacherAvailability.id}`, { teacher: record.teacherAvailability })
                                 }} style={{ cursor: 'pointer', color: isSubjectContains ? 'black' : 'orange' }}>
-                                    {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher found" : "No teacher found"}
+                                    {record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.firstName + " " + record.teacherAvailability.teacherProfile.lastName + " (" + record.teacherAvailability.studentCount + ")" : "No teacher" : "No teacher"}
                                 </p>
                             </Tooltip>
                         </span> : null

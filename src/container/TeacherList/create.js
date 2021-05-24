@@ -41,7 +41,6 @@ function CreateAvailibility() {
 
     useEffect(() => {
         getStudents();
-        getEnabledTags();
     }, []);
     
     const changeChildren = (id) => {
@@ -73,11 +72,8 @@ function CreateAvailibility() {
             return
         }
         setSubmitting(true);
-        
-        let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
 
-        createAvailibility(children, s, tgs).then(data => {
+        createAvailibility(children, s).then(data => {
             history.push(`/teacherlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -182,32 +178,6 @@ function CreateAvailibility() {
                             }
                         />
                     </Form.Item>
-                    {
-                            !tagsList ? 
-                            (<></>)
-                            :
-                            (
-                            <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
-                                <Select mode="multiple"
-                                    allowClear
-                                    loading={loadingS}
-                                    open={open1}
-                                    onFocus={() => setOpen1(true)}
-                                    onBlur={() => setOpen1(false)}
-                                    style={{ width: '100%' }}
-                                    onSelect={() => setOpen1(false)}
-                                    placeholder="Please select tags"
-                                    onChange={handleChangeTags}>
-                                    {
-                                        tagsList.map(tag => {
-                                            return (
-                                                <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </Form.Item>)
-                        }
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
