@@ -5,7 +5,7 @@ import { PageHeader, Form, Input, Button, Select } from 'antd';
 import 'react-phone-input-2/lib/bootstrap.css'
 import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
-import { createSchedule, createTeacher, getTenants, getTenantByName} from '../../services/Teacher';
+import { createSchedule, createTeacher, getTenants, getTenantByName } from '../../services/Teacher';
 import React, { useEffect, useState, useReducer } from 'react'
 import { getCountry, getSchedule, getTags } from '../../services/Student';
 
@@ -50,17 +50,17 @@ function CreateTeacher() {
     const getTenantsList = () => {
         setLoading(true)
         //setSortingName("displayName")
-        getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'),listProps.index, listProps.size, "displayName", sortingType).then(data => {
-            if(data){
-                if(data.content){
-                    console.log("List of tenants ===>",data.content)
+        getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), listProps.index, listProps.size, "displayName", sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    console.log("List of tenants ===>", data.content)
                     setTenantsList(data.content)
                 }
             }
         }).finally(() => setLoading(false))
-    } 
+    }
 
-    const handleChangeTenants = (value) =>{
+    const handleChangeTenants = (value) => {
         setTenants(value);
     }
 
@@ -75,7 +75,7 @@ function CreateTeacher() {
         }).finally(() => setLoading(false))
     }
 
-    const handleChangeTags = (value) =>{
+    const handleChangeTags = (value) => {
         setTags(value);
     }
 
@@ -136,21 +136,21 @@ function CreateTeacher() {
             // return
         }
 
-        let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
+        let tgs = []
+        tags.map(res => tgs.push({ "id": res }))
 
-        let tnts=[]
+        let tnts = []
         tenants.map(res => {
-           tnts.push({"id":res})
+            tnts.push({ "id": res })
         })
 
-        console.log("tenants ==>",tnts)
-        console.log("tags ==>",tgs)
+        console.log("tenants ==>", tnts)
+        console.log("tags ==>", tgs)
 
         setSubmitting(true);
 
         createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs, tnts).then(data => {
-            console.log("teacher registered ==>",data)
+            console.log("teacher registered ==>", data)
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
@@ -179,26 +179,26 @@ function CreateTeacher() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="My Organizations" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen3(open3 ? false : true)}>
-                                <Select mode="multiple"
-                                    allowClear
-                                    loading={loading}
-                                    open={open3}
-                                    onFocus={() => setOpen3(true)}
-                                    onBlur={() => setOpen3(false)}
-                                    style={{ width: '100%' }}
-                                    onSelect={() => setOpen3(false)}
-                                    placeholder="Please select tenants"
-                                    onChange={handleChangeTenants}>
-                                    {
-                                        tenantsList.map(tenant => {
-                                            return (
-                                                <Select.Option value={tenant.displayName} key={tenant.id}>{tenant.displayName}</Select.Option>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </Form.Item>
+                        <Form.Item label="My Organizations" required style={{ flex: 1, marginRight: '10px' }} onClick={() => setOpen3(open3 ? false : true)}>
+                            <Select mode="multiple"
+                                allowClear
+                                loading={loading}
+                                open={open3}
+                                onFocus={() => setOpen3(true)}
+                                onBlur={() => setOpen3(false)}
+                                style={{ width: '100%' }}
+                                onSelect={() => setOpen3(false)}
+                                placeholder="Please select tenants"
+                                onChange={handleChangeTenants}>
+                                {
+                                    tenantsList.map(tenant => {
+                                        return (
+                                            <Select.Option value={tenant.key} key={tenant.key}>{tenant.displayName}</Select.Option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
                     </div>
 
                     <div style={{
@@ -300,14 +300,14 @@ function CreateTeacher() {
                                 : null}
                     </div>
                     {
-                            !tagsList ? 
+                        !tagsList ?
                             (<></>)
                             :
                             (<div style={{
                                 display: 'flex',
                                 flexDirection: 'row'
                             }}>
-                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
                                     <Select mode="multiple"
                                         allowClear
                                         loading={loading}
@@ -328,7 +328,7 @@ function CreateTeacher() {
                                     </Select>
                                 </Form.Item>
                             </div>)
-                        }
+                    }
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
