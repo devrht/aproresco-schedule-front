@@ -1,5 +1,6 @@
 import 'antd/dist/antd.css';
 import Moment from 'react-moment';
+import SearchFilter from './SearchFilter';
 import { useHistory } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
 import { Form, Row, Col, Card, Input } from 'antd';
@@ -10,11 +11,10 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { assignStudents } from '../../Action-Reducer/Student/action';
-import SearchFilter from '../../components/StudentList/SearchFilter';
 import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
 import { faCrown, faShieldAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { markTeacherAsPresent, markAsSupervisor, markAsAdmin, markAsApproved, updateAvailabilityAssistants } from '../../services/Teacher';
-import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher, findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate } from '../../services/Student';
+import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher, findTeacherProfileByFirstNameAndLastName } from '../../services/Student';
 
 const { Text } = Typography;
 
@@ -33,7 +33,9 @@ function StudentListOfTeacher(props) {
     const [studentsTmp, setStudentsTmp] = useState([]);
     const history = useHistory();
     const [active, setActive] = useState(true);
+    const [open, setOpen] = useState(false);
     const [present, setPresent] = useState(true);
+    const [profileLoading, setProfileLoading] = useState(true)
     const [startDate, setStartDate] = useState('');
     const [effectiveStartDate, setEffectiveStartDate] = useState('');
     const [selectedRow, setSelectedRow] = useState([]);
@@ -41,7 +43,7 @@ function StudentListOfTeacher(props) {
     const assignStudentList = useSelector((state) => {
         return state.Student.assignStudent;
     })
-    const [teacherList, setTeacherList] = useState();
+    const [teacherList, setTeacherList] = useState([]);
     const [sortingName, setSortingName] = useState("createDate");
     const [sortingType, setSortingType] = useState("desc");
     const [loading, setLoading] = useState(false);
@@ -86,7 +88,6 @@ function StudentListOfTeacher(props) {
         } else {
             newAssistants = newAssistants.filter(a => !datas.includes(a));
         }
-        console.log(newAssistants);
         updateAvailabilityAssistants(teacher.id, newAssistants.map(a => (a.id))).then(data => {
             setAssistants([...newAssistants]);
             setIsAddingAssistants(false);
@@ -107,32 +108,27 @@ function StudentListOfTeacher(props) {
                 setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
-        searchList();
     };
+
+    useEffect(() => {
+        console.log(search)
+        searchList()
+    }, [search])
 
     const searchList = () => {
         getListProfiles();
     }
 
     const getListProfiles = () => {
-        if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "no tag" || !localStorage.getItem('currentTag'))) {
-            getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                if (data) {
-                    if (data.content) {
-                        setTeacherList(data.content)
-                        setTableProps({
-                            ...tableProps,
-                            totalCount: data.totalCount,
-                            pageSize: 30,
-                        });
-                    } else {
-                        setTeacherList([])
-                        setTableProps({
-                            ...tableProps,
-                            totalCount: 0,
-                            pageSize: 30,
-                        });
-                    }
+        findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), null, null, tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
+            if (data) {
+                if (data.content) {
+                    setTeacherList(data.content)
+                    setTableProps({
+                        ...tableProps,
+                        totalCount: data.totalCount,
+                        pageSize: 30,
+                    });
                 } else {
                     setTeacherList([])
                     setTableProps({
@@ -141,66 +137,17 @@ function StudentListOfTeacher(props) {
                         pageSize: 30,
                     });
                 }
-                setLoading(false);
-            })
-        }
-        else if ((search.firstName !== "" || search.lastName !== "") && (localStorage.getItem('currentTag') === "no tag" || !localStorage.getItem('currentTag'))) {
-            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
-                if (data) {
-                    if (data.content) {
-                        setTeacherList(data.content)
-                        setTableProps({
-                            ...tableProps,
-                            totalCount: data.totalCount,
-                            pageSize: 30,
-                        });
-                    } else {
-                        setTeacherList([])
-                        setTableProps({
-                            ...tableProps,
-                            totalCount: 0,
-                            pageSize: 30,
-                        });
-                    }
-                } else {
-                    setTeacherList([])
-                    setTableProps({
-                        ...tableProps,
-                        totalCount: 0,
-                        pageSize: 30,
-                    });
-                }
-                setLoading(false);
-            })
-        } else {
-            findTeacherProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
-                if (data) {
-                    if (data.content) {
-                        setTeacherList(data.content)
-                        setTableProps({
-                            ...tableProps,
-                            totalCount: data.totalCount,
-                            pageSize: 30,
-                        });
-                    } else {
-                        setTeacherList([])
-                        setTableProps({
-                            ...tableProps,
-                            totalCount: 0,
-                            pageSize: 30,
-                        });
-                    }
-                } else {
-                    setTeacherList([])
-                    setTableProps({
-                        ...tableProps,
-                        totalCount: 0,
-                        pageSize: 30,
-                    });
-                }
-                setLoading(false);
-            })
-        }
+            } else {
+                setTeacherList([])
+                setTableProps({
+                    ...tableProps,
+                    totalCount: 0,
+                    pageSize: 30,
+                });
+            }
+            setLoading(false);
+            setProfileLoading(false);
+        })
     }
 
     const removeAssistant = (data) => {
@@ -760,6 +707,25 @@ function StudentListOfTeacher(props) {
                         }}>
                             <SearchFilter
                                 changeInput={changeSearch}
+                                open={open}
+                                profiles={teacherList}
+                                setOpenTrue={() => setOpen(true)}
+                                setOpenFalse={() => setOpen(false)}
+                                loading={profileLoading}
+                                changeProfile={(__, e) => {
+                                    try {
+                                        e.target = {};
+                                        e.target.value = e.firstName + " " + e.lastName
+                                        e.target.name = 'name';
+                                        console.log(e)
+                                        changeSearch(e);
+                                    } catch (err) {
+                                        setSearch({ ...search, firstName: '', lastName: '' });
+                                    }
+                                }}
+                                changeProfileInput={(e) => {
+                                    changeSearch(e);
+                                }}
                                 searchList={searchList}
                             />
                             <div>
