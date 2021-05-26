@@ -141,21 +141,16 @@ function CreateTeacher() {
 
         let tnts = []
         tenants.map(res => {
-            tnts.push({ "id": res })
+            if (res)
+                tnts.push({ "id": res })
         })
-
-        console.log("tenants ==>", tnts)
-        console.log("tags ==>", tgs)
 
         setSubmitting(true);
 
         createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs, tnts).then(data => {
-            console.log("teacher registered ==>", data)
             history.push(`/teacherprofiles`);
-            // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
-            console.log(err)
         })
             .finally(() => setSubmitting(false));
     }
@@ -193,7 +188,7 @@ function CreateTeacher() {
                                 {
                                     tenantsList.map(tenant => {
                                         return (
-                                            <Select.Option value={tenant.key} key={tenant.key}>{tenant.displayName}</Select.Option>
+                                            <Select.Option value={tenant.id} key={tenant.key}>{tenant.displayName}</Select.Option>
                                         )
                                     })
                                 }
