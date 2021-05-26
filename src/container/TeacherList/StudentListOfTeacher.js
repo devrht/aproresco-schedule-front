@@ -668,7 +668,7 @@ function StudentListOfTeacher(props) {
 
                 {!studentList || !students ? <Spin /> :
                     <>
-                        <h2>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}'s students </h2>
+                        <h2>Students </h2>
                         <Table
                             columns={columns}
                             dataSource={students}
@@ -685,7 +685,7 @@ function StudentListOfTeacher(props) {
                             flexDirection: 'row',
                             justifyContent: 'space-between'
                         }}>
-                            <h2>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}'s assistants </h2>
+                            <h2>Assistants </h2>
                             <Button key='3' size="medium" type="primary" onClick={() => setIsAddingAssistants(true)}>
                                 < PlusOutlined />
                             </Button>

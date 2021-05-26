@@ -100,27 +100,14 @@ function StudentProfile() {
             fixed: 'left',
         },
         {
-            title: <div><span>Registration Date </span>
-                {sortingName === "registrationDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "registrationDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "registrationDate" && sortingType === "" && ""}
+            title: <div><span>Parent phone </span>
             </div>,
-            onHeaderCell: (column) => {
-                return {
-                    onClick: () => {
-                        setSortingName("registrationDate");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("registrationDate"); }
-                    }
-                };
-            },
             render: (record) => (
                 <div>
                     {
-                        <Moment local format="D MMM YYYY HH:MM" withTitle>
-                            {record.registrationDate}
-                        </Moment>
+                        <p style={{ width: "50%", textAlign: "left" }}>
+                            {record.parent.phoneNumber}
+                        </p>
                     }
                 </div>
             ),

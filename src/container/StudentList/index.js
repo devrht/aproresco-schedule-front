@@ -268,7 +268,7 @@ function StudentList() {
         ,
         {
             title: 'Teacher Name',
-            title: <div><span>Teacher Name </span>
+            title: <div><span>Teacher </span>
             </div>,
             render: (record) => {
                 var isSubjectContains = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.subjects.includes(record.subject) : false : false;
