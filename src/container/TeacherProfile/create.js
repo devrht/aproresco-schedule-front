@@ -53,7 +53,6 @@ function CreateTeacher() {
         getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), listProps.index, listProps.size, "displayName", sortingType).then(data => {
             if (data) {
                 if (data.content) {
-                    console.log("List of tenants ===>", data.content)
                     setTenantsList(data.content)
                 }
             }
@@ -61,6 +60,7 @@ function CreateTeacher() {
     }
 
     const handleChangeTenants = (value) => {
+        console.log(value)
         setTenants(value);
     }
 
@@ -86,7 +86,7 @@ function CreateTeacher() {
             setCountry(data.countryCode.toString().toLowerCase());
         })
         getEnabledTags();
-        getTenantsList();
+        // getTenantsList();
     }, []);
 
     const handleChange = event => {
@@ -139,23 +139,14 @@ function CreateTeacher() {
         let tgs = []
         tags.map(res => tgs.push({ "id": res }))
 
-        let tnts = []
-        tenants.map(res => {
-            tnts.push({ "id": res })
-        })
-
-        console.log("tenants ==>", tnts)
-        console.log("tags ==>", tgs)
+        let tnts = [{ key: JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)) }]
 
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs, tnts).then(data => {
-            console.log("teacher registered ==>", data)
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0), tnts).then(data => {
             history.push(`/teacherprofiles`);
-            // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
-            console.log(err)
         })
             .finally(() => setSubmitting(false));
     }
@@ -175,7 +166,7 @@ function CreateTeacher() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <div style={{
+                    {/* <div style={{
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
@@ -193,13 +184,13 @@ function CreateTeacher() {
                                 {
                                     tenantsList.map(tenant => {
                                         return (
-                                            <Select.Option value={tenant.key} key={tenant.key}>{tenant.displayName}</Select.Option>
+                                            <Select.Option value={tenant.key}>{tenant.displayName}</Select.Option>
                                         )
                                     })
                                 }
                             </Select>
                         </Form.Item>
-                    </div>
+                    </div> */}
 
                     <div style={{
                         display: 'flex',
@@ -318,6 +309,7 @@ function CreateTeacher() {
                                         onSelect={() => setOpen1(false)}
                                         placeholder="Please select tags"
                                         onChange={handleChangeTags}>
+                                        <Select.Option value={0} key={0}>No tag</Select.Option>
                                         {
                                             tagsList.map(tag => {
                                                 return (

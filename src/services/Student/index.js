@@ -435,7 +435,14 @@ export const sendMessageBookings = (message_id) => {
 }
 
 export const sendMessageToBooking = (booking_id, message) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/message/booking/${booking_id}`, message).then(res => {
+    var config = {
+        headers: {
+            'Content-Length': 0,
+            'Content-Type': 'text/plain'
+        },
+       responseType: 'text'
+    };
+    return axios.post(`${routes.SERVER_ADDRESS}/message/booking/${booking_id}`, message, config).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

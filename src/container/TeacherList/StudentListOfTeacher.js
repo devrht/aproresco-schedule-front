@@ -23,6 +23,7 @@ function StudentListOfTeacher(props) {
     const dispatch = useDispatch();
     const location = useLocation();
     const [teacher, setTeacher] = useState(location.state.teacher);
+    const [profile, setProfile] = useState(location.state.profile);
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
     const [confUrl, setConfUrl] = useState();
@@ -667,7 +668,7 @@ function StudentListOfTeacher(props) {
 
                 {!studentList || !students ? <Spin /> :
                     <>
-                        <h2>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}'s students </h2>
+                        <h2>Students </h2>
                         <Table
                             columns={columns}
                             dataSource={students}
@@ -677,14 +678,14 @@ function StudentListOfTeacher(props) {
                     </>
                 }
 
-                {!isAddingAssistants && (
+                {!isAddingAssistants && !profile && (
                     <div style={{ marginTop: 40 }}>
                         <div style={{
                             display: 'flex',
                             flexDirection: 'row',
                             justifyContent: 'space-between'
                         }}>
-                            <h2>{`${teacher.teacherProfile.firstName} ${teacher.teacherProfile.lastName}`}'s assistants </h2>
+                            <h2>Assistants </h2>
                             <Button key='3' size="medium" type="primary" onClick={() => setIsAddingAssistants(true)}>
                                 < PlusOutlined />
                             </Button>
@@ -696,7 +697,7 @@ function StudentListOfTeacher(props) {
                     </div>
                 )}
 
-                {isAddingAssistants && (
+                {isAddingAssistants && !profile && (
                     <div style={{ marginTop: 40 }}>
                         <h2>Select new assistants </h2>
                         <div style={{

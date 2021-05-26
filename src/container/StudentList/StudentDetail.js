@@ -36,7 +36,6 @@ function StudentDetail(props) {
     }, []);
 
     const handleChange = event => {
-        console.log(event.target.value)
         setFormData({
             name: event.target.name,
             value: event.target.value,
@@ -45,7 +44,6 @@ function StudentDetail(props) {
 
     const getDetailView = () => {
         getStudentDetail(params.id).then(data => {
-            console.log('DATA ==> ', data)
             setStudentDetail(data)
             history.push(`/studentlist/studentDetail/${data.id}`)
         })
@@ -53,7 +51,6 @@ function StudentDetail(props) {
 
     const getStudentBooking = () => {
         getBooking(studentDetail.id).then(data => {
-            console.log('BOOKING ==>',data)
             setStudentDetail(data.data)
         })
     }
@@ -73,17 +70,13 @@ function StudentDetail(props) {
     }
 
     const handleSubmitSendMessage = () => {
-        if (message == null) 
-        {
+        if (message == null) {
             alert("Please, enter a message");
             return
-        }
-        else {
-            setMessage(formData.message);
+        } else {
             setSubmitting(true);
             getBooking(studentDetail.id).then(result => {
-                sendMessageToBooking(result.id, message).then(result => {
-                    console.log(result);
+                sendMessageToBooking(result.data.id, formData.message).then(result => {
                     setSubmitting(false);
                     setMessage('');
                     setFormData([]);
