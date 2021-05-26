@@ -37,7 +37,7 @@ function CreateTeacher() {
 
     const [tagsList, setTagsList] = useState([]);
     const [tags, setTags] = useState([]);
-    const [defaulttags, setDefaultTags] = useState([]);
+    const [defaulttags, setDefaultTags] = useState([0]);
 
     const [sortingName, setSortingName] = useState("name");
     const [sortingType, setSortingType] = useState("desc");
@@ -133,8 +133,7 @@ function CreateTeacher() {
         let tgs=[]
         tags.map(res => tgs.push({"id": res}))
 
-        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects, phone, formData.schoolName, formData.schoolBoard, tgs).then(data => {
-             console.log("teacher updated ===>",data)
+        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects, phone, formData.schoolName, formData.schoolBoard, tgs.filter(t => t.id != 0)).then(data => {
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
@@ -280,6 +279,7 @@ function CreateTeacher() {
                                 onSelect={() => setOpen1(false)}
                                 placeholder="Please select tags"
                                 onChange={handleChangeTags}>
+                                <Select.Option value={0} key={0}>No tag</Select.Option>
                                 {
                                     tagsList.map(tag => {
                                         return (

@@ -61,6 +61,7 @@ function CreateTeacher() {
     }
 
     const handleChangeTenants = (value) => {
+        console.log(value)
         setTenants(value);
     }
 
@@ -139,15 +140,9 @@ function CreateTeacher() {
         let tgs = []
         tags.map(res => tgs.push({ "id": res }))
 
-        let tnts = []
-        tenants.map(res => {
-            if (res)
-                tnts.push({ "id": res })
-        })
-
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs, tnts).then(data => {
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0), tenantsList.filter(t => tenants.includes(t.key))).then(data => {
             history.push(`/teacherprofiles`);
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -188,7 +183,7 @@ function CreateTeacher() {
                                 {
                                     tenantsList.map(tenant => {
                                         return (
-                                            <Select.Option value={tenant.id} key={tenant.key}>{tenant.displayName}</Select.Option>
+                                            <Select.Option value={tenant.key}>{tenant.displayName}</Select.Option>
                                         )
                                     })
                                 }
@@ -313,6 +308,7 @@ function CreateTeacher() {
                                         onSelect={() => setOpen1(false)}
                                         placeholder="Please select tags"
                                         onChange={handleChangeTags}>
+                                        <Select.Option value={0} key={0}>No tag</Select.Option>
                                         {
                                             tagsList.map(tag => {
                                                 return (
