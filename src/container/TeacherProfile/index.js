@@ -88,7 +88,7 @@ function TeacherProfile() {
                             onClick={(e) => {
                                 e.stopPropagation();
                                 record.teacherProfile = record;
-                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
+                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: true })
                                 // history.push(`/studentlist/studentDetail/${record.id}`)
                             }}>
                             <p style={{ width: "50%", textAlign: "left" }}>

@@ -304,7 +304,7 @@ function TeacherList() {
                             style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer' }}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record })
+                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: false })
                             }}>{(record.teacherProfile.firstName + " " + record.teacherProfile.lastName).length <= 20 ?
                                 record.teacherProfile.firstName + " " + record.teacherProfile.lastName :
                                 (record.teacherProfile.firstName + " " + record.teacherProfile.lastName).substring(0, 19) + '...'}</Button>

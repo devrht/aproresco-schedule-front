@@ -23,6 +23,7 @@ function StudentListOfTeacher(props) {
     const dispatch = useDispatch();
     const location = useLocation();
     const [teacher, setTeacher] = useState(location.state.teacher);
+    const [profile, setProfile] = useState(location.state.profile);
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
     const [confUrl, setConfUrl] = useState();
@@ -677,7 +678,7 @@ function StudentListOfTeacher(props) {
                     </>
                 }
 
-                {!isAddingAssistants && (
+                {!isAddingAssistants && !profile && (
                     <div style={{ marginTop: 40 }}>
                         <div style={{
                             display: 'flex',
@@ -696,7 +697,7 @@ function StudentListOfTeacher(props) {
                     </div>
                 )}
 
-                {isAddingAssistants && (
+                {isAddingAssistants && !profile && (
                     <div style={{ marginTop: 40 }}>
                         <h2>Select new assistants </h2>
                         <div style={{
