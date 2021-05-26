@@ -53,7 +53,6 @@ function CreateTeacher() {
         getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), listProps.index, listProps.size, "displayName", sortingType).then(data => {
             if (data) {
                 if (data.content) {
-                    console.log("List of tenants ===>", data.content)
                     setTenantsList(data.content)
                 }
             }
@@ -87,7 +86,7 @@ function CreateTeacher() {
             setCountry(data.countryCode.toString().toLowerCase());
         })
         getEnabledTags();
-        getTenantsList();
+        // getTenantsList();
     }, []);
 
     const handleChange = event => {
@@ -140,9 +139,11 @@ function CreateTeacher() {
         let tgs = []
         tags.map(res => tgs.push({ "id": res }))
 
+        let tnts = [{ key: JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)) }]
+
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0), tenantsList.filter(t => tenants.includes(t.key))).then(data => {
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0), tnts).then(data => {
             history.push(`/teacherprofiles`);
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -165,7 +166,7 @@ function CreateTeacher() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    <div style={{
+                    {/* <div style={{
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
@@ -189,7 +190,7 @@ function CreateTeacher() {
                                 }
                             </Select>
                         </Form.Item>
-                    </div>
+                    </div> */}
 
                     <div style={{
                         display: 'flex',
