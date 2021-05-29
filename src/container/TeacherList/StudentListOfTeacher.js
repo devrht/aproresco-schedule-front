@@ -431,7 +431,7 @@ function StudentListOfTeacher(props) {
                     datas.push(elt.studentProfile);
                     setStudentsTmp(datas);
                 });
-                setConfUrl(location.state.teacher.conferenceUrl);
+                setConfUrl(profile ? '' : location.state.teacher.conferenceUrl);
                 setStudents(studentsTmp);
             } else {
                 setStudents([]);
