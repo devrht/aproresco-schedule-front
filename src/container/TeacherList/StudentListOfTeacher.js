@@ -587,7 +587,7 @@ function StudentListOfTeacher(props) {
                                 <p onClick={(e) => {
                                     window.open(teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
                                     // window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
-                                }}>{`${teacher.conferenceUrl}`}</p>
+                                }}>{`${teacher.teacherProfile.conferenceUrl}`}</p>
                             </Col>
                         </Row>
                         <Row gutter={16}>
