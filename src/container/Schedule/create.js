@@ -199,7 +199,7 @@ function CreateSchedule() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Subjects" required style={{ flex: 1, marginRight: '10px' }}>
+                        <Form.Item label="Select or type subjects" required style={{ flex: 1, marginRight: '10px' }}>
                             <CreatableSelect
                                 isMulti
                                 onChange={handleSubjectChange}
