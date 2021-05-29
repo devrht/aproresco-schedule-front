@@ -23,6 +23,7 @@ function StudentListOfTeacher(props) {
     const dispatch = useDispatch();
     const location = useLocation();
     const [teacher, setTeacher] = useState(location.state.teacher);
+    // console.log(teacher)
     const [profile, setProfile] = useState(location.state.profile);
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
@@ -584,8 +585,9 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <p onClick={(e) => {
-                                    window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
-                                }}>{`${teacher.teacherProfile.conferenceUrl}`}</p>
+                                    window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : '')
+                                    // window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                }}>{`${teacher.conferenceUrl}`}</p>
                             </Col>
                         </Row>
                         <Row gutter={16}>
