@@ -23,6 +23,7 @@ function StudentListOfTeacher(props) {
     const dispatch = useDispatch();
     const location = useLocation();
     const [teacher, setTeacher] = useState(location.state.teacher);
+    console.log(teacher)
     const [profile, setProfile] = useState(location.state.profile);
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
@@ -430,7 +431,7 @@ function StudentListOfTeacher(props) {
                     datas.push(elt.studentProfile);
                     setStudentsTmp(datas);
                 });
-                setConfUrl(location.state.teacher.teacherProfile.conferenceUrl);
+                setConfUrl(profile ? '' : location.state.teacher.conferenceUrl);
                 setStudents(studentsTmp);
             } else {
                 setStudents([]);
@@ -584,7 +585,8 @@ function StudentListOfTeacher(props) {
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <p onClick={(e) => {
-                                    window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                    window.open(teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                    // window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
                                 }}>{`${teacher.teacherProfile.conferenceUrl}`}</p>
                             </Col>
                         </Row>
@@ -634,7 +636,7 @@ function StudentListOfTeacher(props) {
                             <Col className="gutter-row" span={14} onDoubleClick={() => setEditable(!editable)}>
                                 {!editable ?
                                     <p onClick={(e) => {
-                                        window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : teacher.teacherProfile.conferenceUrl ? teacher.teacherProfile.conferenceUrl.includes('http') ? teacher.teacherProfile.conferenceUrl : 'http://' + teacher.teacherProfile.conferenceUrl : '')
+                                        window.open(teacher.conferenceUrl ? teacher.conferenceUrl.includes('http') ? teacher.conferenceUrl : 'http://' + teacher.conferenceUrl : '')
                                     }} >{confUrl}</p> :
                                     <Form layout="inline">
                                         <Form.Item>

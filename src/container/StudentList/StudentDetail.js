@@ -23,6 +23,7 @@ function StudentDetail(props) {
     const history = useHistory();
     const { params } = props.match;
     const [studentDetail, setStudentDetail] = useState(location.state.student);
+    console.log(studentDetail)
     const [content, setContent] = useState('');
     const [comment, setComment] = useState(null);
     const [form] = Form.useForm();
@@ -177,7 +178,15 @@ function StudentDetail(props) {
                             </Row>
                             <Row gutter={16}>
                                 <Col className="gutter-row" span={8}>
-                                    <h4 >Conference URL</h4>
+                                    <h4 >Booking URL</h4>
+                                </Col>
+                                <Col className="gutter-row" span={14}>
+                                    <h4 onClick={() => window.open(studentDetail.conferenceUrl ? studentDetail.conferenceUrl.includes('http') ? studentDetail.conferenceUrl : 'http://' + studentDetail.conferenceUrl : '')}>{studentDetail.conferenceUrl}</h4>
+                                </Col>
+                            </Row>
+                            <Row gutter={16}>
+                                <Col className="gutter-row" span={8}>
+                                    <h4 >Student URL</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
                                     <h4 onClick={() => window.open(studentDetail.studentProfile.conferenceUrl.includes('http') ? studentDetail.studentProfile.conferenceUrl : 'http://' + studentDetail.studentProfile.conferenceUrl)}>{studentDetail.studentProfile.conferenceUrl}</h4>
