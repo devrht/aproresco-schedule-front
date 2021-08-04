@@ -42,10 +42,10 @@ function LayoutOfApp({ children }, props) {
 
       if (localStorage.getItem('user')) {
         let user = JSON.parse(localStorage.getItem('user'));
-        let tenant = localStorage.getItem('tenant' + user.id);
-        if (!tenant) {
-          history.push('/settings');
-        }
+        // let tenant = localStorage.getItem('tenant' + user.id);
+        // if (!tenant) {
+        //   history.push('/settings');
+        // }
         if (!user.phoneNumber || !user.grades || !user.firstName || !user.lastName) {
           history.push('/settings');
         }
@@ -175,7 +175,7 @@ function LayoutOfApp({ children }, props) {
                 justifyContent: 'flex-end',
               }}>
                 <SettingOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/settings') }} />
-                <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/tenant') }} />
+                {/* <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/tenant') }} /> */}
                 <LogoutOutlined style={{ fontSize: '30px' }} onClick={() => { logout(); }} />
               </div> : null}
           <div className="content-div" style={{ padding: 0 }}>{children}</div>

@@ -23,31 +23,9 @@ function Login() {
             localStorage.setItem('user', JSON.stringify(data));
             if (localStorage.getItem("email")) {
               let mail = JSON.parse(localStorage.getItem("email"));
-              if (mail)
-                if (mail != data.externalEmail) {
-                  localStorage.removeItem('tenant'+data.id);
-                }
             }
             if(!JSON.parse(localStorage.getItem("advanceSchedule" + data.id)))
               localStorage.setItem("advanceSchedule" + data.id, JSON.stringify(false));
-            // if (data.tenants) {
-            //   if (data.tenants.length > 0) {
-                // if (localStorage.getItem("tenant"+data.id)) {
-                //   if (data.tenants.filter(t => t.key == localStorage.getItem("tenant"+data.id)).length == 0) {
-                //     localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
-                //   } else {
-                //     localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
-                //   }
-                // } else {
-                //   localStorage.setItem('tenant'+data.id, JSON.stringify(data.tenants[0].tenant.key))
-                // }
-            //  } 
-            //   else {
-            //     localStorage.removeItem('tenant'+data.id);
-            //   }
-            // } else {
-            //   localStorage.removeItem('tenant'+data.id);
-            // }
             localStorage.setItem('email', JSON.stringify(data.externalEmail));
             localStorage.setItem('id', JSON.stringify(data.id));
             history.push(`/teacherlist`);

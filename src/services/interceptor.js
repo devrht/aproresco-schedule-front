@@ -7,20 +7,18 @@ const addToken = () => {
             try {
                 // Get auth token
                 const accessToken = JSON.parse(localStorage.getItem("token"));
-                const tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
+                //const tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
 
                 if (accessToken) {
                     config.headers['Authorization'] = 'Bearer ' + accessToken;
                 }
 
-                if (!config.url.toString().includes('teacher-profile/email') && !(config.url.toString().includes('teacher-profile') && config.method== 'patch')) {
-                    if (tenant) {
-                        config.headers['TenantKey'] = tenant;
-                    }
-                    // config.headers['TenantKey'] = 'alpha';
-                }
+                // if (!config.url.toString().includes('teacher-profile/email') && !(config.url.toString().includes('teacher-profile') && config.method== 'patch')) {
+                //     if (tenant) {
+                //         config.headers['TenantKey'] = tenant;
+                //     }
+                // }
 
-                // config.headers['Content-Type'] = 'application/json';
                 return config;
             } catch (e) {
                 console.log('ERROR => ', e)
