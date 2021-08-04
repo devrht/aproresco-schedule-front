@@ -154,7 +154,7 @@ export default function TagsList() {
         
         if(localStorage.getItem('currentTag') && localStorage.getItem('currentTag') != "no tag"){
             getTagByName(localStorage.getItem('currentTag')).then(res => {
-                setTag(res.content[0].name)
+                setTag(res.content[0] ? res.content[0].name : '');
             })
         }else{
             setTag("no tag")

@@ -328,7 +328,7 @@ function StudentDetail(props) {
                         <Card title="Feedback section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
                             <Row gutter={16}>
                                 <Form.Item label={comment ? "Message (press escape to create)" : "Message"} required style={{ flex: 1, marginRight: '10px' }}>
-                                    <Input type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)} onKeyUp={(e) => {
+                                    <Input.TextArea rows={4} type="text" name="content" value={content} onChange={(e) => setContent(e.target.value)} onKeyUp={(e) => {
                                         if (e.key === 'Escape') {
                                             setComment(null);
                                             setContent('')
