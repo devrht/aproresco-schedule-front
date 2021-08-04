@@ -119,7 +119,7 @@ function CreateSchedule() {
         }
 
         let data = [];
-        let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
+        // let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
 
         if (isCreation) {
             data.push(
@@ -136,9 +136,9 @@ function CreateSchedule() {
                     language: language,
                     price: price,
                     imageUrl: imageUrl,
-                    tenant: {
-                        "key": tenant
-                    }
+                    // tenant: {
+                    //     "key": tenant
+                    // }
                 })
         } else {
             selectedSubjects.forEach(s => data.push(
@@ -155,9 +155,9 @@ function CreateSchedule() {
                     language: language,
                     price: price,
                     imageUrl: imageUrl,
-                    tenant: {
-                        "key": tenant
-                    }
+                    // tenant: {
+                    //     "key": tenant
+                    // }
                 }))
         }
         createSchedule(data).then(result => {

@@ -51,14 +51,14 @@ export const getParentProfile = (start, end, page, size, sortName, sortType) => 
         })
 }
 
-export const getTenant = (key) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/tenant-profile/${key}`)
-        .then(res => {
-            return res.data;
-        })
-        .catch(err => {
-        })
-}
+// export const getTenant = (key) => {
+//     return axios.get(`${routes.SERVER_ADDRESS}/tenant-profile/${key}`)
+//         .then(res => {
+//             return res.data;
+//         })
+//         .catch(err => {
+//         })
+// }
 
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/${routes.SCHEDULE}?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
@@ -75,7 +75,7 @@ export const getSchedule = (grade) => {
     let size = 100;
     let filter = 'startDate';
     let sort = 'asc';
-    let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
+    // let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
     return axios.get(`${routes.SERVER_ADDRESS}/${routes.SCHEDULE}?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
         .then(res => {
             return res.data;

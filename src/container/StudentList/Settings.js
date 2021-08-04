@@ -44,7 +44,7 @@ function Settings(props) {
   const [school, setSchool] = useState('');
   const [board, setBoard] = useState('');
   const [email, setEmail] = useState('');
-  const [tenant, setTenant] = useState(null);
+  // const [tenant, setTenant] = useState(null);
   const [tag, setTag] = useState('no tag');
   const [advanceSchedule, setAdvanceSchedule] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -60,28 +60,28 @@ function Settings(props) {
 
   const getRole = (role, data) => {
     let result = false;
-    if (data)
-      if (data.tenants) {
-        data.tenants.forEach(t => {
-          if (t.roles) {
-            if (t.roles.includes(role)) {
-              result = true;
-            }
-          }
-        })
-      }
+    // if (data)
+    //   if (data.tenants) {
+    //     data.tenants.forEach(t => {
+    //       if (t.roles) {
+    //         if (t.roles.includes(role)) {
+    //           result = true;
+    //         }
+    //       }
+    //     })
+    //   }
     return result;
   }
 
   useEffect(() => {
-    setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
+    // setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
     setTag(JSON.parse(localStorage.getItem('currentTag')) ? JSON.parse(localStorage.getItem('currentTag')) : 'no tag');
     setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
     getSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
     }).finally(() => getTeacher());
-    getTenantsList();
+    // getTenantsList();
     getTagList();
   }, []);
 
@@ -145,25 +145,26 @@ function Settings(props) {
 
   const handleSubmit = () => {
 
-    if (formData.tenant) {
-      if (
-        formData.tenant.toString().length <= 0
-      ) {
-        alert("Please, fill the form!");
-        return
-      }
-    } else {
-      alert("Please, fill the form!");
-      return
-    }
-    newTenant(formData.tenant).then(data => {
-      setTenant(formData.tenant);
-      localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
-      history.push(`/teacherlist`)
-    }).catch(err => {
-      alert("Error occured when saving data, please retry!")
-      console.log(err)
-    });
+    // if (formData.tenant) {
+    //   if (
+    //     formData.tenant.toString().length <= 0
+    //   ) {
+    //     alert("Please, fill the form!");
+    //     return
+    //   }
+    // } else {
+    //   alert("Please, fill the form!");
+    //   return
+    // }
+
+    // newTenant(formData.tenant).then(data => {
+    //   setTenant(formData.tenant);
+    //   localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(formData.tenant))
+    //   history.push(`/teacherlist`)
+    // }).catch(err => {
+    //   alert("Error occured when saving data, please retry!")
+    //   console.log(err)
+    // });
 
   }
 
@@ -223,22 +224,22 @@ function Settings(props) {
     });
   }
 
-  const [tenants, setTenants] = useState([]);
+  // const [tenants, setTenants] = useState([]);
 
-  const getTenantsList = () => {
-    getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 10, "displayName", "desc").then(data => {
-      if (data) {
-        if (data.content) {
-          setTenants(data.content)
-        }
-      }
-    })
-  }
+  // const getTenantsList = () => {
+  //   getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 10, "displayName", "desc").then(data => {
+  //     if (data) {
+  //       if (data.content) {
+  //         setTenants(data.content)
+  //       }
+  //     }
+  //   })
+  // }
 
-  const changeTenant = (e) => {
-    setTenant(e);
-    localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
-  }
+  // const changeTenant = (e) => {
+  //   setTenant(e);
+  //   localStorage.setItem("tenant" + JSON.parse(localStorage.getItem("user")).id, JSON.stringify(e));
+  // }
 
   const changeAdvanceSchedule = (e) => {
     setAdvanceSchedule(e);
@@ -409,11 +410,10 @@ function Settings(props) {
             display: 'flex',
             flexDirection: 'row'
           }}>
-            {
+            {/* {
               teacher != null && !isCreation && (
                 <Form.Item label="My Organizations" required style={{ flex: 1, marginRight: '10px' }}>
                   <Select defaultValue={tenant} style={{ width: '100%' }} onChange={(e) => { changeTenant(e) }}>
-                    {/* <Option value={'000'}>Add new organization</Option> */}
                     {tenants ? tenants.map(tenant => {
                       return (
                         <Option value={tenant.key}>{tenant.displayName}</Option>
@@ -422,7 +422,7 @@ function Settings(props) {
                     }
                   </Select>
                 </Form.Item>
-              )}
+              )} */}
             <Form.Item label="Advance Schedules" required style={{ flex: 1, marginRight: '10px' }}>
               <Select value={advanceSchedule} style={{ width: '100%' }} onChange={(e) => { changeAdvanceSchedule(e) }}>
                 <Option value={false}>False</Option>

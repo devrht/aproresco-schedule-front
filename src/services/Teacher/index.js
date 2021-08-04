@@ -342,7 +342,7 @@ export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPe
     }).catch(err => console.log(err));
 }
 
-export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone, tags, tenants) => {
+export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone, tags) => {
     let data = {
         firstName,
         lastName,
@@ -352,8 +352,7 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
         grades: grades,
         phoneNumber: phone,
         subjects: subjects,
-        tags: tags,
-        tenants:tenants
+        tags: tags
     }
     return axios.post(`${routes.SERVER_ADDRESS}/${routes.TEACHER}/register`, data).then(res => {
         return res;

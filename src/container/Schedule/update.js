@@ -143,7 +143,7 @@ function UpdateSchedule() {
             f = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear() + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0') + ':00 +0000';
 
         let data = [];
-        let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
+        // let tenant = JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id));
 
 
         updateSchedule(schedule.id, {
@@ -159,9 +159,9 @@ function UpdateSchedule() {
             language: language,
             price: price,
             imageUrl: imageUrl,
-            tenant: {
-                "key": tenant
-            }
+            // tenant: {
+            //     "key": tenant
+            // }
         }).then(result => {
             history.push(`/schedules`)
 

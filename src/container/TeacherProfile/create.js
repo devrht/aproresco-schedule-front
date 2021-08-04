@@ -44,25 +44,25 @@ function CreateTeacher() {
     const [tagsList, setTagsList] = useState([]);
     const [tags, setTags] = useState([]);
 
-    const [tenantsList, setTenantsList] = useState([]);
-    const [tenants, setTenants] = useState([]);
+    // const [tenantsList, setTenantsList] = useState([]);
+    // const [tenants, setTenants] = useState([]);
 
-    const getTenantsList = () => {
-        setLoading(true)
-        //setSortingName("displayName")
-        getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), listProps.index, listProps.size, "displayName", sortingType).then(data => {
-            if (data) {
-                if (data.content) {
-                    setTenantsList(data.content)
-                }
-            }
-        }).finally(() => setLoading(false))
-    }
+    // const getTenantsList = () => {
+    //     setLoading(true)
+    //     //setSortingName("displayName")
+    //     getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), listProps.index, listProps.size, "displayName", sortingType).then(data => {
+    //         if (data) {
+    //             if (data.content) {
+    //                 setTenantsList(data.content)
+    //             }
+    //         }
+    //     }).finally(() => setLoading(false))
+    // }
 
-    const handleChangeTenants = (value) => {
-        console.log(value)
-        setTenants(value);
-    }
+    // const handleChangeTenants = (value) => {
+    //     console.log(value)
+    //     setTenants(value);
+    // }
 
     const getEnabledTags = () => {
         setLoading(true)
@@ -139,11 +139,11 @@ function CreateTeacher() {
         let tgs = []
         tags.map(res => tgs.push({ "id": res }))
 
-        let tnts = [{ key: JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)) }]
+        // let tnts = [{ key: JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)) }]
 
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0), tnts).then(data => {
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0)).then(data => {
             history.push(`/teacherprofiles`);
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
