@@ -12,7 +12,8 @@ export const OAUTH = {
 
 export const PARENT = SERVER_ADDRESS+"/v1/parent";
 export const STUDENT = SERVER_ADDRESS+"/v1/student";
-export const COURSE = SERVER_ADDRESS+"/v1/course";
+//export const COURSE = SERVER_ADDRESS+"/v1/course";
+export const SUBJECT = SERVER_ADDRESS+"/v1/subject";
 export const SCHEDULE = SERVER_ADDRESS+"/v1/schedule";
 export const BOOKING = SERVER_ADDRESS+"/v1/booking";
 export const COMMENT = SERVER_ADDRESS+"/v1/comment";
@@ -22,7 +23,7 @@ export const TAG = SERVER_ADDRESS+"/v1/tag";
 
 // export const PARENT = "http://appui-student-parent-appui-backend-project.apps.api1.appui.info/v1/parent";
 // export const STUDENT = "http://appui-student-profile-appui-backend-project.apps.api1.appui.info/v1/student";
-// export const COURSE = "http://appui-course-appui-backend-project.apps.api1.appui.info/v1/course";
+export const COURSE = "http://appui-course-appui-backend-project.apps.api1.appui.info/v1/course";
 // export const SCHEDULE = "http://appui-schedule-appui-backend-project.apps.api1.appui.info/v1/schedule";
 // export const BOOKING = "http://appui-student-booking-appui-backend-project.apps.api1.appui.info/v1/booking";
 // export const COMMENT = "http://appui-comment-appui-backend-project.apps.api1.appui.info/v1/comment";

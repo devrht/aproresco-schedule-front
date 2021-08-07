@@ -133,7 +133,7 @@ function StudentList() {
             title: <div>Parent Email</div>,
             render: (record) => {
                 return (
-                    <span>{record.studentProfile.parent.email}</span>
+                    <span>{record.studentProfile.parent ? record.studentProfile.parent.email : ''}</span>
                 )
             },
             key: 'parentEmail',
@@ -640,8 +640,8 @@ function StudentList() {
                         className="table-padding"
                         columns={columns}
                         loading={loading}
-                        //dataSource={studentList}
-                        dataSource={[]}
+                        dataSource={studentList}
+                        // dataSource={[]}
                         onChange={handleTableChange}
                         pagination={{
                             total: tableProps.totalCount,

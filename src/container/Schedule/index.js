@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
-import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
-import '../../Assets/container/StudentList.css'
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import '../../Assets/container/StudentList.css';
+import React, { useEffect, useState } from 'react';
+import { getCourses } from '../../services/Teacher';
+import { Table, PageHeader, Button, Spin, Typography } from 'antd';
+import SearchFilter from '../../components/StudentList/SearchFilter';
 import { findScheduleByGrade, getScheduleByDate, deleteSchedule } from '../../services/Student'
-import SearchFilter from '../../components/StudentList/SearchFilter'
-import Moment from 'react-moment';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 
 const { Text } = Typography;
 
 function Schedule() {
     const history = useHistory();
-    const [schedules, setSchedules] = useState([]);
-    const [selectedRow, setSelectedRow] = useState([]);
-    const [sortingName, setSortingName] = useState("createDate");
-    const [sortingType, setSortingType] = useState("desc");
+    const [courses, setCourses] = useState([]);
     const [gradeMin, setGradeMin] = useState("0");
+    const [schedules, setSchedules] = useState([]);
     const [gradeMax, setGradeMax] = useState("100");
+    const [selectedRow, setSelectedRow] = useState([]);
+    const [sortingType, setSortingType] = useState("desc");
+    const [sortingName, setSortingName] = useState("createDate");
     const [advanceSchedule, setAdvanceSchedule] = useState(false);
+
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -56,8 +58,18 @@ function Schedule() {
     }
 
     useEffect(() => {
-        setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
+        //setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
     }, []);
+
+    const getAllCourses = () => {
+        getCourses().then(data => {
+            if (data) {
+                if (data.content) {
+                    setCourses(data.content);
+                }
+            }
+        })
+    }
 
     let columns = [
 
@@ -78,9 +90,10 @@ function Schedule() {
                 };
             },
             render: (record) => {
+                let course = courses.find(c => record.courseId === c.id);
                 return (
                     <div>
-                        {record.subject}
+                        {course ? course.subject ? course.subject.name : '' : ''}
                     </div>
                 )
             },
@@ -149,9 +162,10 @@ function Schedule() {
             title: 'Duration',
             key: 'durationInMinutes',
             render: (record) => {
+                let course = courses.find(c => record.courseId === c.id);
                 return (
                     <div>
-                        {record.durationInMinutes + ' min'}
+                        {course ? course.durationInMinutes+' min' : ''}
                     </div>
                 )
             }
@@ -160,9 +174,10 @@ function Schedule() {
             title: 'Grades',
             key: 'grades',
             render: (record) => {
+                let course = courses.find(c => record.courseId === c.id);
                 return (
                     <div>
-                        {gradesToPrint(record)}
+                        {gradesToPrint(course)}
                     </div>
                 )
             }
@@ -256,6 +271,7 @@ function Schedule() {
 
     useEffect(() => {
         getListView();
+        getAllCourses();
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
     const computeLastName = (name) => {

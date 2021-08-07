@@ -133,6 +133,20 @@ export const getTenants = (start, end,page,size,sortName,sortType) => {
     })
 }
 
+export const getCourses = (page = 0, size = 1000, sortName = "subject", sortType = "asc") => {
+    return axios.get(`${routes.COURSE}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    .then(res => {
+        return res.data;
+    })
+}
+
+export const getSubjects = (page = 0, size = 1000, sortName = "name", sortType = "asc") => {
+    return axios.get(`${routes.SUBJECT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    .then(res => {
+        return res.data;
+    })
+}
+
 export const getTenantByName = (displayName,page,size) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?displayName=${displayName}&size=${size}&page=${page}`)
     .then(res => {
@@ -311,8 +325,8 @@ export const createSchedule = (data) => {
     }).catch(err => console.log(err));
 }
 
-export const updateSchedule = (id, data) => {
-    return axios.patch(`${routes.SCHEDULE}/${id}`, data).then(res => {
+export const updateSchedule = (data) => {
+    return axios.put(`${routes.SCHEDULE}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -371,7 +385,7 @@ export const updateTenant = (key, displayName, conferenceUrlPrefix, maxTeacherPe
     }).catch(err => console.log(err));
 }
 
-export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone, tags) => {
+export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoard, grades, subjects, phone) => {
     let data = {
         firstName,
         lastName,
@@ -380,8 +394,8 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
         schoolBoard,
         grades: grades,
         phoneNumber: phone,
-        subjects: subjects,
-        tags: tags
+        subjects: subjects
+        //tags: tags
     }
     return axios.post(`${routes.TEACHER}`, data).then(res => {
         return res;
@@ -433,7 +447,7 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         subjects: subjects,
         tags:tags
     }
-    return axios.patch(`${routes.TEACHER}/update/${id}`, data).then(res => {
+    return axios.put(`${routes.TEACHER}/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -487,12 +501,7 @@ export const createParent = (firstName, lastName, phoneNumber, countryCode, emai
         countryCode,
         firstName,
         lastName,
-        email,
-        tenants: [
-            {
-                "key": JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id))
-            }
-        ]
+        email
     }
     return axios.post(`${routes.PARENT}`, data).then(res => {
         return res;

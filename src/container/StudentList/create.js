@@ -1,14 +1,14 @@
 import 'antd/dist/antd.css';
-import { useHistory } from 'react-router-dom'
-import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button, Table, Spin, Select, Text } from 'antd';
-import React, { useEffect, useState, useReducer } from 'react'
-import { createBooking } from '../../services/Teacher';
-import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate, getTags } from '../../services/Student'
+import { useHistory } from 'react-router-dom';
+import '../../Assets/container/StudentList.css';
 import TextField from '@material-ui/core/TextField';
+import { createBooking } from '../../services/Teacher';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, { useEffect, useState, useReducer } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, EditOutlined } from "@ant-design/icons"
+import { PageHeader, Form, Input, Button, Table, Spin, Select } from 'antd';
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
+import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate, getTags } from '../../services/Student'
 
 
 const formReducer = (state, event) => {

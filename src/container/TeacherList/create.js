@@ -1,25 +1,23 @@
 import 'antd/dist/antd.css';
+import Moment from 'react-moment';
 import { useHistory } from 'react-router-dom'
 import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button, Select } from 'antd';
-import React, { useEffect, useState, useReducer } from 'react'
-import { createAvailibility } from '../../services/Teacher';
-import { getTeacherProfileByDate, getSchedule, findTeacherProfileByFirstNameAndLastName, getTags, getTagByDate } from '../../services/Student'
+import React, { useEffect, useState } from 'react'
 import TextField from '@material-ui/core/TextField';
+import { PageHeader, Form, Button, Select } from 'antd';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Moment from 'react-moment';
+import { createAvailibility, getCourses } from '../../services/Teacher';
+import { getTeacherProfileByDate, getSchedule, findTeacherProfileByFirstNameAndLastName } from '../../services/Student'
 
 function CreateAvailibility() {
 
     const history = useHistory();
     const [open, setOpen] = useState(false);
-    const [open1, setOpen1] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [student, setStudent] = useState('');
     const [studentList, setStudentList] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [tagsList, setTagsList] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
     const [schedules, setSchedules] = useState([]);
@@ -29,36 +27,31 @@ function CreateAvailibility() {
     const [endDate, setEndDate] = useState(null);
     const [subjec, setSubjec] = useState(null);
     const [submitting, setSubmitting] = useState(false);
-
-    const [sortingName, setSortingName] = useState("name");
     const [sortingType, setSortingType] = useState("desc");
 
-    const [listProps, setListProps] = useState({
-        totalCount: 0,
-        index: 0,
-        size: 10,
-    });
-
     useEffect(() => {
-        getStudents();
+        getAllCourses();
     }, []);
-    
+
     const changeChildren = (id) => {
         setDates([]);
         setDat(null);
         setSubjec(null);
         let _children = studentList.filter(c => c.id == id)[0];
         setChildren(_children);
+        console.log(_children)
         getSchedule(1).then(data => {
             setSchedules(data.content);
             setDat(null);
-            setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['createDate'], item])).values()]);
+            setDates([...new Map(data.content.filter(s => _children.subjects.map(cs => cs.id).includes(courses.find(c => c.id === s.courseId) ? courses.find(c => c.id === s.courseId).subject.id : 'null')).map(item => [item['createDate'], item])).values()]);
+            // setDates([...new Map(data.content.map(item => [item['createDate'], item])).values()]);
         });
     }
 
     const changeDate = (date) => {
         setDat(date);
         setEnds([...new Map(schedules.filter(s => children.subjects.includes(s.subject)).filter(s => s.startDate == date).map(item => [item['createDate'], item])).values()]);
+        //setEnds([...new Map(schedules.filter(s => s.startDate == date).map(item => [item['createDate'], item])).values()]);
     }
 
     const changeEndDate = (date) => {
@@ -83,7 +76,7 @@ function CreateAvailibility() {
 
     const getStudents = (newInputValue = '') => {
         setLoadingS(true);
-        if(newInputValue.length < 1) {
+        if (newInputValue.length < 1) {
             getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', sortingType).then(data => {
                 if (data) {
                     if (data.content) {
@@ -102,19 +95,15 @@ function CreateAvailibility() {
         }
     }
 
-    const getEnabledTags = () => {
-        setLoadingS(true);
-        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
+    const getAllCourses = () => {
+        getCourses().then(data => {
+            getStudents();
             if (data) {
                 if (data.content) {
-                    setTagsList(data.content.filter(t => t.enabled == true));
+                    setCourses(data.content);
                 }
             }
-        }).finally(() => setLoadingS(false))
-    }
-
-    const handleChangeTags = (value) =>{
-        setTags(value);
+        })
     }
 
     return (
@@ -137,7 +126,7 @@ function CreateAvailibility() {
                     <Form.Item label="Teacher" required>
                         <Autocomplete
                             id="asynchronous-search"
-                            options={studentList}
+                            options={studentList.filter(t => t.subjects)}
                             size="small"
                             inputValue={student}
                             onInputChange={(__, newInputValue) => {
@@ -145,13 +134,11 @@ function CreateAvailibility() {
                                     setStudent(newInputValue);
                                     getStudents(newInputValue);
                                 }
-                                console.log(newInputValue)
                             }}
                             onChange={(__, newValue) => {
                                 if (newValue != null) {
                                     changeChildren(newValue.id);
                                 }
-                                console.log(newValue)
                             }}
                             open={open}
                             onOpen={() => {
