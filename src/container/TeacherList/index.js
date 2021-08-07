@@ -1,22 +1,18 @@
+import 'antd/dist/antd.css';
+import Modal from 'react-modal';
+import { useHistory } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import 'antd/dist/antd.css';
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip , Typography} from 'antd';
-import { getTeacherList, findTeacherListByFirstNameAndLastName, getTeacherListByDate, deleteTeacherAvailabilities, sendMessageAvailability } from '../../services/Teacher'
-
-import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade, deleteAvailabilities } from '../../services/Student'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { assignStudents } from '../../Action-Reducer/Student/action'
 import SearchFilter from '../../components/StudentList/SearchFilter'
-import Moment from 'react-moment';
-import Modal from 'react-modal';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined,MessageOutlined, ApiOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import { Table, PageHeader, Button, Spin, Popconfirm, Form, Input, Tooltip, Typography } from 'antd';
+import { findTeacherListByFirstNameAndLastName, getTeacherListByDate, sendMessageAvailability, getTeacherProfileById } from '../../services/Teacher'
+import { assignStudentToAnotherTeacher, findStudentListByFirstNameAndLastName, getStudentListByDate, editSubjectGrade, deleteAvailabilities } from '../../services/Student'
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, VideoCameraOutlined, MessageOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 
 const { Text } = Typography;
-
 
 const customStyles = {
     content: {
@@ -38,6 +34,7 @@ function TeacherList() {
         return state.Student.assignStudent;
     })
     const [teacherList, setTeacherList] = useState();
+    const [teacherProfiles, setTeacherProfiles] = useState([]);
     const [teacherId, setTeacherId] = useState(0);
     const [mess_id, setMess_id] = useState("t1");
     const [sortingName, setSortingName] = useState("createDate");
@@ -51,7 +48,6 @@ function TeacherList() {
 
     const [editableSubject, setEditableSubject] = useState([])
     const [editableGrade, setEditableGrade] = useState([])
-    const [editableTag, setEditableTag] = useState([])
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -71,7 +67,7 @@ function TeacherList() {
     });
     // const [start, setStart] = useState();
     // const [end, setEnd] = useState();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [search, setSearch] = useState({
         name: "",
@@ -86,12 +82,6 @@ function TeacherList() {
     })
 
     const [modalIsOpen, setIsOpen] = React.useState(false);
-
-    function openModal(id) {
-        setTeacherId(id);
-        console.log(id)
-        setIsOpen(true);
-    }
 
     function closeModal() {
         setIsOpen(false);
@@ -109,7 +99,6 @@ function TeacherList() {
     const rowSelection = {
         selectedRow,
         onChange: (__, records) => {
-            console.log('selectedRowKeys changed: ', records);
             var recordIdArray = [];
             records.map(record => {
                 recordIdArray.push({ id: record.id })
@@ -121,7 +110,6 @@ function TeacherList() {
     const rowSelectionStudent = {
         selectedRowStudent,
         onChange: (__, records) => {
-            console.log('selectedRowKeys changed: ', records);
             var recordIdArray = [];
             records.map(record => {
                 recordIdArray.push({ id: record.id })
@@ -141,23 +129,40 @@ function TeacherList() {
 
     useEffect(() => {
         getListView();
-        
+
         // getStudentList();
     }, [tableProps.pageIndex]);
-    
+
     useEffect(() => {
         getListView();
         // getStudentList();
     }, [sortingType, sortingName]);
 
+    // useEffect(() => {
+    //     let datas = teacherList ? teacherList : [];
+    //     datas.map(t => {
+    //         getProfile(t.teacherProfileId);
+    //     });
+    // }, [teacherList]);
+
+    // useEffect(() => {
+    //     //console.log("Update => ", teacherProfiles)
+    // }, [teacherProfiles]);
+
+    // const getProfile = (id) => {
+    //     getTeacherProfileById(id).then(data => {
+    //         let profiles = teacherProfiles;
+    //         profiles.push(data);
+    //         setTeacherProfiles([...profiles]);
+    //     })
+    // }
 
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "" || localStorage.getItem('currentTag') === "no tag")) {
             getTeacherListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA 11 ==> ', data)
                 if (data) {
                     if (data.content) {
-                        setTeacherList(data.content)
+                        setTeacherList(data.content);
                         setTableProps({
                             ...tableProps,
                             totalCount: data.totalCount,
@@ -179,16 +184,13 @@ function TeacherList() {
                         pageSize: 30,
                     });
                 }
-
-                setLoading(false);
             })
         }
-        else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag"){
+        else if (search.firstName !== "" && search.lastName !== "" && localStorage.getItem('currentTag') === "no tag") {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, null, sortingName, sortingType).then(data => {
-                console.log('DATA 12 ==> ', data)
                 if (data) {
                     if (data.content) {
-                        setTeacherList(data.content)
+                        setTeacherList(data.content);
                         setTableProps({
                             ...tableProps,
                             totalCount: data.totalCount,
@@ -210,13 +212,13 @@ function TeacherList() {
                         pageSize: 30,
                     });
                 }
-                setLoading(false);
             })
-        } else{
+        } else {
             findTeacherListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
-                        setTeacherList(data.content)
+                        //console.log(data.content)
+                        setTeacherList(data.content);
                         setTableProps({
                             ...tableProps,
                             totalCount: data.totalCount,
@@ -238,7 +240,6 @@ function TeacherList() {
                         pageSize: 30,
                     });
                 }
-                setLoading(false);
             })
 
         }
@@ -288,28 +289,32 @@ function TeacherList() {
                     }
                 };
             },
-            render: (record) =>
+            render: (record) => {
+                // record['teacherProfile'] = teacherProfiles.find(p => p.id === record.teacherProfileId);
+                return (
+                    record.teacherProfile && (
+                        <div
+                            style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
+                        >
+                            <Tooltip title={"Online status"}>
+                                <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.teacherProfile.onlineStatus == 0 ? "block" : "none" }} />
+                                <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.teacherProfile.onlineStatus == 1 ? "block" : "none" }} />
+                                <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.teacherProfile.onlineStatus == 2 ? "block" : "none" }} />
+                            </Tooltip>
 
-                <div
-                    style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
-                >
-                    <Tooltip title={"Online status"}>
-                        <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.teacherProfile.onlineStatus == 0 ? "block" : "none" }} />
-                        <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.teacherProfile.onlineStatus == 1 ? "block" : "none" }} />
-                        <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.teacherProfile.onlineStatus == 2 ? "block" : "none" }} />
-                    </Tooltip>
-
-                    <Tooltip title={record.teacherProfile.firstName + " " + record.teacherProfile.lastName}>
-                        <Button
-                            style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer' }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: false })
-                            }}>{(record.teacherProfile.firstName + " " + record.teacherProfile.lastName).length <= 20 ?
-                                record.teacherProfile.firstName + " " + record.teacherProfile.lastName :
-                                (record.teacherProfile.firstName + " " + record.teacherProfile.lastName).substring(0, 19) + '...'}</Button>
-                    </Tooltip>
-                </div>,
+                            <Tooltip title={record.teacherProfile.firstName + " " + record.teacherProfile.lastName}>
+                                <Button
+                                    style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer' }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: false })
+                                    }}>{(record.teacherProfile.firstName + " " + record.teacherProfile.lastName).length <= 20 ?
+                                        record.teacherProfile.firstName + " " + record.teacherProfile.lastName :
+                                        (record.teacherProfile.firstName + " " + record.teacherProfile.lastName).substring(0, 19) + '...'}</Button>
+                            </Tooltip>
+                        </div>
+                    ))
+            },
             key: 'name',
             fixed: 'left',
         },
@@ -330,10 +335,10 @@ function TeacherList() {
                 };
             },
             render: (record) => {
-                let tmp = new Date(record.schedule.startDate);
+                let tmp = new Date(record.schedule ? record.schedule.startDate : null);
                 let result = new Date(tmp.getFullYear(), tmp.getMonth(), tmp.getDate());
 
-                let startD = (result.getMonth()+1).toString().padStart(2, '0') + '/' + result.getDate().toString().padStart(2, '0') + '/' + result.getFullYear();
+                let startD = (result.getMonth() + 1).toString().padStart(2, '0') + '/' + result.getDate().toString().padStart(2, '0') + '/' + result.getFullYear();
                 return (
                     <span>
                         {startD}
@@ -348,39 +353,43 @@ function TeacherList() {
             key: 'subjects',
             render: (record) => {
                 return (
-                    <div onDoubleClick={() => {
-                        if (!editableSubject.includes(record)) {
-                            setEditableSubject([...editableSubject, record]);
-                        } else {
-                            setEditableSubject(editableSubject.filter(r => r.id !== record.id));
-                        }
-                    }}
-                        style={{
-                            width: '200px'
-                        }}>
-                        {!editableSubject.includes(record) ?
+                    record.teacherProfile && (
+                        record.teacherProfile.subjects && (
+                            <div onDoubleClick={() => {
+                                if (!editableSubject.includes(record)) {
+                                    setEditableSubject([...editableSubject, record]);
+                                } else {
+                                    setEditableSubject(editableSubject.filter(r => r.id !== record.id));
+                                }
+                            }}
+                                style={{
+                                    width: '200px'
+                                }}>
+                                {!editableSubject.includes(record) ?
 
-                            <Tooltip title={record.teacherProfile.subjects.join(', ')}>
-                                {record.teacherProfile.subjects.join(', ').length <= 20 ?
-                                    record.teacherProfile.subjects.join(', ') :
-                                    (record.teacherProfile.subjects.join(', ')).substring(0, 19) + '...'}
-                            </Tooltip> : <Form layout="inline">
-                                <Form.Item>
-                                    <Input
-                                        type="text"
-                                        placeholder="Subjects"
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                editSubjectGrade(record.id, e.target.value, record.teacherProfile.grades.join(',')).then(data => {
-                                                    setEditableSubject(editableSubject.filter(r => r.id !== record.id));
-                                                    getListView();
-                                                })
-                                            }
-                                        }}
-                                    />
-                                </Form.Item>
-                            </Form>}
-                    </div>
+                                    <Tooltip title={record.teacherProfile.subjects.join(', ')}>
+                                        {record.teacherProfile.subjects.join(', ').length <= 20 ?
+                                            record.teacherProfile.subjects.join(', ') :
+                                            (record.teacherProfile.subjects.join(', ')).substring(0, 19) + '...'}
+                                    </Tooltip> : <Form layout="inline">
+                                        <Form.Item>
+                                            <Input
+                                                type="text"
+                                                placeholder="Subjects"
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        editSubjectGrade(record.id, e.target.value, record.teacherProfile.grades.join(',')).then(data => {
+                                                            setEditableSubject(editableSubject.filter(r => r.id !== record.id));
+                                                            getListView();
+                                                        })
+                                                    }
+                                                }}
+                                            />
+                                        </Form.Item>
+                                    </Form>}
+                            </div>
+                        )
+                    )
                 )
             }
         },
@@ -389,29 +398,29 @@ function TeacherList() {
             key: 'tags',
             render: (record) => {
 
-                let tags= []
-                if(record.tags){
+                let tags = []
+                if (record.tags) {
                     record.tags.map(tag => tags.push(tag.name))
                 }
 
-                return(
+                return (
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong></Text>)
+                                (<Text strong></Text>)
                                 :
-                            (
-                            <Tooltip title={(tags.join(', '))}>
-                                {(tags.join(', ')).length <= 20 ?
-                                    (tags.join(', ')) :
-                                    (tags.join(', ')).substring(0, 19) + '...'}
-                            </Tooltip>
-                            )
+                                (
+                                    <Tooltip title={(tags.join(', '))}>
+                                        {(tags.join(', ')).length <= 20 ?
+                                            (tags.join(', ')) :
+                                            (tags.join(', ')).substring(0, 19) + '...'}
+                                    </Tooltip>
+                                )
                         }
-                        
+
                     </div>
                 )
-                
+
             }
         },
         {
@@ -485,39 +494,40 @@ function TeacherList() {
                     let studentIds = studentIdArray.join(',');
                     assignStudentToAnotherTeacher(record.id, studentIds)
                         .then(res => {
-                            setLoading(true);
                             dispatch(assignStudents([]));
                             getListView();
                         })
                 }
                 return (
-                    <div style={{ display: 'flex', flexDirection: 'row', width: '100px' }}>
-                        <Tooltip title={record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://' + record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://' + record.teacherProfile.conferenceUrl : ''}>
-                            <Button
-                                style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
-                                onClick={(e) => {
-                                    window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://' + record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://' + record.teacherProfile.conferenceUrl : '')
-                                }}
-                                disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
-                                <VideoCameraOutlined style={{ fontSize: 20 }} />
-                            </Button>
-                        </Tooltip>
+                    record.teacherProfile && (
+                        <div style={{ display: 'flex', flexDirection: 'row', width: '100px' }}>
+                            <Tooltip title={record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://' + record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://' + record.teacherProfile.conferenceUrl : ''}>
+                                <Button
+                                    style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
+                                    onClick={(e) => {
+                                        window.open(record.conferenceUrl ? record.conferenceUrl.includes('http') ? record.conferenceUrl : 'http://' + record.conferenceUrl : record.teacherProfile.conferenceUrl ? record.teacherProfile.conferenceUrl.includes('http') ? record.teacherProfile.conferenceUrl : 'http://' + record.teacherProfile.conferenceUrl : '')
+                                    }}
+                                    disabled={!record.teacherProfile.conferenceUrl && !record.conferenceUrl}>
+                                    <VideoCameraOutlined style={{ fontSize: 20 }} />
+                                </Button>
+                            </Tooltip>
 
-                        <Popconfirm
-                            icon={false}
-                            title={Assigntitle}
-                            placement="left"
-                            onConfirm={confirm}
-                            onCancel={(e) => { e.stopPropagation(); dispatch(assignStudents([])) }}
-                            okText="Assign"
-                            cancelText="Cancel"
-                            disabled={assignStudentList.length > 0 ? false : true}
-                        >
-                            {/* <ApiOutlined style={{ color: assigningStatus && assignStudentList.length > 0 ? '#1890FF' : 'gray', fontSize: 20 }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()} /> */}
-                        </Popconfirm>
+                            <Popconfirm
+                                icon={false}
+                                title={Assigntitle}
+                                placement="left"
+                                onConfirm={confirm}
+                                onCancel={(e) => { e.stopPropagation(); dispatch(assignStudents([])) }}
+                                okText="Assign"
+                                cancelText="Cancel"
+                                disabled={assignStudentList.length > 0 ? false : true}
+                            >
+                                {/* <ApiOutlined style={{ color: assigningStatus && assignStudentList.length > 0 ? '#1890FF' : 'gray', fontSize: 20 }} disabled={assignStudentList.length > 0 ? false : true} onClick={(e) => e.stopPropagation()} /> */}
+                            </Popconfirm>
 
-                        <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/teacherlist/${record.id}/update`, { teacher: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
-                    </div>
+                            <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/teacherlist/${record.id}/update`, { teacher: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+                        </div>
+                    )
                 )
 
             }
@@ -527,7 +537,7 @@ function TeacherList() {
     const getStudentList = () => {
         if (studentSearch.firstName === "" && studentSearch.lastName === "") {
             getStudentListByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), studentTableProps.pageIndex, 5, sortingNameStudent, sortingTypeStudent).then(data => {
-    
+
                 if (data) {
                     if (data) {
                         setStudentList(data)
@@ -659,7 +669,7 @@ function TeacherList() {
                 setSearch({ ...search, firstName: nameData[0].trim(), lastName: nameData[0].trim() });
             }
         }
-        
+
     };
 
     const searchList = () => {
@@ -686,21 +696,6 @@ function TeacherList() {
             }
         }
     };
-
-    const deleteBooking = (selectedrow) => {
-        if (selectedrow.length > 0) {
-            let ids = selectedrow.reduce((a, b) => {
-                return a + ',' + b.id;
-            }, '')
-            deleteTeacherAvailabilities(ids.substring(1)).then(data => {
-                console.log(data);
-                setSelectedRow([]);
-                getListView();
-            });
-        } else {
-            alert('Select at least one teacher');
-        }
-    }
 
     const sendMessage = (messId) => {
         sendMessageAvailability(messId).then(res => {
@@ -731,13 +726,13 @@ function TeacherList() {
                         </Button>
                     </div>
                     {
-                        (selectedRow.length == 0) ? 
+                        (selectedRow.length == 0) ?
                             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
                                 <Button key='3' size="medium" type="primary" onClick={() => history.push("/teacherlist/add")}>
                                     <PlusOutlined />
                                 </Button>
-                            </div> 
-                            : 
+                            </div>
+                            :
                             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
                                 <Button key='3' size="medium" type="primary" onClick={() => sendMessage(mess_id)}>
                                     <MessageOutlined />
@@ -745,13 +740,14 @@ function TeacherList() {
                             </div>
                     }
                 </div>
-                {!teacherList ? <Spin className="loading-table" /> :
+                {!teacherList && loading ? <Spin className="loading-table" /> :
                     <Table
                         className="table-padding"
                         columns={columns}
                         style={{ marginTop: '30px' }}
-                        loading={loading}
+                        loading={!teacherList}
                         dataSource={teacherList}
+                        // dataSource={[]}
                         onChange={handleTableChange}
                         pagination={{
                             total: tableProps.totalCount,
@@ -790,7 +786,8 @@ function TeacherList() {
                         columns={studentColumns}
                         style={{ marginTop: '30px' }}
                         loading={loading}
-                        dataSource={studentList}
+                        // dataSource={studentList}
+                        dataSource={[]}
                         onChange={handleTableChange}
                         pagination={{
                             total: tableProps.totalCount,

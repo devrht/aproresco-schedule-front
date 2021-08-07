@@ -640,7 +640,8 @@ function StudentList() {
                         className="table-padding"
                         columns={columns}
                         loading={loading}
-                        dataSource={studentList}
+                        //dataSource={studentList}
+                        dataSource={[]}
                         onChange={handleTableChange}
                         pagination={{
                             total: tableProps.totalCount,

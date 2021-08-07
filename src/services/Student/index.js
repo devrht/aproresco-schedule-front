@@ -10,7 +10,7 @@ const headers = {
 
 export const getStudentListById = (TeacherId, type = 'availabilityId') => {
     // return axios.get(`${routes.SERVER_ADDRESS}/teacher-availability/${TeacherId}/student-bookings`)
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.BOOKING}?${type}=${TeacherId}`)
+    return axios.get(`${routes.BOOKING}?${type}=${TeacherId}`)
         .then(res => {
             console.log(res.data);
             return res.data;
@@ -22,7 +22,7 @@ export const getStudentListById = (TeacherId, type = 'availabilityId') => {
 
 export const getStudentList = (page, size, sortName, sortType) => {
 
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.BOOKING}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.BOOKING}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -32,7 +32,7 @@ export const getStudentList = (page, size, sortName, sortType) => {
 }
 
 export const getStudentListByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.BOOKING}?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.BOOKING}?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -42,7 +42,17 @@ export const getStudentListByDate = (start, end, page, size, sortName, sortType)
 }
 
 export const getParentProfile = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.PARENT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.PARENT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
+export const getParentById = (id) => {
+    return axios.get(`${routes.PARENT}/${id}`)
         .then(res => {
             return res.data;
         })
@@ -52,7 +62,7 @@ export const getParentProfile = (start, end, page, size, sortName, sortType) => 
 }
 
 // export const getTenant = (key) => {
-//     return axios.get(`${routes.SERVER_ADDRESS}/tenant-profile/${key}`)
+//     return axios.get(`tenant-profile/${key}`)
 //         .then(res => {
 //             return res.data;
 //         })
@@ -61,7 +71,7 @@ export const getParentProfile = (start, end, page, size, sortName, sortType) => 
 // }
 
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.SCHEDULE}?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.SCHEDULE}?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -76,7 +86,7 @@ export const getSchedule = (grade) => {
     let filter = 'startDate';
     let sort = 'asc';
     // let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.SCHEDULE}?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
+    return axios.get(`${routes.SCHEDULE}?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
         .then(res => {
             return res.data;
         })
@@ -91,7 +101,7 @@ export const getCountry = () => {
 }
 
 export const getStudentProfileByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.STUDENT}?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.STUDENT}?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -101,7 +111,7 @@ export const getStudentProfileByDate = (start, end, page, size, sortName, sortTy
 }
 
 export const getTeacherProfileByDate = (start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.TEACHER}?startDate=${start}&endDate=${end}page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.TEACHER}?startDate=${start}&endDate=${end}page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -121,7 +131,7 @@ export const getShortMessagesByDate = (type, start, end, page, size, sortName, s
 }
 
 export const getStudentDetail = (studentId) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.BOOKING}/${studentId}`)
+    return axios.get(`${routes.BOOKING}/${studentId}`)
         .then(res => {
             return res.data;
         })
@@ -131,7 +141,7 @@ export const getStudentDetail = (studentId) => {
 }
 
 export const getBookings = (studentId) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.BOOKING}/${studentId}`)
+    return axios.get(`${routes.BOOKING}/${studentId}`)
         .then(res => {
             return res.data;
         })
@@ -141,7 +151,7 @@ export const getBookings = (studentId) => {
 }
 
 export const findStudentListByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.BOOKING}?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.BOOKING}?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -151,7 +161,7 @@ export const findStudentListByFirstNameAndLastName = (firstName, start, end, pag
 }
 
 export const findParentProfileByEmail = (email, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.PARENT}?email=${email}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.PARENT}?email=${email}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -161,7 +171,7 @@ export const findParentProfileByEmail = (email, start, end, page, size, sortName
 }
 
 export const findScheduleByGrade = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.SCHEDULE}?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.SCHEDULE}?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -171,7 +181,7 @@ export const findScheduleByGrade = (gradeMin, gradeMax, start, end, page, size, 
 }
 
 export const findStudentProfileByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.STUDENT}?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.STUDENT}?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -181,8 +191,8 @@ export const findStudentProfileByFirstNameAndLastName = (firstName, start, end, 
 }
 
 export const findTeacherProfileByFirstNameAndLastName = (firstName, start, end, page, size, tag, sortName, sortType) => {
-    //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.TEACHER}?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    //return axios.get(`students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
+    return axios.get(`${routes.TEACHER}?firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&tag=${tag}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -448,14 +458,14 @@ export const sendMessageToBooking = (booking_id, message) => {
 }
 
 export const getTags = (page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.TAG}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.TAG}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
         .catch(err => console.log(err))
 }
 export const getTagByName = (name) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.TAG}?name=${name}`)
+    return axios.get(`${routes.TAG}?name=${name}`)
         .then(res => {
             return res.data;
         })
@@ -463,7 +473,7 @@ export const getTagByName = (name) => {
 }
 
 export const addTag = (data) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/${routes.TAG}`,data)
+    return axios.post(`${routes.TAG}`,data)
         .then(res => {
             return res.data;
         })
@@ -471,7 +481,7 @@ export const addTag = (data) => {
 }
 
 export const updateTag = (id,data) => {
-    return axios.patch(`${routes.SERVER_ADDRESS}/${routes.TAG}/${id}`, data)
+    return axios.put(`${routes.TAG}/${id}`, data)
         .then(res => {
             return res.data;
         })
@@ -479,7 +489,7 @@ export const updateTag = (id,data) => {
 }
 
 export const enableTags = (data) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/${routes.TAG}/enable`,data)
+    return axios.post(`${routes.TAG}/enable`,data)
         .then(res => {
             return res.data;
         })
@@ -487,7 +497,7 @@ export const enableTags = (data) => {
 }
 
 export const disableTags = (data) => {
-    return axios.post(`${routes.SERVER_ADDRESS}/${routes.TAG}/disable`,data)
+    return axios.post(`${routes.TAG}/disable`,data)
         .then(res => {
             return res.data;
         })
@@ -495,7 +505,7 @@ export const disableTags = (data) => {
 }
 
 export const getTagByDate = (page, size, sortName, sortType, name, date) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/${routes.TAG}?page=${page}&size=${size}&sort=${sortName},${sortType}&name=${name}&createDate=${date}`)
+    return axios.get(`${routes.TAG}?page=${page}&size=${size}&sort=${sortName},${sortType}&name=${name}&createDate=${date}`)
         .then(res => {
             return res.data;
         })

@@ -282,7 +282,7 @@ function CreateTeacher() {
                                         {
                                             subjectsList.map(subject => {
                                                 return (
-                                                    <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                                    <Select.Option value={subject.id} key={subject.id}>{subject.id}</Select.Option>
                                                 )
                                             })
                                         }

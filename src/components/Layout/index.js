@@ -50,11 +50,11 @@ function LayoutOfApp({ children }, props) {
           history.push('/settings');
         }
       } else {
-        setLogged(false);
+        setLogged(true);
         // history.push('/login');
       }
     } catch (error) {
-      setLogged(false);
+      setLogged(true);
       localStorage.removeItem("token");
       localStorage.removeItem("expireAt");
       localStorage.removeItem("user");
@@ -93,23 +93,23 @@ function LayoutOfApp({ children }, props) {
 
     let expireAt = new Date(localStorage.getItem("expireAt"));
 
-    if (localStorage.getItem("expireAt") == null) {
-      setLogged(false);
-      history.push('/login');
-    } else
-      if (localStorage.getItem("expireAt").length > 0)
-        if (today.getTime() <= expireAt.getTime()) {
-          setLogged(true);
-          if (window.location.pathname == '/login')
-            history.push('/teacherlist');
-        } else {
-          setLogged(false);
-          history.push('/login');
-        }
-      else {
-        setLogged(false);
-        history.push('/login');
-      }
+    // if (localStorage.getItem("expireAt") == null) {
+    //   setLogged(false);
+    //   history.push('/login');
+    // } else
+    //   if (localStorage.getItem("expireAt").length > 0)
+    //     if (today.getTime() <= expireAt.getTime()) {
+    //       setLogged(true);
+    //       if (window.location.pathname == '/login')
+    //         history.push('/teacherlist');
+    //     } else {
+    //       setLogged(false);
+    //       history.push('/login');
+    //     }
+    //   else {
+    //     setLogged(false);
+    //     history.push('/login');
+    //   }
     setPathName(window.location.pathname);
   }, [window.location.pathname, pathName])
 

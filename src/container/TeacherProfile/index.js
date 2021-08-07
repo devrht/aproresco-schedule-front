@@ -131,28 +131,28 @@ function TeacherProfile() {
         },
         {
             title: <div><span>Email </span>
-                {sortingName === "internalEmail" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "internalEmail" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "internalEmail" && sortingType === "" && ""}
+                {sortingName === "email" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "email" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "email" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("internalEmail");
+                        setSortingName("email");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("internalEmail"); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("email"); }
                     }
                 };
             },
             render: (record) => {
                 return (
                     <div>
-                        {record.internalEmail ? record.internalEmail : record.externalEmail}
+                        {record.email ? record.email : record.internalEmail}
                     </div>
                 )
             },
-            key: 'internalEmail',
+            key: 'email',
         }
         ,
         {

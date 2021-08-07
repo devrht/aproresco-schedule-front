@@ -56,7 +56,7 @@ function CreateTeacher() {
             formData.lastName = teacher.lastName;
             formData.schoolName = teacher.schoolName;
             formData.schoolBoard = teacher.schoolBoard;
-            formData.iemail = teacher.externalEmail;
+            formData.iemail = teacher.email;
             setGrades(teacher.grades)
             setSubjects(teacher.subjects)
             setPhone(teacher.phoneNumber)
@@ -174,7 +174,7 @@ function CreateTeacher() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="iemail" onChange={handleChange}  defaultValue={ teacher.externalEmail }/>
+                            <Input type="email" name="iemail" onChange={handleChange}  defaultValue={ teacher.email }/>
                         </Form.Item>
                         <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
                             <PhoneInput
@@ -250,7 +250,7 @@ function CreateTeacher() {
                                         {
                                             subjectsList.map(subject => {
                                                 return (
-                                                    <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                                    <Select.Option value={subject.id} key={subject.id}>{subject.id}</Select.Option>
                                                 )
                                             })
                                         }
