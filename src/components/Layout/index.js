@@ -146,12 +146,12 @@ function LayoutOfApp({ children }, props) {
               <SubMenu key="teachers" icon={<BookOutlined />} title="Teachers">
                 <Menu.Item key="1" onClick={() => { history.push('/teacherlist') }}>Availabilities</Menu.Item>
                 <Menu.Item key="2" onClick={() => { history.push('/teacherprofiles') }}>Profiles</Menu.Item>
-                <Menu.Item key="3" onClick={() => { history.push('/short-messages/TeacherProfile') }}>Messages</Menu.Item>
+                <Menu.Item key="3" onClick={() => { history.push('/short-messages/teacher') }}>Messages</Menu.Item>
               </SubMenu>
               <SubMenu key="students" icon={<UserOutlined />} title="Students">
                 <Menu.Item key="5" onClick={() => { history.push('/studentlist') }}>Bookings</Menu.Item>
                 <Menu.Item key="4" onClick={() => { history.push('/studentprofiles') }}>Profiles</Menu.Item>
-                <Menu.Item key="6" onClick={() => { history.push('/short-messages/StudentProfile') }}>Messages</Menu.Item>
+                <Menu.Item key="6" onClick={() => { history.push('/short-messages/parent') }}>Messages</Menu.Item>
                 <Menu.Item key="7" onClick={() => { history.push('/parentProfiles') }}>Parents</Menu.Item>
               </SubMenu>
               <Menu.Item key="schedules" icon={<CalendarOutlined />} onClick={() => { history.push('/schedules') }}>
@@ -175,7 +175,7 @@ function LayoutOfApp({ children }, props) {
                 justifyContent: 'flex-end',
               }}>
                 <SettingOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/settings') }} />
-                <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/tenant') }} />
+                {/* <SafetyOutlined style={{ fontSize: '30px', marginRight: '20px' }} onClick={() => { history.push('/tenant') }} /> */}
                 <LogoutOutlined style={{ fontSize: '30px' }} onClick={() => { logout(); }} />
               </div> : null}
           <div className="content-div" style={{ padding: 0 }}>{children}</div>

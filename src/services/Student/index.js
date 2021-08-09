@@ -120,16 +120,6 @@ export const getTeacherProfileByDate = (start, end, page, size, sortName, sortTy
         })
 }
 
-export const getShortMessagesByDate = (type, start, end, page, size, sortName, sortType) => {
-    return axios.get(`${routes.SERVER_ADDRESS}/search/customer-messages?category=${type}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
-        .then(res => {
-            return res.data;
-        })
-        .catch(err => {
-            //alert(err.message);
-        })
-}
-
 export const getStudentDetail = (studentId) => {
     return axios.get(`${routes.BOOKING}/${studentId}`)
         .then(res => {
@@ -201,9 +191,9 @@ export const findTeacherProfileByFirstNameAndLastName = (firstName, start, end, 
         })
 }
 
-export const getShortMessages = (type, firstName, start, end, page, size, sortName, sortType) => {
+export const getShortMessages = (type, term, page, size, sortName, sortType) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/customer-messages?category=${type}&firstName=${firstName}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    return axios.get(`${routes.MESSAGE}/${type}?term=${term}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -219,9 +209,9 @@ export const getChild = (id) => {
         })
 }
 
-export const getShortMessagesTemplates = (type, page, size, sortName, sortType) => {
+export const getShortMessagesTemplates = (type, page, size) => {
     //return axios.get(`${routes.SERVER_ADDRESS}/students_bookings/search/findByStudentProfileFirstNameIgnoreCaseContainingOrStudentProfileLastNameIgnoreCaseContaining?firstName=${firstName}&lastName=${lastName}&sort=${sortName},${sortType}`)
-    return axios.get(`${routes.SERVER_ADDRESS}/search/customer-message-templates?category=${type}&page=${page}&size=${size}`)
+    return axios.get(`${routes.SERVER_ADDRESS}/${type}?page=${page}&size=${size}`)
         .then(res => {
             return res.data;
         })

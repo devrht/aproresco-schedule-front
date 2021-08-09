@@ -371,7 +371,7 @@ export const updateStudent = (id, firstName, lastName, email, schoolName, school
         parent: { email: parent },
         tags: tags
     }
-    return axios.put(`${routes.STUDENT}/${id}`, data).then(res => {
+    return axios.patch(`${routes.STUDENT}/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

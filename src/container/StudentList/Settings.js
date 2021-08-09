@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useReducer } from 'react'
-import { PageHeader, Button, Select, Form, Input } from 'antd';
-import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action'
-import { bridgeManagement, getTags, bridgeStatus } from '../../services/Student'
-import { getTeacherProfile, newTenant } from '../../services/Teacher'
-import 'react-phone-input-2/lib/bootstrap.css'
-import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
+import { useHistory } from 'react-router-dom';
+import 'react-phone-input-2/lib/bootstrap.css';
+import "react-phone-input-2/lib/bootstrap.css";
+import { useSelector, useDispatch } from 'react-redux';
+import { getTeacherProfile } from '../../services/Teacher';
+import React, { useState, useEffect, useReducer } from 'react';
+import { PageHeader, Button, Select, Form, Input } from 'antd';
 import { getCountry, getSchedule } from '../../services/Student';
-import { updateTeacher, getTenants, getTenantByName } from '../../services/Teacher';
+import { bridgeManagement, getTags } from '../../services/Student';
+import { updateTeacher, getSubjects } from '../../services/Teacher';
+import { enableDeleting, enableAssigning } from '../../Action-Reducer/Student/action';
 const { Option } = Select;
 
 const formReducer = (state, event) => {
@@ -76,8 +76,8 @@ function Settings(props) {
   useEffect(() => {
     // setTenant(JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)));
     setTag(JSON.parse(localStorage.getItem('currentTag')) ? JSON.parse(localStorage.getItem('currentTag')) : 'no tag');
-    setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
-    getSubjects();
+    //setAdvanceSchedule(JSON.parse(localStorage.getItem('advanceSchedule' + JSON.parse(localStorage.getItem("user")).id)));
+    getAllSubjects();
     getCountry().then(data => {
       setCountry(data.countryCode.toString().toLowerCase());
     }).finally(() => getTeacher());
@@ -108,17 +108,11 @@ function Settings(props) {
           history.push(`/teacherlist`);
   }, [teacher])
 
-  const getSubjects = () => {
-    getSchedule(1).then(data => {
-      var obj = {};
-      for (var i = 0, len = data.content.length; i < len; i++)
-        obj[data.content[i]['subject']] = data.content[i];
-      data.content = new Array();
-      for (var key in obj)
-        data.content.push(obj[key]);
-      setSubjectsList(data.content)
+  const getAllSubjects = () => {
+    getSubjects().then(data => {
+        setSubjectsList(data.content)
     });
-  }
+}
 
   const changeTag = (name) => {
     if (name != 'no tag') {

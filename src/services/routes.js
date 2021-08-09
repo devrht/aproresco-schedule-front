@@ -20,6 +20,7 @@ export const COMMENT = SERVER_ADDRESS+"/v1/comment";
 export const TEACHER = SERVER_ADDRESS+"/v1/teacher";
 export const AVAILABILITY = SERVER_ADDRESS+"/v1/availability";
 export const TAG = SERVER_ADDRESS+"/v1/tag";
+export const MESSAGE = SERVER_ADDRESS+"/v1/notification";
 
 // export const PARENT = "http://appui-student-parent-appui-backend-project.apps.api1.appui.info/v1/parent";
 // export const STUDENT = "http://appui-student-profile-appui-backend-project.apps.api1.appui.info/v1/student";
