@@ -93,7 +93,6 @@ function UpdateSchedule() {
 
         let data = {
             courseId: courseId,
-            id: schedule.id,
             startDate: d,
             endDate: f,
             repeatPeriodInDays: repeatPeriod,
@@ -101,7 +100,7 @@ function UpdateSchedule() {
 
         console.log(data)
 
-        updateSchedule(data).then(result => {
+        updateSchedule(schedule.id, data).then(result => {
             history.push(`/schedules`)
         }).finally(() => setSubmitting(false));
     }

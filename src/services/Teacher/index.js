@@ -147,6 +147,13 @@ export const getSubjects = (page = 0, size = 1000, sortName = "name", sortType =
     })
 }
 
+export const getSubjectById = (id) => {
+    return axios.get(`${routes.SUBJECT}/${id}`)
+    .then(res => {
+        return res.data;
+    })
+}
+
 export const getTenantByName = (displayName,page,size) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?displayName=${displayName}&size=${size}&page=${page}`)
     .then(res => {
@@ -325,8 +332,8 @@ export const createSchedule = (data) => {
     }).catch(err => console.log(err));
 }
 
-export const updateSchedule = (data) => {
-    return axios.put(`${routes.SCHEDULE}`, data).then(res => {
+export const updateSchedule = (id, data) => {
+    return axios.patch(`${routes.SCHEDULE}/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -548,8 +555,14 @@ export const sendMessageAvailability = (message_id) => {
     }).catch(err => console.log(err));
 }
 
-export const updateAvailabilityAssistants = (availability_id, assistants) => {
-    return axios.put(`${routes.AVAILABILITY}/${availability_id}/assistants`, assistants).then(res => {
+export const updateAvailabilityAssistants = (availability_id, assistant_id) => {
+    return axios.post(`${routes.AVAILABILITY}/${availability_id}/assistant/${assistant_id}`, {}).then(res => {
+        return res;
+    }).catch(err => console.log(err));
+}
+
+export const removeAvailabilityAssistants = (availability_id, assistant_id) => {
+    return axios.delete(`${routes.AVAILABILITY}/${availability_id}/assistant/${assistant_id}`).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

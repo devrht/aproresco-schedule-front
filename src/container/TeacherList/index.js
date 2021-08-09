@@ -138,24 +138,25 @@ function TeacherList() {
         // getStudentList();
     }, [sortingType, sortingName]);
 
-    // useEffect(() => {
-    //     let datas = teacherList ? teacherList : [];
-    //     datas.map(t => {
-    //         getProfile(t.teacherProfileId);
-    //     });
-    // }, [teacherList]);
+    useEffect(() => {
+        let datas = teacherList ? teacherList : [];
+        setTeacherProfiles([]);
+        datas.map(t => {
+            getProfile(t.teacherProfile.id);
+        });
+    }, [teacherList]);
 
-    // useEffect(() => {
-    //     //console.log("Update => ", teacherProfiles)
-    // }, [teacherProfiles]);
+    useEffect(() => {
+        //console.log("Update => ", teacherProfiles)
+    }, [teacherProfiles]);
 
-    // const getProfile = (id) => {
-    //     getTeacherProfileById(id).then(data => {
-    //         let profiles = teacherProfiles;
-    //         profiles.push(data);
-    //         setTeacherProfiles([...profiles]);
-    //     })
-    // }
+    const getProfile = (id) => {
+        getTeacherProfileById(id).then(data => {
+            let profiles = teacherProfiles;
+            profiles.push(data);
+            setTeacherProfiles([...profiles]);
+        })
+    }
 
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "" || localStorage.getItem('currentTag') === "no tag")) {
@@ -290,27 +291,28 @@ function TeacherList() {
                 };
             },
             render: (record) => {
-                // record['teacherProfile'] = teacherProfiles.find(p => p.id === record.teacherProfileId);
+                let teacherProfile = teacherProfiles.find(p => p.id === record.teacherProfile.id);
+                //console.log(teacherProfile)
                 return (
-                    record.teacherProfile && (
+                    teacherProfile && (
                         <div
                             style={{ display: "flex", flexDirection: 'row', alignItems: "center" }}
                         >
                             <Tooltip title={"Online status"}>
-                                <FontAwesomeIcon icon={faCircle} color="green" style={{ display: record.teacherProfile.onlineStatus == 0 ? "block" : "none" }} />
-                                <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: record.teacherProfile.onlineStatus == 1 ? "block" : "none" }} />
-                                <FontAwesomeIcon icon={faCircle} color="red" style={{ display: record.teacherProfile.onlineStatus == 2 ? "block" : "none" }} />
+                                <FontAwesomeIcon icon={faCircle} color="green" style={{ display: teacherProfile.onlineStatus == 0 ? "block" : "none" }} />
+                                <FontAwesomeIcon icon={faCircle} color="orange" style={{ display: teacherProfile.onlineStatus == 1 ? "block" : "none" }} />
+                                <FontAwesomeIcon icon={faCircle} color="red" style={{ display: teacherProfile.onlineStatus == 2 ? "block" : "none" }} />
                             </Tooltip>
 
-                            <Tooltip title={record.teacherProfile.firstName + " " + record.teacherProfile.lastName}>
+                            <Tooltip title={teacherProfile.firstName + " " + teacherProfile.lastName}>
                                 <Button
                                     style={{ backgroundColor: "transparent", border: "0px", cursor: 'pointer' }}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: false })
-                                    }}>{(record.teacherProfile.firstName + " " + record.teacherProfile.lastName).length <= 20 ?
-                                        record.teacherProfile.firstName + " " + record.teacherProfile.lastName :
-                                        (record.teacherProfile.firstName + " " + record.teacherProfile.lastName).substring(0, 19) + '...'}</Button>
+                                        history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: false, teacherProfile })
+                                    }}>{(teacherProfile.firstName + " " + teacherProfile.lastName).length <= 20 ?
+                                        teacherProfile.firstName + " " + teacherProfile.lastName :
+                                        (teacherProfile.firstName + " " + teacherProfile.lastName).substring(0, 19) + '...'}</Button>
                             </Tooltip>
                         </div>
                     ))
@@ -352,33 +354,43 @@ function TeacherList() {
             </div>,
             key: 'subjects',
             render: (record) => {
+                let teacherProfile = teacherProfiles.find(p => p.id === record.teacherProfile.id);
+                if (!teacherProfile) {
+                    teacherProfile = {}
+                } else {
+                    if (!teacherProfile.subjects) {
+                        teacherProfile.subjects = [];
+                    }
+                }
                 return (
-                    record.teacherProfile && (
-                        record.teacherProfile.subjects && (
-                            <div onDoubleClick={() => {
-                                if (!editableSubject.includes(record)) {
-                                    setEditableSubject([...editableSubject, record]);
-                                } else {
-                                    setEditableSubject(editableSubject.filter(r => r.id !== record.id));
-                                }
-                            }}
+                    teacherProfile && (
+                        teacherProfile.subjects && (
+                            <div
+                                // onDoubleClick={() => {
+                                //     if (!editableSubject.includes(record)) {
+                                //         setEditableSubject([...editableSubject, record]);
+                                //     } else {
+                                //         setEditableSubject(editableSubject.filter(r => r.id !== record.id));
+                                //     }
+                                // }}
                                 style={{
                                     width: '200px'
                                 }}>
                                 {!editableSubject.includes(record) ?
 
-                                    <Tooltip title={record.teacherProfile.subjects.join(', ')}>
-                                        {record.teacherProfile.subjects.join(', ').length <= 20 ?
-                                            record.teacherProfile.subjects.join(', ') :
-                                            (record.teacherProfile.subjects.join(', ')).substring(0, 19) + '...'}
-                                    </Tooltip> : <Form layout="inline">
+                                    <Tooltip title={teacherProfile.subjects.map(s => s.name).join(', ')}>
+                                        {teacherProfile.subjects.map(s => s.name).join(', ').length <= 20 ?
+                                            teacherProfile.subjects.map(s => s.name).join(', ') :
+                                            (teacherProfile.subjects.map(s => s.name).join(', ')).substring(0, 19) + '...'}
+                                    </Tooltip> :
+                                    <Form layout="inline">
                                         <Form.Item>
                                             <Input
                                                 type="text"
                                                 placeholder="Subjects"
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
-                                                        editSubjectGrade(record.id, e.target.value, record.teacherProfile.grades.join(',')).then(data => {
+                                                        editSubjectGrade(record.id, e.target.value, teacherProfile.grades.join(',')).then(data => {
                                                             setEditableSubject(editableSubject.filter(r => r.id !== record.id));
                                                             getListView();
                                                         })
@@ -428,15 +440,25 @@ function TeacherList() {
             </div>,
             key: 'grades',
             render: (record) => {
+                let teacherProfile = teacherProfiles.find(p => p.id === record.teacherProfile.id);
+                if (!teacherProfile) {
+                    teacherProfile = {}
+                } else {
+                    if (!teacherProfile.grades) {
+                        teacherProfile.grades = [];
+                    }
+                }
                 return (
-                    <div onDoubleClick={() => {
-                        if (!editableGrade.includes(record)) {
-                            setEditableGrade([...editableGrade, record]);
-                        } else {
-                            setEditableGrade(editableGrade.filter(r => r.id !== record.id));
-                        }
-                    }}>
-                        {!editableGrade.includes(record) ? gradesToPrint(record.teacherProfile) : <Form layout="inline">
+                    <div
+                    // onDoubleClick={() => {
+                    //     if (!editableGrade.includes(record)) {
+                    //         setEditableGrade([...editableGrade, record]);
+                    //     } else {
+                    //         setEditableGrade(editableGrade.filter(r => r.id !== record.id));
+                    //     }
+                    // }}
+                    >
+                        {!editableGrade.includes(record) ? gradesToPrint(teacherProfile) : <Form layout="inline">
                             <Form.Item>
                                 <Input
                                     type="text"

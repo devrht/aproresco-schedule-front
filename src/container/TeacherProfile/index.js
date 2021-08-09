@@ -49,7 +49,6 @@ function TeacherProfile() {
     const deleteRows = () => {
         let ids = [];
         selectedRow.forEach(r => ids.push(r.id));
-        console.log(ids.join(','));
         deleteTeacherProfile(ids.join(',')).then(data => {
             getListView();
             setSelectedRow([]);
@@ -88,7 +87,7 @@ function TeacherProfile() {
                             onClick={(e) => {
                                 e.stopPropagation();
                                 record.teacherProfile = record;
-                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: true })
+                                history.push(`/studentlist/teacher/${record.id}`, { teacher: record, profile: true, teacherProfile: record })
                                 // history.push(`/studentlist/studentDetail/${record.id}`)
                             }}>
                             <p style={{ width: "50%", textAlign: "left" }}>
