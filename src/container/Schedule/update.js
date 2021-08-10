@@ -98,8 +98,6 @@ function UpdateSchedule() {
             repeatPeriodInDays: repeatPeriod,
         }
 
-        console.log(data)
-
         updateSchedule(schedule.id, data).then(result => {
             history.push(`/schedules`)
         }).finally(() => setSubmitting(false));

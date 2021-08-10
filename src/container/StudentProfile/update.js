@@ -76,8 +76,7 @@ function UpdateStudent() {
     }
 
     const getListView = () => {
-        getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-            console.log('DATA ==> ', data)
+        getParentProfile(0, 100, 'firstName', 'asc').then(data => {
             if (data) {
                 if (data.content) {
                     setParents(data.content);

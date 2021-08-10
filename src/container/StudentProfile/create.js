@@ -64,8 +64,7 @@ function CreateStudent() {
 
     const getListView = (search = '') => {
         if (search.length < 0) {
-            getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-                console.log('DATA ==> ', data)
+            getParentProfile(0, 100, 'firstName', 'asc').then(data => {
                 if (data) {
                     if (data.content) {
                         setParents(data.content);
@@ -77,8 +76,7 @@ function CreateStudent() {
                 }
             })
         } else {
-            findParentProfileByEmail(search, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-                console.log('DATA ==> ', data)
+            findParentProfileByEmail(search, 0, 100, 'firstName', 'asc').then(data => {
                 if (data) {
                     if (data.content) {
                         setParents(data.content);

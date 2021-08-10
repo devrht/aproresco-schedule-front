@@ -2,9 +2,9 @@ import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom';
 import '../../Assets/container/StudentList.css';
 import TextField from '@material-ui/core/TextField';
+import { PageHeader, Form, Input, Button } from 'antd';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect, useState, useReducer } from 'react';
-import { PageHeader, Form, Input, Button, Select } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { createSchedule, getCourses } from '../../services/Teacher';
 

@@ -41,7 +41,7 @@ export const getStudentListByDate = (start, end, page, size, sortName, sortType)
         })
 }
 
-export const getParentProfile = (start, end, page, size, sortName, sortType) => {
+export const getParentProfile = (page, size, sortName, sortType) => {
     return axios.get(`${routes.PARENT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
@@ -72,6 +72,16 @@ export const getParentById = (id) => {
 
 export const getScheduleByDate = (gradeMin, gradeMax, start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SCHEDULE}?gradeMin=${gradeMin}&gradeMax=${gradeMax}&startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
+export const getSchedules = (page, size, sortName, sortType) => {
+    return axios.get(`${routes.SCHEDULE}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })
@@ -150,7 +160,7 @@ export const findStudentListByFirstNameAndLastName = (firstName, start, end, pag
         })
 }
 
-export const findParentProfileByEmail = (email, start, end, page, size, sortName, sortType) => {
+export const findParentProfileByEmail = (email, page, size, sortName, sortType) => {
     return axios.get(`${routes.PARENT}?email=${email}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
@@ -471,7 +481,7 @@ export const addTag = (data) => {
 }
 
 export const updateTag = (id,data) => {
-    return axios.put(`${routes.TAG}/${id}`, data)
+    return axios.patch(`${routes.TAG}/${id}`, data)
         .then(res => {
             return res.data;
         })

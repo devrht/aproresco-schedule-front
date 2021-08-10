@@ -39,7 +39,6 @@ function CreateAvailibility() {
         setSubjec(null);
         let _children = studentList.filter(c => c.id == id)[0];
         setChildren(_children);
-        console.log(_children)
         getSchedule(1).then(data => {
             setSchedules(data.content);
             setDat(null);
@@ -80,7 +79,7 @@ function CreateAvailibility() {
             getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', sortingType).then(data => {
                 if (data) {
                     if (data.content) {
-                        setStudentList(data.content);
+                        setStudentList(data.content.filter(t => t.subjects));
                     }
                 }
             }).finally(() => setLoadingS(false))
@@ -88,7 +87,7 @@ function CreateAvailibility() {
             findTeacherProfileByFirstNameAndLastName(newInputValue, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, null, 'firstName', sortingType).then(data => {
                 if (data) {
                     if (data.content) {
-                        setStudentList(data.content);
+                        setStudentList(data.content.filter(t => t.subjects));
                     }
                 }
             }).finally(() => setLoadingS(false))
@@ -126,7 +125,7 @@ function CreateAvailibility() {
                     <Form.Item label="Teacher" required>
                         <Autocomplete
                             id="asynchronous-search"
-                            options={studentList.filter(t => t.subjects)}
+                            options={studentList}
                             size="small"
                             inputValue={student}
                             onInputChange={(__, newInputValue) => {

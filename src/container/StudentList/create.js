@@ -2,13 +2,13 @@ import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom';
 import '../../Assets/container/StudentList.css';
 import TextField from '@material-ui/core/TextField';
-import { createBooking } from '../../services/Teacher';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect, useState, useReducer } from 'react';
+import { createBooking, getCourses } from '../../services/Teacher';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { PageHeader, Form, Input, Button, Table, Spin, Select } from 'antd';
+import { PageHeader, Form, Input, Button, Table, Spin } from 'antd';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
-import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate, getTags } from '../../services/Student'
+import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate, getParentProfile } from '../../services/Student'
 
 
 const formReducer = (state, event) => {
@@ -21,28 +21,28 @@ const formReducer = (state, event) => {
 function CreateBooking() {
 
     const history = useHistory();
-    const [open, setOpen] = useState(false);
-    const [open2, setOpen2] = useState(false);
-    const [loadingS, setLoadingS] = useState(false);
-    const [student, setStudent] = useState(null);
-    const [comment, setComment] = useState('');
-    const [formData, setFormData] = useReducer(formReducer, {});
-    const [studentList, setStudentList] = useState([]);
-    const [children, setChildren] = useState(null);
     const [form] = Form.useForm();
-    const [schedules, setSchedules] = useState([]);
-    const [schedule, setSchedule] = useState(null);
-    const [subjects, setSubjects] = useState([]);
-    const [dates, setDates] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [dat, setDat] = useState(null);
+    const [dates, setDates] = useState([]);
+    const [open, setOpen] = useState(false);
     const [subjec, setSubjec] = useState(null);
-    const [submitting, setSubmitting] = useState(false);
-    const [selectedRow, setSelectedRow] = useState([]);
-    const [sortingName, setSortingName] = useState("createDate");
-    const [sortingType, setSortingType] = useState("desc");
+    const [comment, setComment] = useState('');
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [subjects, setSubjects] = useState([]);
+    const [student, setStudent] = useState(null);
     const [gradeMin, setGradeMin] = useState("0");
+    const [schedules, setSchedules] = useState([]);
+    const [children, setChildren] = useState(null);
+    const [schedule, setSchedule] = useState(null);
+    const [loadingS, setLoadingS] = useState(false);
     const [gradeMax, setGradeMax] = useState("100");
+    const [selectedRow, setSelectedRow] = useState([]);
+    const [studentList, setStudentList] = useState([]);
+    const [submitting, setSubmitting] = useState(false);
+    const [sortingType, setSortingType] = useState("desc");
+    const [formData, setFormData] = useReducer(formReducer, {});
+    const [sortingName, setSortingName] = useState("createDate");
 
     const [open1, setOpen1] = useState(false);
     const [tagsList, setTagsList] = useState([]);
@@ -76,20 +76,19 @@ function CreateBooking() {
         type: 'radio'
     };
 
-    const getEnabledTags = () => {
-        setLoadingS(true)
-        setSortingName("name")
-        getTags(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+    useEffect(() => {
+        getAllCourses();
+    }, []);
+
+    const getAllCourses = () => {
+        setLoading(true);
+        getCourses().then(data => {
             if (data) {
                 if (data.content) {
-                    setTagsList(data.content.filter(t => t.enabled == true));
+                    setCourses(data.content);
                 }
             }
-        }).finally(() => setLoadingS(false))
-    }
-
-    const handleChangeTags = (value) =>{
-        setTags(value);
+        }).finally(() => setLoading(false))
     }
 
     useEffect(() => {
@@ -97,19 +96,12 @@ function CreateBooking() {
         getListView();
     }, [sortingType, sortingName, tableProps.pageIndex]);
 
-    const handleChange = event => {
-        setFormData({
-            name: event.target.name,
-            value: event.target.value,
-        });
-    }
-
     const changeChildren = (value) => {
         setDates([]);
         setSubjects([]);
         setDat(null);
         setSubjec(null);
-        if(value == null){
+        if (value == null) {
             setChildren(null)
         }
         let _children = studentList.filter(c => c.id == value.id)[0];
@@ -125,16 +117,6 @@ function CreateBooking() {
                 data.content.push(obj[key]);
             setSubjects(data.content)
         });
-    }
-
-    const changeSubject = (subject) => {
-        setSubjec(subject);
-        setDat(null);
-        setDates(schedules.filter(s => s.subject == subject).filter(s => s.grades.includes(children.grade)));
-    }
-
-    const changeDate = (date) => {
-        setDat(date);
     }
 
     const handleSubmit = () => {
@@ -153,7 +135,7 @@ function CreateBooking() {
 
     const getStudents = (search = '') => {
         setLoadingS(true);
-        if(search.length < 0) {
+        if (search.length < 0) {
             getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
                 if (data) {
                     if (data.content) {
@@ -170,7 +152,7 @@ function CreateBooking() {
                 }
             }).finally(() => setLoadingS(false))
         }
-        
+
     }
 
     const getListView = () => {
@@ -205,7 +187,6 @@ function CreateBooking() {
     }
 
     const columns = [
-
         {
             title: <div><span>Subject </span>
                 {sortingName === "subject" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
@@ -223,9 +204,10 @@ function CreateBooking() {
                 };
             },
             render: (record) => {
+                let course = courses.find(c => c.id === record.courseId);
                 return (
                     <div>
-                        {record.subject}
+                        {course ? course.subject.name : ''}
                     </div>
                 )
             },
@@ -250,13 +232,13 @@ function CreateBooking() {
             render: (record) => {
                 let s = record.startDate;
                 let date = (new Date(s)).toLocaleDateString();
-                let sTime= ((new Date(s)).toLocaleTimeString()).split(':');
+                let sTime = ((new Date(s)).toLocaleTimeString()).split(':');
 
-                let sst= sTime[0]+':'+sTime[1];
+                let sst = sTime[0] + ':' + sTime[1];
 
                 return (
                     <span>
-                        {date +" "+ sst}
+                        {date + " " + sst}
                     </span>
                 )
             },
@@ -293,9 +275,10 @@ function CreateBooking() {
             title: 'Duration',
             key: 'durationInMinutes',
             render: (record) => {
+                let course = courses.find(c => c.id === record.courseId);
                 return (
                     <div>
-                        {record.durationInMinutes + ' min'}
+                        {course ? course.durationInMinutes + ' min' : ''}
                     </div>
                 )
             }
@@ -304,9 +287,14 @@ function CreateBooking() {
             title: 'Grades',
             key: 'grades',
             render: (record) => {
+                let course = courses.find(c => c.id === record.courseId);
+                if (!course) {
+                    course = {};
+                    course.grade = []
+                }
                 return (
                     <div>
-                        {gradesToPrint(record)}
+                        {gradesToPrint(course)}
                     </div>
                 )
             }
@@ -315,10 +303,13 @@ function CreateBooking() {
             title: 'Price',
             key: 'price',
             render: (record) => {
+                let course = courses.find(c => c.id === record.courseId);
                 return (
-                    <div>
-                        {record.price +' '+ record.currency }
-                    </div>
+                    course && (
+                        <div>
+                            {course.prices[0].amount + ' ' + course.prices[0].currencyCode}
+                        </div>
+                    )
                 )
             }
         },
@@ -337,9 +328,10 @@ function CreateBooking() {
             title: 'Language',
             key: 'language',
             render: (record) => {
+                let course = courses.find(c => c.id === record.courseId);
                 return (
                     <div>
-                        {record.language}
+                        {course ? course.language : ''}
                     </div>
                 )
             }
@@ -393,7 +385,7 @@ function CreateBooking() {
             <PageHeader
                 ghost={false}
                 title={<p style={{ fontSize: '3em', textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>Create Booking</p>}
-                style={{ width: '100%'}}
+                style={{ width: '100%' }}
                 extra={[
                 ]}
             >
@@ -407,7 +399,7 @@ function CreateBooking() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}}>
+                        <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }}>
                             <Autocomplete
                                 id="asynchronous-search"
                                 options={studentList}
@@ -445,19 +437,19 @@ function CreateBooking() {
                                 }
                             />
                         </Form.Item>
-                        <Form.Item label="Comment" required style={{ flex: 1, marginRight: '10px',marginLeft: '10px' }}>
+                        <Form.Item label="Comment" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }}>
                             <Input type="text" name="comment" style={{ marginTop: '3px', padding: '8px 8px', lineHeight: '14px' }} onChange={(e) => setComment(e.target.value)} />
                         </Form.Item>
                     </div>
-                        {
-                            !tagsList ? 
+                    {/* {
+                        !tagsList ?
                             (<></>)
                             :
                             (<div style={{
                                 display: 'flex',
                                 flexDirection: 'row'
                             }}>
-                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px',  marginLeft: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
+                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
                                     <Select mode="multiple"
                                         allowClear
                                         loading={loadingS}
@@ -478,13 +470,13 @@ function CreateBooking() {
                                     </Select>
                                 </Form.Item>
                             </div>)
-                        }
-                    
-                    
-                        {!schedules ? <Spin className="loading-table" /> :
+                    } */}
+
+
+                    {!schedules ? <Spin className="loading-table" /> :
                         <Table
                             className="table-padding"
-                            style={{  marginLeft: '10px', marginRight: '10px'}}
+                            style={{ marginLeft: '10px', marginRight: '10px' }}
                             columns={columns}
                             loading={loading}
                             dataSource={schedules}
