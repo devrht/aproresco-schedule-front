@@ -8,7 +8,7 @@ import { createBooking, getCourses } from '../../services/Teacher';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PageHeader, Form, Input, Button, Table, Spin } from 'antd';
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@ant-design/icons"
-import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getScheduleByDate, getParentProfile } from '../../services/Student'
+import { getStudentProfileByDate, findStudentProfileByFirstNameAndLastName, getSchedule } from '../../services/Student'
 
 
 const formReducer = (state, event) => {
@@ -106,7 +106,7 @@ function CreateBooking() {
         }
         let _children = studentList.filter(c => c.id == value.id)[0];
         setChildren(_children);
-        getScheduleByDate(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+        getSchedule(_children.grade ? _children.grade : 0, -1).then(data => {
             setSchedules(data.content)
             var obj = {};
             for (var i = 0, len = data.content.length; i < len; i++)
@@ -156,7 +156,7 @@ function CreateBooking() {
     }
 
     const getListView = () => {
-        getScheduleByDate(gradeMin, gradeMax, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+        getSchedule(0, 100).then(data => {
             if (data) {
                 if (data.content) {
                     setSchedules([])

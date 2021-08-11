@@ -472,6 +472,7 @@ export const createBooking = (studentProfile, schedule, studentComment) => {
 
 export const updateBooking = (id, studentProfile, schedule, studentComment) => {
     let data = {
+        id,
         studentProfile,
         schedule,
         studentComment

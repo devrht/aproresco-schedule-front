@@ -356,84 +356,88 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            render: (record) =>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    {
-                        !editTeacher.includes(record) ?
-                            <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl : "Link Not Found" : "Student Not Found"}>
-                                <Button
-                                    style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
-                                    onClick={(e) => {
-                                        //e.stopPropagation();
-                                        if (record.studentProfile)
-                                            if (record.studentProfile.conferenceUrl)
-                                                window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://' + record.studentProfile.conferenceUrl)
-                                    }}><VideoCameraOutlined style={{ fontSize: 20 }} /></Button>
-                            </Tooltip> :
-                            <Autocomplete
-                                id="asynchronous-search"
-                                options={teacherList}
-                                size="small"
-                                inputValue={teacherName}
-                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
-                                onInputChange={(__, newInputValue) => {
-                                    setTeacherName(newInputValue);
-                                    console.log(newInputValue)
-                                }}
-                                onChange={(__, newValue) => {
-                                    if (newValue != null)
-                                        setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
-                                }}
-                                open={open}
-                                onOpen={() => {
-                                    setOpen(true);
-                                }}
-                                onClose={() => {
-                                    setOpen(false);
-                                }}
-                                loading={loadingTeacher}
-                                getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                                style={{ minWidth: 450, marginLeft: -250 }}
-                                renderInput={(params) =>
-                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                        <TextField {...params}
-                                            label="Select a teacher to assign"
-                                            variant="outlined"
-                                            onChange={(e) => changeTeacherSearch(e)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && !open) {
-                                                    let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
-                                                    if (teachers.length === 0) {
-                                                        alert('This teacher is not found');
-                                                    } else {
-                                                        assigningStudents(teachers[0], record.id);
+            render: (record) => {
+                let course = getOneCourse(record);
+                return (
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        {
+                            !editTeacher.includes(record) ?
+                                <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl : "Link Not Found" : "Student Not Found"}>
+                                    <Button
+                                        style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
+                                        onClick={(e) => {
+                                            //e.stopPropagation();
+                                            if (record.studentProfile)
+                                                if (record.studentProfile.conferenceUrl)
+                                                    window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://' + record.studentProfile.conferenceUrl)
+                                        }}><VideoCameraOutlined style={{ fontSize: 20 }} /></Button>
+                                </Tooltip> :
+                                <Autocomplete
+                                    id="asynchronous-search"
+                                    options={teacherList}
+                                    size="small"
+                                    inputValue={teacherName}
+                                    // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                    onInputChange={(__, newInputValue) => {
+                                        setTeacherName(newInputValue);
+                                        console.log(newInputValue)
+                                    }}
+                                    onChange={(__, newValue) => {
+                                        if (newValue != null)
+                                            setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                    }}
+                                    open={open}
+                                    onOpen={() => {
+                                        setOpen(true);
+                                    }}
+                                    onClose={() => {
+                                        setOpen(false);
+                                    }}
+                                    loading={loadingTeacher}
+                                    getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
+                                    style={{ minWidth: 450, marginLeft: -250 }}
+                                    renderInput={(params) =>
+                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <TextField {...params}
+                                                label="Select a teacher to assign"
+                                                variant="outlined"
+                                                onChange={(e) => changeTeacherSearch(e)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && !open) {
+                                                        let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
+                                                        if (teachers.length === 0) {
+                                                            alert('This teacher is not found');
+                                                        } else {
+                                                            assigningStudents(teachers[0], record.id);
+                                                        }
                                                     }
-                                                }
-                                            }}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <React.Fragment>
-                                                        {loadingTeacher ? <CircularProgress color="inherit" size={20} /> : null}
-                                                        {params.InputProps.endAdornment}
-                                                    </React.Fragment>
-                                                ),
-                                            }}
-                                        />
-                                    </div>
+                                                }}
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment: (
+                                                        <React.Fragment>
+                                                            {loadingTeacher ? <CircularProgress color="inherit" size={20} /> : null}
+                                                            {params.InputProps.endAdornment}
+                                                        </React.Fragment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
 
-                                }
-                            />
-                    }
-                    {
-                        !editTeacher.includes(record) ?
-                            null : null
-                        // <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><ApiOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }} /></div> : null
-                    }
+                                    }
+                                />
+                        }
+                        {
+                            !editTeacher.includes(record) ?
+                                null : null
+                            // <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><ApiOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }} /></div> : null
+                        }
 
-                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/studentlist/${record.id}/update`, { student: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+                        <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/studentlist/${record.id}/update`, { student: record, course }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
 
-                </div>,
+                    </div>
+                )
+            },
         },
     ];
 

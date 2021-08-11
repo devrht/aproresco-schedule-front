@@ -90,13 +90,14 @@ export const getSchedules = (page, size, sortName, sortType) => {
         })
 }
 
-export const getSchedule = (grade) => {
+export const getSchedule = (min = 0, max = 100) => {
     let page = 0;
-    let size = 100;
+    let size = 10000;
     let filter = 'startDate';
     let sort = 'asc';
+    max = max === -1 ? min : max;
     // let tenant = JSON.parse(localStorage.getItem("tenant"+JSON.parse(localStorage.getItem("user")).id));
-    return axios.get(`${routes.SCHEDULE}?gradeMin=${0}&gradeMax=${100}&page=${page}&size=${size}&sort=${filter},${sort}`)
+    return axios.get(`${routes.SCHEDULE}?gradeMin=${min}&gradeMax=${max}&page=${page}&size=${size}&sort=${filter},${sort}`)
         .then(res => {
             return res.data;
         })
