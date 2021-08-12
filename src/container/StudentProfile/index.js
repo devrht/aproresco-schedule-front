@@ -10,17 +10,17 @@ import SearchFilter from '../../components/StudentList/SearchFilter'
 import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
 import { faCircle, faCoffee, faCommentAlt } from '@fortawesome/free-solid-svg-icons'
 import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
-import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles, sendStudentsMessage, getParentById } from '../../services/Student'
+import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles, sendStudentsMessage, getParentProfile } from '../../services/Student'
 
 const { Text } = Typography;
 
 function StudentProfile() {
     const history = useHistory();
-    const [studentList, setStudentList] = useState();
-    const [parentProfiles, setParentProfiles] = useState([]);
-    const [sortingName, setSortingName] = useState("createDate");
-    const [sortingType, setSortingType] = useState("desc");
+    const [parents, setParents] = useState([]);
     const [mess_id, setMess_id] = useState("s1");
+    const [studentList, setStudentList] = useState();
+    const [sortingType, setSortingType] = useState("desc");
+    const [sortingName, setSortingName] = useState("createDate");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -56,23 +56,17 @@ function StudentProfile() {
     }
 
     useEffect(() => {
-        let datas = studentList ? studentList : [];
-        console.log(datas)
-        datas.map(t => {
-            getParent(t.studentParentId);
+        getParents();
+    }, []);
+
+    const getParents = () => {
+        getParentProfile(0, 50000, "createDate", 'desc').then(data => {
+            if (data) {
+                if (data.content) {
+                    setParents(data.content);
+                }
+            }
         });
-    }, [studentList]);
-
-    useEffect(() => {
-        //console.log("Update => ", teacherProfiles)
-    }, [parentProfiles]);
-
-    const getParent = (id) => {
-        getParentById(id).then(data => {
-            let parents = parentProfiles;
-            parents.push(data);
-            setParentProfiles([...parents]);
-        })
     }
 
     const columns = [
@@ -124,7 +118,7 @@ function StudentProfile() {
             title: <div><span>Parent phone </span>
             </div>,
             render: (record) => {
-                record.parent = parentProfiles.find(p => p.id === record.studentParentId);
+                record.parent = parents.find(p => p.id === record.studentParentId);
                 return (
                     <div>
                         {

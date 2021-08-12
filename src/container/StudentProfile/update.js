@@ -123,7 +123,7 @@ function UpdateStudent() {
         let tgs=[]
         tags.map(res => tgs.push({"id": res}))
 
-        updateStudent(data.id, formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent, tgs).then(data => {
+        updateStudent(data.id, formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parents.find(p => p.email === parent).id, tgs).then(data => {
             history.push(`/studentprofiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")

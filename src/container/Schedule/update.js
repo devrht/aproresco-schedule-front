@@ -1,19 +1,13 @@
 import 'antd/dist/antd.css';
 import '../../Assets/container/StudentList.css';
+import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { PageHeader, Form, Input, Button } from 'antd';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useHistory, useLocation } from 'react-router-dom';
-import React, { useEffect, useState, useReducer } from 'react';
+import { PageHeader, Form, Input, Button, Select } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { updateSchedule, getCourses } from '../../services/Teacher';
+import { updateSchedule, getCoursesByGrade } from '../../services/Teacher';
 
-const formReducer = (state, event) => {
-    return {
-        ...state,
-        [event.name]: event.value
-    }
-}
 
 function UpdateSchedule() {
 
@@ -21,25 +15,22 @@ function UpdateSchedule() {
     const [form] = Form.useForm();
     const location = useLocation();
     const [open, setOpen] = useState(false);
+    const [grade, setGrade] = useState(1);
     const [courses, setCourses] = useState([]);
     const [endDate, setEndDate] = useState('');
     const [course, setCourse] = useState(null);
     const [defaultCourse, setDefaultCourse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [startDate, setStartDate] = useState('');
-    const [courseId, setCourseId] = useState(null);    
+    const [courseId, setCourseId] = useState(null);
     const [repeatPeriod, setRepeatPeriod] = useState();
     const [submitting, setSubmitting] = useState(false);
     const [schedule, setSchedule] = useState(location.state.schedule);
-
-
-
 
     useEffect(() => {
         console.log(schedule);
         let s = schedule.startDate.replaceAll('/', '-').split(' ')[0].split('-');
         let f = schedule.endDate.replaceAll('/', '-').split(' ')[0].split('-');
-        let st = schedule.startDate.replaceAll('/', '-').split(' ')[1].split(':');
         setStartDate(s[2] + '-' + s[0] + '-' + s[1]);
         setEndDate(f[2] + '-' + f[0] + '-' + f[1]);
         setCourseId(schedule.courseId);
@@ -47,16 +38,20 @@ function UpdateSchedule() {
     }, []);
 
     useEffect(() => {
-        getAllCourses();
-    }, []);
+        if (grade)
+            getAllCourses();
+    }, [grade]);
 
     const getAllCourses = () => {
         setLoading(true);
-        getCourses().then(data => {
+        getCoursesByGrade(grade).then(data => {
             if (data) {
                 if (data.content) {
                     setCourses(data.content);
+                    setCourse(data.content.find(c => c.id === schedule.courseId).name);
                     setDefaultCourse(data.content.find(c => c.id === schedule.courseId));
+                    console.log("Course => ", data.content.find(c => c.id === schedule.courseId))
+                    setGrade(data.content.find(c => c.id === schedule.courseId).grades[0]);
                 }
             }
         }).finally(() => setLoading(false))
@@ -128,6 +123,28 @@ function UpdateSchedule() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
+                        <Form.Item label="Select a grade" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Select onChange={(e) => setGrade(e)} value={grade}>
+                                <Select.Option value={null}>Select a grade</Select.Option>
+                                <Select.Option value={1}>1</Select.Option>
+                                <Select.Option value={2}>2</Select.Option>
+                                <Select.Option value={3}>3</Select.Option>
+                                <Select.Option value={4}>4</Select.Option>
+                                <Select.Option value={5}>5</Select.Option>
+                                <Select.Option value={6}>6</Select.Option>
+                                <Select.Option value={7}>7</Select.Option>
+                                <Select.Option value={8}>8</Select.Option>
+                                <Select.Option value={9}>9</Select.Option>
+                                <Select.Option value={10}>10</Select.Option>
+                                <Select.Option value={11}>11</Select.Option>
+                                <Select.Option value={12}>12</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
                         <Form.Item label="Select the course" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }}>
                             <Autocomplete
                                 id="asynchronous-search"
@@ -195,7 +212,7 @@ function UpdateSchedule() {
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
-                                submitting ? 'Loading...' : 'Create a Schedule'
+                                submitting ? 'Loading...' : 'Update a Schedule'
                             }
                         </Button>
                     </Form.Item>

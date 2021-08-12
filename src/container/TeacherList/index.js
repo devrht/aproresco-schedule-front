@@ -513,12 +513,14 @@ function TeacherList() {
                     assignStudentList.map((student) => {
                         studentIdArray.push(student.id)
                     })
-                    let studentIds = studentIdArray.join(',');
-                    assignStudentToAnotherTeacher(record.id, studentIds)
+                    studentIdArray.map(studentId => {
+                        assignStudentToAnotherTeacher(record.id, studentId)
                         .then(res => {
-                            dispatch(assignStudents([]));
+                            setStudentList(null);
                             getListView();
                         })
+                    })
+                    dispatch(assignStudents([]));
                 }
                 return (
                     record.teacherProfile && (
@@ -631,12 +633,13 @@ function TeacherList() {
         selectedRowStudent.map((student) => {
             studentIdArray.push(student.id)
         })
-        let studentIds = studentIdArray.join(',');
-        assignStudentToAnotherTeacher(teacherId, studentIds)
+        studentIdArray.map(studentId => {
+            assignStudentToAnotherTeacher(teacherId.id, studentId)
             .then(res => {
                 closeModal();
                 getListView();
             })
+        })
     }
 
     const computeLastName = (name) => {

@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useReducer} from 'react'
-import { getStudentDetail } from '../../services/Student'
-import { Row, Col, PageHeader, Button, Card, Divider } from 'antd';
-import { Form, Input } from 'antd';
-import { useLocation, useHistory } from "react-router-dom";
-import { assignStudentToAnotherTeacher, getBooking, sendMessageToBooking } from '../../services/Student'
-import { createComment, updateComment, approveComment } from '../../services/Teacher'
 import Moment from 'react-moment';
-import {
-    CheckOutlined
-} from '@ant-design/icons';
+import { Form, Input } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Row, Col, PageHeader, Button, Card } from 'antd';
+import { useLocation, useHistory } from "react-router-dom";
+import React, { useState, useEffect, useReducer } from 'react';
+import { createComment, updateComment, approveComment, getCourses, getTeacherProfileById, getScheduleById } from '../../services/Teacher';
+import { assignStudentToAnotherTeacher, getBooking, sendMessageToBooking, getStudentDetail, getBookingAvailability } from '../../services/Student';
 
 const formReducer = (state, event) => {
     return {
@@ -19,28 +16,73 @@ const formReducer = (state, event) => {
 
 function StudentDetail(props) {
 
-    const location = useLocation();
     const history = useHistory();
     const { params } = props.match;
-    const [studentDetail, setStudentDetail] = useState(location.state.student);
-    console.log(studentDetail)
+    const location = useLocation();
     const [content, setContent] = useState('');
-    const [comment, setComment] = useState(null);
-    const [form] = Form.useForm();
     const [message, setMessage] = useState('');
+    const [courses, setCourses] = useState([]);
+    const [comment, setComment] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [availability, setAvailability] = useState(null);
     const [formData, setFormData] = useReducer(formReducer, {});
+    const [studentDetail, setStudentDetail] = useState(location.state.student);
 
     useEffect(() => {
-        // getDetailView();
-        console.log('STUDENT==> ',location.state.student);
+        getAllCourses();
+        getAvailability();
     }, []);
+
+    useEffect(() => {
+        if (studentDetail.teacherAvailability) {
+            getTeacherProfileById(studentDetail.teacherAvailability.teacherProfile.id).then(teacher => {
+                if (teacher) {
+                    let tmpStudent = studentDetail;
+                    tmpStudent.teacherAvailability.teacherProfile = teacher;
+                    setStudentDetail(tmpStudent);
+                }
+            })
+        }
+
+        getScheduleById(studentDetail.schedule.id).then(schedule => {
+            if (schedule) {
+                let tmpStudent = studentDetail;
+                tmpStudent.schedule = schedule;
+                setStudentDetail(tmpStudent);
+            }
+        })
+        
+        console.log(studentDetail);
+    }, [studentDetail]);
 
     const handleChange = event => {
         setFormData({
             name: event.target.name,
             value: event.target.value,
         });
+    }
+
+    const getAllCourses = () => {
+        getCourses().then(data => {
+            if (data) {
+                if (data.content) {
+                    setCourses(data.content);
+                }
+            }
+        })
+    }
+
+    const getAvailability = () => {
+        getBookingAvailability(studentDetail.id).then(data => {
+            if (data.length > 0) {
+                setAvailability(data[0]);
+                let tmp = data[0];
+                tmp.parent = studentDetail.parent;
+                tmp.schedule = studentDetail.schedule;
+                tmp.studentProfile = studentDetail.studentProfile;
+                setStudentDetail(tmp);
+            }
+        })
     }
 
     const getDetailView = () => {
@@ -150,7 +192,7 @@ function StudentDetail(props) {
                                     <h4 >Subject</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.schedule.subject}</h4>
+                                    <h4 >{studentDetail.schedule.courseId ? courses.find(c => c.id === studentDetail.schedule.courseId) ? courses.find(c => c.id === studentDetail.schedule.courseId).name : '' : ''}</h4>
                                 </Col>
                             </Row>
                             <Row gutter={16}>
@@ -158,7 +200,7 @@ function StudentDetail(props) {
                                     <h4>Grade</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.studentProfile.grade}</h4>
+                                    <h4 >{studentDetail.studentProfile.grade ? studentDetail.studentProfile.grade : 0}</h4>
                                 </Col>
                             </Row>
                             <Row gutter={16}>
@@ -173,7 +215,7 @@ function StudentDetail(props) {
                                     <h4>Parent Email</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.studentProfile.parent ? studentDetail.studentProfile.parent.email : ''}</h4>
+                                    <h4 >{studentDetail.studentProfile.parent ? studentDetail.studentProfile.parent.email : studentDetail.parent ? studentDetail.parent.email : ''}</h4>
                                 </Col>
                             </Row>
                             <Row gutter={16}>
@@ -197,7 +239,7 @@ function StudentDetail(props) {
                                     <h4>Phone</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.studentProfile.parent ? studentDetail.studentProfile.parent.phoneNumber : ''}</h4>
+                                    <h4 >{studentDetail.studentProfile.parent ? studentDetail.studentProfile.parent.phoneNumber : studentDetail.parent ? studentDetail.parent.phoneNumber : ''}</h4>
                                 </Col>
                             </Row>
 
@@ -215,14 +257,14 @@ function StudentDetail(props) {
                                 </Col>
                             </Row>
 
-                            <Row gutter={16} style={{ display: studentDetail.rejectionDate ? 'flex' : 'none' }}>
+                            <Row gutter={16} style={{ display: studentDetail.rejectDate ? 'flex' : 'none' }}>
                                 <Col className="gutter-row" span={8}>
                                     <h4>Rejection Date</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.rejectionDate ?
+                                    <h4 >{studentDetail.rejectDate ?
                                         <Moment local format="D MMM YYYY HH:MM" withTitle>
-                                            {studentDetail.rejectionDate}
+                                            {studentDetail.rejectDate}
                                         </Moment> :
                                         'Undefined'}
                                     </h4>
@@ -258,7 +300,7 @@ function StudentDetail(props) {
                                     <h4>Subjects</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.subjects.join(', ') : '' : ''}</h4>
+                                    <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.subjects ? studentDetail.teacherAvailability.teacherProfile.subjects.map(s => s.name).join(', ') : '' : '' : ''}</h4>
                                 </Col>
                             </Row>
                             <Row gutter={16} style={{ display: studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? 'flex' : 'none' : 'none' }}>
@@ -266,7 +308,7 @@ function StudentDetail(props) {
                                     <h4 >Grades</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.grades.join(', ') : '' : ''}</h4>
+                                    <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.grades ? studentDetail.teacherAvailability.teacherProfile.grades.join(', ') : '' : '' : ''}</h4>
                                 </Col>
                             </Row>
                             <Row gutter={16} style={{ display: studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? 'flex' : 'none' : 'none' }}>
@@ -284,7 +326,7 @@ function StudentDetail(props) {
                                     <h4 >Email</h4>
                                 </Col>
                                 <Col className="gutter-row" span={14}>
-                                    <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.internalEmail : '' : ''}</h4>
+                                    <h4 >{studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? studentDetail.teacherAvailability.teacherProfile.email : '' : ''}</h4>
                                 </Col>
                             </Row>
                             <Row gutter={16} style={{ display: studentDetail.teacherAvailability ? studentDetail.teacherAvailability.teacherProfile ? 'flex' : 'none' : 'none' }}>
@@ -310,7 +352,7 @@ function StudentDetail(props) {
                         <Card title="Send a message" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
                             <Row gutter={16}>
                                 <Form.Item label="Message" required style={{ flex: 1, marginRight: '10px' }}>
-                                    <Input type="text" name="message"  /* onChange={(e) => setMessage(e.target.value)} */ onChange={handleChange}/>
+                                    <Input type="text" name="message"  /* onChange={(e) => setMessage(e.target.value)} */ onChange={handleChange} />
                                 </Form.Item>
 
                                 <Form.Item>
@@ -342,19 +384,19 @@ function StudentDetail(props) {
                                 </Form.Item>
                             </Row>
                             {studentDetail.teacherComments ?
-                                    studentDetail.teacherComments.map(c => (
-                                        <>
-                                            <Row gutter={16} style={{ height: 50 }}>
-                                                <Col className="gutter-row" style={{ width: '90%' }} onClick={() => handleComment(c)}>
-                                                    <h4>{c.content ? c.content : 'No message found in this feedback'}</h4>
-                                                </Col>
-                                                <Col className="gutter-row" style={{ width: '10%' }} onClick={() => handleComment(c)}>
-                                                    <CheckOutlined style={{ fontSize: '20px', marginRight: '20px', color: c.approveDate ? 'green' : 'gray' }} onClick={() => handleApproval(c)} />
-                                                </Col>
-                                            </Row>
-                                        </>
-                                    ))
-                            : null}
+                                studentDetail.teacherComments.map(c => (
+                                    <>
+                                        <Row gutter={16} style={{ height: 50 }}>
+                                            <Col className="gutter-row" style={{ width: '90%' }} onClick={() => handleComment(c)}>
+                                                <h4>{c.content ? c.content : 'No message found in this feedback'}</h4>
+                                            </Col>
+                                            <Col className="gutter-row" style={{ width: '10%' }} onClick={() => handleComment(c)}>
+                                                <CheckOutlined style={{ fontSize: '20px', marginRight: '20px', color: c.approveDate ? 'green' : 'gray' }} onClick={() => handleApproval(c)} />
+                                            </Col>
+                                        </Row>
+                                    </>
+                                ))
+                                : null}
 
                         </Card>
                     </Row>

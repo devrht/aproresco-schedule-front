@@ -1,12 +1,12 @@
 import 'antd/dist/antd.css';
 import { useHistory } from 'react-router-dom';
 import '../../Assets/container/StudentList.css';
+import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { PageHeader, Form, Input, Button } from 'antd';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import React, { useEffect, useState, useReducer } from 'react';
+import { PageHeader, Form, Input, Button, Select } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { createSchedule, getCourses } from '../../services/Teacher';
+import { createSchedule, getCoursesByGrade } from '../../services/Teacher';
 
 const { TextArea } = Input;
 
@@ -22,6 +22,7 @@ function CreateSchedule() {
     const history = useHistory();
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
+    const [grade, setGrade] = useState(null);
     const [endDate, setEndDate] = useState('');
     const [courses, setCourses] = useState([]);
     const [course, setCourse] = useState(null);
@@ -29,18 +30,18 @@ function CreateSchedule() {
     const [courseId, setCourseId] = useState(null);
     const [startDate, setStartDate] = useState('');
     const [submitting, setSubmitting] = useState(false);
-    const [formData, setFormData] = useReducer(formReducer, {});
 
     const [repeatPeriod, setRepeatPeriod] = useState('');
 
 
     useEffect(() => {
-        getAllCourses();
-    }, []);
+        if(grade)
+            getAllCourses();
+    }, [grade]);
 
     const getAllCourses = () => {
         setLoading(true);
-        getCourses().then(data => {
+        getCoursesByGrade(grade).then(data => {
             if (data) {
                 if (data.content) {
                     setCourses(data.content);
@@ -117,6 +118,28 @@ function CreateSchedule() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
+                        <Form.Item label="Select a grade" required style={{ flex: 1, marginRight: '10px' }}>
+                            <Select onChange={(e) => setGrade(e)}>
+                                <Select.Option value={null}>Select a grade</Select.Option>
+                                <Select.Option value={1}>1</Select.Option>
+                                <Select.Option value={2}>2</Select.Option>
+                                <Select.Option value={3}>3</Select.Option>
+                                <Select.Option value={4}>4</Select.Option>
+                                <Select.Option value={5}>5</Select.Option>
+                                <Select.Option value={6}>6</Select.Option>
+                                <Select.Option value={7}>7</Select.Option>
+                                <Select.Option value={8}>8</Select.Option>
+                                <Select.Option value={9}>9</Select.Option>
+                                <Select.Option value={10}>10</Select.Option>
+                                <Select.Option value={11}>11</Select.Option>
+                                <Select.Option value={12}>12</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                    }}>
                         <Form.Item label="Select the course" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }}>
                             <Autocomplete
                                 id="asynchronous-search"
@@ -165,10 +188,10 @@ function CreateSchedule() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Start date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="date" name="startDate"  onChange={(e) => setStartDate(e.target.value)} />
+                            <Input type="date" name="startDate" onChange={(e) => setStartDate(e.target.value)} />
                         </Form.Item>
                         <Form.Item label="End date" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="date" name="endDate"  onChange={(e) => setEndDate(e.target.value)} />
+                            <Input type="date" name="endDate" onChange={(e) => setEndDate(e.target.value)} />
                         </Form.Item>
                     </div>
 

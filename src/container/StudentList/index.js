@@ -184,6 +184,7 @@ function StudentList() {
             title: <div>Parent Email</div>,
             render: (record) => {
                 let parent = parents.find(p => p.id === record.studentProfile.studentParentId);
+                record.parent = parent;
                 return (
                     <span>{parent ? parent.email : ''}</span>
                 )

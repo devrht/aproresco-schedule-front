@@ -48,7 +48,6 @@ function CreateTeacher() {
     });
 
     useEffect(() => {
-        console.log(teacher)
         getAllSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());

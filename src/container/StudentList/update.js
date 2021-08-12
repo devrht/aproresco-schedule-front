@@ -85,14 +85,14 @@ function UpdateBooking() {
     }
 
     const handleSubmit = () => {
-        if (!children || !subjec) {
+        if (!subjec) {
             alert('Fill the form');
             return;
         }
 
         //setSubmitting(true);
 
-        updateBooking(data.id, children, schedules.find(s => s.id === subjec), comment).then(data => {
+        updateBooking(data.id, schedules.find(s => s.id === subjec)).then(data => {
             history.push(`/studentlist`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -131,7 +131,7 @@ function UpdateBooking() {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px' }}>
+                        {/* <Form.Item label="Student" required style={{ flex: 1, marginRight: '10px' }}>
                             <Autocomplete
                                 id="asynchronous-search"
                                 options={studentList}
@@ -170,7 +170,7 @@ function UpdateBooking() {
                                     />
                                 }
                             />
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item label="Subject" required style={{ flex: 1, marginLeft: '10px' }}>
                             <Select onChange={(e) => changeSubject(e)} value={schedules.find(s => s.id === subjec) ? subjec : null}>
                                 <option value={null}>Select a subject</option>

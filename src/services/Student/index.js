@@ -251,21 +251,24 @@ export const deleteStudentBooking = (studentIds) => {
         })
 }
 
-export const assignStudentToAnotherTeacher = (teacherId, studentIds) => {
-    let student_ids = [];
+export const getBookingAvailability = (bookingId) => {
+    return axios.get(`${routes.AVAILABILITY}/booking?id=${bookingId}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
 
-    studentIds.split(',').forEach(id => {
-        let item = {};
-        item.id = id;
-        student_ids.push(item);
-    });
-
-    let data = {
-        "studentBookings":
-            student_ids
-    }
+export const assignStudentToAnotherTeacher = (teacherId, studentId) => {
     // console.log(`${routes.SERVER_ADDRESS}/meet/assign/${studentIds}/${teacherId}`);
-    return axios.patch(`${routes.SERVER_ADDRESS}/${routes.AVAILABILITY}/${teacherId}`, data)
+    let data = {
+        teacherId,
+        studentId
+    }
+
+    return axios.post(`${routes.AVAILABILITY}/${teacherId}/booking/${studentId}`, data)
         .then(res => {
             return res.data;
         })

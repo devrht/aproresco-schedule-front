@@ -140,6 +140,17 @@ export const getCourses = (page = 0, size = 1000, sortName = "subject", sortType
     })
 }
 
+export const getCoursesByGrade = (grade) => {
+    let page = 0; 
+    let size = 1000; 
+    let sortType = "asc";
+    let sortName = "subject"; 
+    return axios.get(`${routes.COURSE}?gradeMin=${grade}&gradeMax=${grade}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+    .then(res => {
+        return res.data;
+    })
+}
+
 export const getSubjects = (page = 0, size = 1000, sortName = "name", sortType = "asc") => {
     return axios.get(`${routes.SUBJECT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
     .then(res => {
@@ -344,7 +355,7 @@ export const getScheduleById = (id) => {
     }).catch(err => console.log(err));
 }
 
-export const createStudent = (firstName, lastName, email, schoolName, schoolBoard, grade, parent, tags) => {
+export const createStudent = (firstName, lastName, email, schoolName, schoolBoard, grade, studentParentId) => {
     let data = {
         firstName,
         lastName,
@@ -352,15 +363,14 @@ export const createStudent = (firstName, lastName, email, schoolName, schoolBoar
         schoolName,
         schoolBoard,
         grade,
-        parent: { email: parent },
-        tags: tags
+        studentParentId
     }
     return axios.post(`${routes.STUDENT}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
 
-export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, parent, tags) => {
+export const updateStudent = (id, firstName, lastName, email, schoolName, schoolBoard, grade, studentParentId, tags) => {
     let data = {
         firstName,
         lastName,
@@ -368,7 +378,7 @@ export const updateStudent = (id, firstName, lastName, email, schoolName, school
         schoolName,
         schoolBoard,
         grade,
-        parent: { email: parent },
+        studentParentId,
         tags: tags
     }
     return axios.patch(`${routes.STUDENT}/${id}`, data).then(res => {
@@ -454,7 +464,7 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         subjects: subjects,
         tags:tags
     }
-    return axios.put(`${routes.TEACHER}/${id}`, data).then(res => {
+    return axios.patch(`${routes.TEACHER}/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }
@@ -470,12 +480,10 @@ export const createBooking = (studentProfile, schedule, studentComment) => {
     }).catch(err => console.log(err));
 }
 
-export const updateBooking = (id, studentProfile, schedule, studentComment) => {
+export const updateBooking = (id, schedule) => {
     let data = {
         id,
-        studentProfile,
-        schedule,
-        studentComment
+        schedule
     }
     return axios.patch(`${routes.BOOKING}/${id}`, data).then(res => {
         return res;
@@ -524,7 +532,7 @@ export const updateParent = (id, firstName, lastName, phoneNumber, countryCode, 
         lastName,
         email,
     }
-    return axios.put(`${routes.PARENT}/${id}`, data).then(res => {
+    return axios.patch(`${routes.PARENT}/${id}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

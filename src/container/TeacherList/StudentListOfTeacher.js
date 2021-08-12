@@ -450,19 +450,23 @@ function StudentListOfTeacher(props) {
     }
 
     const assignStudent = () => {
-        if (active) {
+        console.log(active);
+        if (!active) {
             let studentIdArray = [];
             assignStudentList.map((student) => {
                 studentIdArray.push(student.id)
             })
-            let studentIds = studentIdArray.join(',');
-            assignStudentToAnotherTeacher(params.id, studentIds)
+            studentIdArray.map(studentId => {
+                console.log(studentId);
+                assignStudentToAnotherTeacher(params.id, studentId)
                 .then(res => {
                     setStudentList(null);
-                    dispatch(assignStudents([]));
                     getListView();
-                    //window.location.reload();
                 })
+            })
+
+            dispatch(assignStudents([]));
+            
         } else {
             dispatch(assignStudents(selectedRow))
             //history.push('/teacherlist');
@@ -559,9 +563,10 @@ function StudentListOfTeacher(props) {
                             {present ? 'MARK AS PRESENT' : 'MARK AS ABSENT'}
                         </Button>
                         <Button key='3' type="primary"
-                            style={{ display: assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
+                            style={{ display: !assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
                             disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
                             onClick={() => {
+                                console.log("Click !")
                                 assignStudent()
                             }}
                         >
@@ -692,7 +697,7 @@ function StudentListOfTeacher(props) {
                         <Table
                             columns={columns}
                             dataSource={students}
-                            //rowSelection={rowSelection}
+                            rowSelection={rowSelection}
                             rowKey="id"
                         />
                     </>
