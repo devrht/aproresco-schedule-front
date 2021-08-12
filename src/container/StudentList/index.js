@@ -1,41 +1,43 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Row, Form, Input, Typography } from 'antd';
-import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
-import '../../Assets/container/StudentList.css'
-import { findStudentListByFirstNameAndLastName, getStudentListByDate, deleteStudentBooking, editSubject, assignStudentToAnotherTeacher, deleteBookings } from '../../services/Student'
-import { findTeacherListByFirstNameAndLastName } from '../../services/Teacher'
-import { sendMessageBookings } from '../../services/Student'
-import SearchFilter from '../../components/StudentList/SearchFilter'
-import { assignStudents } from '../../Action-Reducer/Student/action'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
+import { useHistory } from 'react-router-dom';
+import '../../Assets/container/StudentList.css';
+import { MessageOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import { useSelector, useDispatch } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { sendMessageBookings } from '../../services/Student';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import SearchFilter from '../../components/StudentList/SearchFilter';
+import { assignStudents } from '../../Action-Reducer/Student/action';
+import { VideoCameraOutlined, EditOutlined } from '@ant-design/icons';
+import { findTeacherListByFirstNameAndLastName, getCourses } from '../../services/Teacher';
+import { Table, PageHeader, Button, Spin, Tooltip, Row, Form, Input, Typography } from 'antd';
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
-    VideoCameraOutlined,
-    ApiOutlined,
-    EditOutlined
-} from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import {MessageOutlined} from '@ant-design/icons'
+    findStudentListByFirstNameAndLastName, getParentProfile, getStudentListByDate, deleteStudentBooking, editSubject,
+    assignStudentToAnotherTeacher, deleteBookings, getSchedules
+} from '../../services/Student';
 
 const { Text } = Typography;
 
 function StudentList() {
-    const dispatch = useDispatch();
     const history = useHistory();
-    const [studentList, setStudentList] = useState();
-    const [loadingTeacher, setLoadingTeacher] = useState(false);
-    const [teacherList, setTeacherList] = useState([]);
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [sortingName, setSortingName] = useState("createDate");
+    const [parents, setParents] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [mess_id, setMess_id] = useState("s1");
+    const [schedules, setSchedules] = useState([]);
+    const [studentList, setStudentList] = useState();
+    const [teacherList, setTeacherList] = useState([]);
     const [teacherName, setTeacherName] = useState("");
     const [sortingType, setSortingType] = useState("desc");
-    const [mess_id, setMess_id] = useState("s1");
+    const [loadingTeacher, setLoadingTeacher] = useState(false);
+    const [sortingName, setSortingName] = useState("createDate");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -78,11 +80,60 @@ function StudentList() {
     const deleteRows = () => {
         let ids = [];
         selectedRow.forEach(r => ids.push(r.id));
-        console.log(ids.join(','));
         deleteBookings(ids.join(',')).then(data => {
             getListView();
             setSelectedRow([]);
         })
+    }
+
+    useEffect(() => {
+        getParents();
+        getAllCourses();
+        getAllSchedules();
+    }, []);
+
+    const getParents = () => {
+        getParentProfile(0, 50000, "createDate", 'desc').then(data => {
+            if (data) {
+                if (data.content) {
+                    setParents(data.content);
+                }
+            }
+        });
+    }
+
+    const getAllSchedules = () => {
+        getSchedules(0, 50000, "createDate", 'desc').then(data => {
+            if (data) {
+                if (data.content) {
+                    setSchedules(data.content);
+                }
+            }
+        })
+    }
+
+    const getAllCourses = () => {
+        getCourses().then(data => {
+            if (data) {
+                if (data.content) {
+                    setCourses(data.content);
+                }
+            }
+        })
+    }
+
+    const getOneCourse = (booking) => {
+        if (!booking.schedule)
+            return null;
+        let schedule = schedules.find(s => s.id === booking.schedule.id);
+        if (!schedule)
+            return null;
+
+        let course = courses.find(c => c.id === schedule.courseId);
+        if (!course)
+            return null;
+        else
+            return course;
     }
 
     const columns = [
@@ -132,8 +183,10 @@ function StudentList() {
         }, {
             title: <div>Parent Email</div>,
             render: (record) => {
+                let parent = parents.find(p => p.id === record.studentProfile.studentParentId);
+                record.parent = parent;
                 return (
-                    <span>{record.studentProfile.parent.email}</span>
+                    <span>{parent ? parent.email : ''}</span>
                 )
             },
             key: 'parentEmail',
@@ -181,31 +234,36 @@ function StudentList() {
                 };
             },
             render: (record) => {
+                let course = getOneCourse(record);
                 return (
-                    <div onDoubleClick={() => {
-                        if (!editableRow.includes(record)) {
-                            setEditableRow([...editableRow, record]);
-                        } else {
-                            setEditableRow(editableRow.filter(r => r.id !== record.id));
-                        }
-                    }}>
-                        {!editableRow.includes(record) ? record.schedule.subject : <Form layout="inline">
-                            <Form.Item>
-                                <Input
-                                    type="text"
-                                    placeholder="Subject"
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            editSubject(record.id, e.target.value).then(data => {
-                                                setEditableRow(editableRow.filter(r => r.id !== record.id));
-                                                getListView();
-                                            })
-                                        }
-                                    }}
-                                />
-                            </Form.Item>
-                        </Form>}
-                    </div>
+                    course && (
+                        <div
+                        // onDoubleClick={() => {
+                        //     if (!editableRow.includes(record)) {
+                        //         setEditableRow([...editableRow, record]);
+                        //     } else {
+                        //         setEditableRow(editableRow.filter(r => r.id !== record.id));
+                        //     }
+                        // }}
+                        >
+                            {!editableRow.includes(record) ? course.subject.name : <Form layout="inline">
+                                <Form.Item>
+                                    <Input
+                                        type="text"
+                                        placeholder="Subject"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                editSubject(record.id, e.target.value).then(data => {
+                                                    setEditableRow(editableRow.filter(r => r.id !== record.id));
+                                                    getListView();
+                                                })
+                                            }
+                                        }}
+                                    />
+                                </Form.Item>
+                            </Form>}
+                        </div>
+                    )
                 )
             },
             key: 'subject',
@@ -228,9 +286,10 @@ function StudentList() {
                 };
             },
             render: (record) => {
-                var min = record.teacherAvailability ? record.teacherAvailability.teacherProfile ? record.teacherAvailability.teacherProfile.grades[0] : 0 : 0;
+                let course = getOneCourse(record);
+                var min = course ? course.grades[0] : 0;
                 return (
-                    <span>{computeMinGrade(min, record.teacherAvailability ? record.teacherAvailability.teacherProfile : null, record.studentProfile.grade) > 0 ? `${record.studentProfile.grade} (${computeMinGrade(min, record.teacherAvailability ? record.teacherAvailability.teacherProfile : null, record.studentProfile.grade)})` : record.studentProfile.grade}</span>
+                    <span>{computeMinGrade(min, course ? course : null, record.studentProfile.grade) > 0 ? `${record.studentProfile.grade ? record.studentProfile.grade : 0} (${computeMinGrade(min, course ? course : null, record.studentProfile.grade)})` : record.studentProfile.grade}</span>
                 )
             },
             key: 'grade',
@@ -240,29 +299,29 @@ function StudentList() {
             key: 'tags',
             render: (record) => {
 
-                let tags= []
-                if(record.tags){
+                let tags = []
+                if (record.tags) {
                     record.tags.map(tag => tags.push(tag.name))
                 }
 
-                return(
+                return (
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong></Text>)
+                                (<Text strong></Text>)
                                 :
-                            (
-                            <Tooltip title={(tags.join(', '))}>
-                                {(tags.join(', ')).length <= 20 ?
-                                    (tags.join(', ')) :
-                                    (tags.join(', ')).substring(0, 19) + '...'}
-                            </Tooltip>
-                            )
+                                (
+                                    <Tooltip title={(tags.join(', '))}>
+                                        {(tags.join(', ')).length <= 20 ?
+                                            (tags.join(', ')) :
+                                            (tags.join(', ')).substring(0, 19) + '...'}
+                                    </Tooltip>
+                                )
                         }
-                        
+
                     </div>
                 )
-                
+
             }
         },
         ,
@@ -298,93 +357,97 @@ function StudentList() {
         {
             title: 'Action',
             key: 'operation',
-            render: (record) =>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    {
-                        !editTeacher.includes(record) ?
-                            <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl : "Link Not Found" : "Student Not Found"}>
-                                <Button
-                                    style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
-                                    onClick={(e) => {
-                                        //e.stopPropagation();
-                                        if (record.studentProfile)
-                                            if (record.studentProfile.conferenceUrl)
-                                                window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://' + record.studentProfile.conferenceUrl)
-                                    }}><VideoCameraOutlined style={{ fontSize: 20 }} /></Button>
-                            </Tooltip> :
-                            <Autocomplete
-                                id="asynchronous-search"
-                                options={teacherList}
-                                size="small"
-                                inputValue={teacherName}
-                                // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
-                                onInputChange={(__, newInputValue) => {
-                                    setTeacherName(newInputValue);
-                                    console.log(newInputValue)
-                                }}
-                                onChange={(__, newValue) => {
-                                    if (newValue != null)
-                                        setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
-                                }}
-                                open={open}
-                                onOpen={() => {
-                                    setOpen(true);
-                                }}
-                                onClose={() => {
-                                    setOpen(false);
-                                }}
-                                loading={loadingTeacher}
-                                getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
-                                style={{ minWidth: 450, marginLeft: -250 }}
-                                renderInput={(params) =>
-                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                        <TextField {...params}
-                                            label="Select a teacher to assign"
-                                            variant="outlined"
-                                            onChange={(e) => changeTeacherSearch(e)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && !open) {
-                                                    let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
-                                                    if (teachers.length === 0) {
-                                                        alert('This teacher is not found');
-                                                    } else {
-                                                        assigningStudents(teachers[0], record.id);
+            render: (record) => {
+                let course = getOneCourse(record);
+                return (
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        {
+                            !editTeacher.includes(record) ?
+                                <Tooltip title={record.studentProfile ? record.studentProfile.conferenceUrl ? record.studentProfile.conferenceUrl : "Link Not Found" : "Student Not Found"}>
+                                    <Button
+                                        style={{ backgroundColor: "transparent", border: "0px", color: "#1890FF" }}
+                                        onClick={(e) => {
+                                            //e.stopPropagation();
+                                            if (record.studentProfile)
+                                                if (record.studentProfile.conferenceUrl)
+                                                    window.open(record.studentProfile.conferenceUrl.includes('http') ? record.studentProfile.conferenceUrl : 'http://' + record.studentProfile.conferenceUrl)
+                                        }}><VideoCameraOutlined style={{ fontSize: 20 }} /></Button>
+                                </Tooltip> :
+                                <Autocomplete
+                                    id="asynchronous-search"
+                                    options={teacherList}
+                                    size="small"
+                                    inputValue={teacherName}
+                                    // closeIcon={<EditOutlined style={{ color: 'blue' }}/>}
+                                    onInputChange={(__, newInputValue) => {
+                                        setTeacherName(newInputValue);
+                                        console.log(newInputValue)
+                                    }}
+                                    onChange={(__, newValue) => {
+                                        if (newValue != null)
+                                            setTeacherName(newValue.teacherProfile.firstName + " " + newValue.teacherProfile.lastName);
+                                    }}
+                                    open={open}
+                                    onOpen={() => {
+                                        setOpen(true);
+                                    }}
+                                    onClose={() => {
+                                        setOpen(false);
+                                    }}
+                                    loading={loadingTeacher}
+                                    getOptionLabel={(record) => record.teacherProfile.firstName + " " + record.teacherProfile.lastName}
+                                    style={{ minWidth: 450, marginLeft: -250 }}
+                                    renderInput={(params) =>
+                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <TextField {...params}
+                                                label="Select a teacher to assign"
+                                                variant="outlined"
+                                                onChange={(e) => changeTeacherSearch(e)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && !open) {
+                                                        let teachers = teacherList.filter(t => t.teacherProfile.firstName + " " + t.teacherProfile.lastName == teacherName);
+                                                        if (teachers.length === 0) {
+                                                            alert('This teacher is not found');
+                                                        } else {
+                                                            assigningStudents(teachers[0], record.id);
+                                                        }
                                                     }
-                                                }
-                                            }}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
-                                                    <React.Fragment>
-                                                        {loadingTeacher ? <CircularProgress color="inherit" size={20} /> : null}
-                                                        {params.InputProps.endAdornment}
-                                                    </React.Fragment>
-                                                ),
-                                            }}
-                                        />
-                                    </div>
+                                                }}
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment: (
+                                                        <React.Fragment>
+                                                            {loadingTeacher ? <CircularProgress color="inherit" size={20} /> : null}
+                                                            {params.InputProps.endAdornment}
+                                                        </React.Fragment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
 
-                                }
-                            />
-                    }
-                    {
-                        !editTeacher.includes(record) ?
-                            null : null
+                                    }
+                                />
+                        }
+                        {
+                            !editTeacher.includes(record) ?
+                                null : null
                             // <div id="edit" onClick={(e) => { setEditTeacher([record]) }}><ApiOutlined id="editIcon" style={{ fontSize: 20, color: '#1890FF' }} /></div> : null
-                    }
-                    
-                    <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/studentlist/${record.id}/update`, { student: record }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+                        }
 
-                </div>,
+                        <div id="edit" onClick={(e) => { e.stopPropagation(); history.push(`/studentlist/${record.id}/update`, { student: record, course }) }}><EditOutlined id="editIcon" style={{ fontSize: 20, marginLeft: 10, color: '#1890FF' }} /></div>
+
+                    </div>
+                )
+            },
         },
     ];
 
     useEffect(() => {
         getListView();
-        const interval = setInterval(() => {
-            getListView();
-        }, 15000);
-        return () => clearInterval(interval);
+        // const interval = setInterval(() => {
+        //     getListView();
+        // }, 15000);
+        // return () => clearInterval(interval);
     }, [tableProps.pageIndex, search, sortingType, sortingName]);
 
     const computeLastName = (name) => {
@@ -426,7 +489,7 @@ function StudentList() {
         getTeacherListView();
     };
 
-    const computeMinGrade = (min, profile, grade) => {
+    const computeMinGrade = (min, profile, grade = 0) => {
         let i = 0;
         let result = min;
         if (profile == null) {
@@ -516,7 +579,7 @@ function StudentList() {
                 }
                 setLoading(false);
             })
-        } else{
+        } else {
             findStudentListByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
@@ -620,13 +683,13 @@ function StudentList() {
                         </Button>
                     </div>
                     {
-                        (selectedRow.length == 0) ? 
+                        (selectedRow.length == 0) ?
                             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
                                 <Button key='3' size="medium" type="primary" onClick={() => history.push("/studentlist/add")}>
                                     <PlusOutlined />
                                 </Button>
-                            </div> 
-                            : 
+                            </div>
+                            :
                             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
                                 <Button key='3' size="medium" type="primary" onClick={() => sendMessage(mess_id)}>
                                     <MessageOutlined />
@@ -641,6 +704,7 @@ function StudentList() {
                         columns={columns}
                         loading={loading}
                         dataSource={studentList}
+                        // dataSource={[]}
                         onChange={handleTableChange}
                         pagination={{
                             total: tableProps.totalCount,

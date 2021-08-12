@@ -53,7 +53,8 @@ function CreateAvailibility() {
         getStudents();
         getSchedule(1).then(data => {
             setSchedules(data.content);
-            setDates([...new Map(data.content.filter(s => teacher.teacherProfile.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
+            // console.log(teacher.teacherProfile.subjects);
+            // setDates([...new Map(data.content.filter(s => teacher.teacherProfile.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
         });
     }, []);
 
@@ -63,6 +64,7 @@ function CreateAvailibility() {
         setChildren(_children);
         getSchedule(1).then(data => {
             setSchedules(data.content);
+            console.log(_children.subjects);
             setDates([...new Map(data.content.filter(s => _children.subjects.includes(s.subject)).map(item => [item['id'], item])).values()]);
         });
     }
@@ -99,25 +101,10 @@ function CreateAvailibility() {
         getTeacherProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
             if (data) {
                 if (data.content) {
-                    setStudentList(data.content);
+                    setStudentList(data.content.filter(t => t.subjects));
                 }
             }
         }).finally(() => setLoadingS(false))
-    }
-
-    const getEnabledTags = () => {
-        setLoadingS(true);
-        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
-            if (data) {
-                if (data.content) {
-                    setTagsList(data.content.filter(t => t.enabled == true));
-                }
-            }
-        }).finally(() => setLoadingS(false))
-    }
-
-    const handleChangeTags = (value) =>{
-        setTags(value);
     }
 
     return (

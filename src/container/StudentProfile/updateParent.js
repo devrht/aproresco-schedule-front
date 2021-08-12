@@ -30,6 +30,8 @@ function UpdateParent() {
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
 
+    console.log(parent);
+
     useEffect(() => {
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());

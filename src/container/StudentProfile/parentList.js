@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
-import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
-import '../../Assets/container/StudentList.css'
-import { findParentProfileByEmail, getParentProfile, deleteParents } from '../../services/Student'
-import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import '../../Assets/container/StudentList.css';
+import React, { useEffect, useState } from 'react';
+import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
+import SearchFilter from '../../components/StudentList/SearchFilter';
+import { findParentProfileByEmail, getParentProfile, deleteParents } from '../../services/Student';
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 function ParentProfile() {
     const history = useHistory();
@@ -171,8 +171,7 @@ function ParentProfile() {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-            getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
+            getParentProfile(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)
@@ -201,8 +200,7 @@ function ParentProfile() {
             })
         }
         else {
-            findParentProfileByEmail(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                console.log('DATA ==> ', data)
+            findParentProfileByEmail(search.firstName.trim(), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)

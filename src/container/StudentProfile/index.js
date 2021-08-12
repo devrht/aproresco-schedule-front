@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Typography} from 'antd';
-import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
-import '../../Assets/container/StudentList.css'
-import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles, sendStudentsMessage} from '../../services/Student'
-import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import '../../Assets/container/StudentList.css'
+import { MessageOutlined } from '@ant-design/icons'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import SearchFilter from '../../components/StudentList/SearchFilter'
+import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
 import { faCircle, faCoffee, faCommentAlt } from '@fortawesome/free-solid-svg-icons'
-import {MessageOutlined} from '@ant-design/icons'
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import { findStudentProfileByFirstNameAndLastName, getStudentProfileByDate, deleteStudentProfiles, sendStudentsMessage, getParentProfile } from '../../services/Student'
 
 const { Text } = Typography;
 
 function StudentProfile() {
     const history = useHistory();
-    const [studentList, setStudentList] = useState();
-    const [sortingName, setSortingName] = useState("createDate");
-    const [sortingType, setSortingType] = useState("desc");
+    const [parents, setParents] = useState([]);
     const [mess_id, setMess_id] = useState("s1");
+    const [studentList, setStudentList] = useState();
+    const [sortingType, setSortingType] = useState("desc");
+    const [sortingName, setSortingName] = useState("createDate");
     const deletingStatus = useSelector((state) => {
         return state.Student.enableDeleting;
     })
@@ -52,6 +53,20 @@ function StudentProfile() {
             getListView();
             setSelectedRow([]);
         })
+    }
+
+    useEffect(() => {
+        getParents();
+    }, []);
+
+    const getParents = () => {
+        getParentProfile(0, 50000, "createDate", 'desc').then(data => {
+            if (data) {
+                if (data.content) {
+                    setParents(data.content);
+                }
+            }
+        });
     }
 
     const columns = [
@@ -102,15 +117,18 @@ function StudentProfile() {
         {
             title: <div><span>Parent phone </span>
             </div>,
-            render: (record) => (
-                <div>
-                    {
-                        <p style={{ width: "50%", textAlign: "left" }}>
-                            {record.parent.phoneNumber}
-                        </p>
-                    }
-                </div>
-            ),
+            render: (record) => {
+                record.parent = parents.find(p => p.id === record.studentParentId);
+                return (
+                    <div>
+                        {
+                            <p style={{ width: "50%", textAlign: "left" }}>
+                                {record.parent ? record.parent.phoneNumber : ''}
+                            </p>
+                        }
+                    </div>
+                )
+            },
             key: 'registrationDate',
         },
         {
@@ -167,29 +185,29 @@ function StudentProfile() {
             key: 'tags',
             render: (record) => {
 
-                let tags= []
-                if(record.tags){
+                let tags = []
+                if (record.tags) {
                     record.tags.map(tag => tags.push(tag.name))
                 }
 
-                return(
+                return (
                     <div>
                         {
                             !record.tags ?
-                            (<Text strong></Text>)
+                                (<Text strong></Text>)
                                 :
-                            (
-                            <Tooltip title={(tags.join(', '))}>
-                                {(tags.join(', ')).length <= 20 ?
-                                    (tags.join(', ')) :
-                                    (tags.join(', ')).substring(0, 19) + '...'}
-                            </Tooltip>
-                            )
+                                (
+                                    <Tooltip title={(tags.join(', '))}>
+                                        {(tags.join(', ')).length <= 20 ?
+                                            (tags.join(', ')) :
+                                            (tags.join(', ')).substring(0, 19) + '...'}
+                                    </Tooltip>
+                                )
                         }
-                        
+
                     </div>
                 )
-                
+
             }
         },
         {
@@ -222,7 +240,7 @@ function StudentProfile() {
     }
 
     const getListView = () => {
-        if (search.firstName === "" && search.lastName === ""&& (localStorage.getItem('currentTag') === "no tag" || localStorage.getItem('currentTag') === "")) {
+        if (search.firstName === "" && search.lastName === "" && (localStorage.getItem('currentTag') === "no tag" || localStorage.getItem('currentTag') === "")) {
             getStudentProfileByDate(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
@@ -280,7 +298,7 @@ function StudentProfile() {
                 }
                 setLoading(false);
             })
-        } else{
+        } else {
             findStudentProfileByFirstNameAndLastName(search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, localStorage.getItem('currentTag'), sortingName, sortingType).then(data => {
                 console.log('DATA ==> ', data)
                 if (data) {
@@ -368,13 +386,13 @@ function StudentProfile() {
                         </Button>
                     </div>
                     {
-                        (selectedRow.length == 0) ? 
+                        (selectedRow.length == 0) ?
                             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
                                 <Button key='3' size="medium" type="primary" onClick={() => history.push('/studentprofiles/add')}>
                                     <PlusOutlined />
                                 </Button>
-                            </div> 
-                            : 
+                            </div>
+                            :
                             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
                                 <Button key='3' size="medium" type="primary" onClick={() => sendMessage(mess_id)}>
                                     <MessageOutlined />

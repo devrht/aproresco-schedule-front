@@ -1,13 +1,13 @@
 import 'antd/dist/antd.css';
-import { useHistory } from 'react-router-dom'
-import { useLocation } from "react-router-dom";
-import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button, Select } from 'antd';
-import 'react-phone-input-2/lib/bootstrap.css'
-import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
-import { updateTeacher, createTeacher} from '../../services/Teacher';
-import React, { useEffect, useState, useReducer } from 'react'
+import { useHistory } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
+import 'react-phone-input-2/lib/bootstrap.css';
+import "react-phone-input-2/lib/bootstrap.css";
+import '../../Assets/container/StudentList.css';
+import React, { useEffect, useState, useReducer } from 'react';
+import { PageHeader, Form, Input, Button, Select } from 'antd';
+import { updateTeacher, getSubjects} from '../../services/Teacher';
 import { getCountry, getSchedule, getTags } from '../../services/Student';
 
 const formReducer = (state, event) => {
@@ -48,17 +48,16 @@ function CreateTeacher() {
     });
 
     useEffect(() => {
-        console.log(teacher)
-        getSubjects();
+        getAllSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
             formData.firstName = teacher.firstName;
             formData.lastName = teacher.lastName;
             formData.schoolName = teacher.schoolName;
             formData.schoolBoard = teacher.schoolBoard;
-            formData.iemail = teacher.externalEmail;
+            formData.iemail = teacher.email;
             setGrades(teacher.grades)
-            setSubjects(teacher.subjects)
+            setSubjects(teacher.subjects.map(s => s.id))
             setPhone(teacher.phoneNumber)
         })
         if(teacher.tags){
@@ -97,21 +96,13 @@ function CreateTeacher() {
         setSubjects(value);
     }
 
-    const getSubjects = () => {
-        getSchedule(1).then(data => {
-            var obj = {};
-            for (var i = 0, len = data.content.length; i < len; i++)
-                obj[data.content[i]['subject']] = data.content[i];
-
-            data.content = new Array();
-            for (var key in obj)
-                data.content.push(obj[key]);
+    const getAllSubjects = () => {
+        getSubjects().then(data => {
             setSubjectsList(data.content)
         });
     }
 
     const handleSubmit = () => {
-        console.log(formData)
         if (formData.firstName && formData.lastName && formData.iemail && formData.schoolName && formData.schoolBoard && phone) {
             if (formData.firstName.toString().length <= 0
                 || formData.lastName.toString().length <= 0
@@ -133,7 +124,7 @@ function CreateTeacher() {
         let tgs=[]
         tags.map(res => tgs.push({"id": res}))
 
-        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects, phone, formData.schoolName, formData.schoolBoard, tgs.filter(t => t.id != 0)).then(data => {
+        updateTeacher(teacher.id, formData.firstName, formData.lastName, formData.iemail, grades, subjects.map(sid => { return { id: sid }}), phone, formData.schoolName, formData.schoolBoard, tgs.filter(t => t.id != 0)).then(data => {
             history.push(`/teacherprofiles`);
             // history.push(`/studentlist/teacher/${data.data.id}`, { teacher: data.data })
         }).catch(err => {
@@ -174,7 +165,7 @@ function CreateTeacher() {
                         flexDirection: 'row'
                     }}>
                         <Form.Item label="Email" required style={{ flex: 1, marginRight: '10px' }}>
-                            <Input type="email" name="iemail" onChange={handleChange}  defaultValue={ teacher.externalEmail }/>
+                            <Input type="email" name="iemail" onChange={handleChange}  defaultValue={ teacher.email }/>
                         </Form.Item>
                         <Form.Item label="Phone Number" required style={{ flex: 1, marginLeft: '10px' }}>
                             <PhoneInput
@@ -240,7 +231,7 @@ function CreateTeacher() {
                                     <Select mode="multiple"
                                         allowClear
                                         open={open2} 
-                                        defaultValue={ teacher.subjects }
+                                        defaultValue={ teacher.subjects.map(s => s.id) }
                                         onFocus={() => setOpen2(true)}
                                         onBlur={() => setOpen2(false)}
                                         style={{ width: '100%' }}
@@ -250,7 +241,7 @@ function CreateTeacher() {
                                         {
                                             subjectsList.map(subject => {
                                                 return (
-                                                    <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                                    <Select.Option value={subject.id} key={subject.id}>{subject.name}</Select.Option>
                                                 )
                                             })
                                         }

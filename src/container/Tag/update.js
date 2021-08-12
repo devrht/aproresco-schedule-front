@@ -9,27 +9,23 @@ const UpdateTag = () => {
 
     const history = useHistory();
     const location = useLocation();
-
     const [tag, setTag] = useState(location.state.tag);
     const [name, setName] = useState("");
     const [url, setUrl] = useState("");
-    const [enabled, setEnabled] = useState("");
 
+    const [enabled, setEnabled] = useState(tag.enabled);
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        console.log(tag)
         setName(tag.name);
         setEnabled(tag.enabled);
         setUrl(tag.url);
-        return () => {
-            setName("");
-            setEnabled("");
-        };
     }, [tag])
 
     const handleSubmit = () => {
-        if (name && enabled) {
+        if (name) {
             if (name.toString().length <= 0) {
                 alert("Please, fill the form 1!");
                 return
@@ -38,6 +34,7 @@ const UpdateTag = () => {
             alert("Please, fill the form 2!");
             return
         }
+        
         setSubmitting(true)
 
         let data = {
@@ -86,8 +83,8 @@ const UpdateTag = () => {
                     }}>
                         <Form.Item label="Enabled" required style={{ flex: 1, marginRight: '10px' }}>
                             <Radio.Group onChange={e => setEnabled(e.target.value)} name="enabled" defaultValue={enabled} >
-                                <Radio value={"true"}>True</Radio>
-                                <Radio value={"false"}>False</Radio>
+                                <Radio value={true}>True</Radio>
+                                <Radio value={false}>False</Radio>
                             </Radio.Group>
                         </Form.Item>
                     </div>

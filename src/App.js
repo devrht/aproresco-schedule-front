@@ -5,12 +5,12 @@ import addToken from './services/interceptor'
 import LayoutOfApp from './components/Layout'
 // Pages
 const TeacherList = React.lazy(() => import('./container/TeacherList'));
-const Login = React.lazy(() => import('./container/Login'));
+// const Login = React.lazy(() => import('./container/Login'));
 const StudentList = React.lazy(() => import('./container/StudentList'));
 const StudentProfile = React.lazy(() => import('./container/StudentProfile'));
 const TeacherProfile = React.lazy(() => import('./container/TeacherProfile'));
 const Settings = React.lazy(() => import('./container/StudentList/Settings'));
-const Tenant = React.lazy(() => import('./container/StudentList/Tenant'));
+// const Tenant = React.lazy(() => import('./container/StudentList/Tenant'));
 const ShortMessages = React.lazy(() => import('./container/StudentList/shortMessages'));
 const StudentsOfTeacher = React.lazy(() => import('./container/TeacherList/StudentListOfTeacher'));
 const StudentDetail = React.lazy(() => import('./container/StudentList/StudentDetail'))
@@ -46,8 +46,8 @@ function App() {
       <Switch>
         <LayoutOfApp>
           <React.Suspense fallback={<div>Loading... </div>}>
-            <Route exact path="/login" name="Login Page" render={props => <Login {...props} />} />
             <Route exact path="/" name="Student Page" render={props => <StudentList {...props} />} />
+            {/* <Route exact path="/login" name="Login Page" render={props => <Login {...props} />} /> */}
             <Route exact path="/studentlist" name="Student Page" render={props => <StudentList {...props} />} />
             <Route exact path="/studentlist/add" name="Create Student Booking Page" render={props => <CreateBooking {...props} />} />
             <Route exact path="/studentlist/:id/update" name="Create Student Booking Page" render={props => <UpdateBooking {...props} />} />
@@ -62,7 +62,7 @@ function App() {
             <Route exact path="/teacherprofiles/add" name="Create Teacher Page" render={props => <CreateTeacher {...props} />} />
             <Route exact path="/teacherprofiles/:id/update" name="Create Teacher Page" render={props => <UpdateTeacher {...props} />} />
             <Route exact path="/settings" name="Settings Page" render={props => <Settings {...props} />} />
-            <Route exact path="/tenant" name="Tenant Page" render={props => <Tenant {...props} />} />
+            {/* <Route exact path="/tenant" name="Tenant Page" render={props => <Tenant {...props} />} /> */}
             <Route exact path="/short-messages/:id" name="Settings Page" render={props => <ShortMessages {...props} />} />
             <Route exact path="/messages/add/:id" name="Add messages Page" render={props => <CreateMessage {...props} />} />
             <Route exact path="/studentlist/teacher/:id" name="StudentOfTeacher Page" render={props => <StudentsOfTeacher {...props} />} />
@@ -77,7 +77,7 @@ function App() {
             <Route exact path="/tagList" name="Tag Page" render={props => <TagList {...props} />} />
             <Route exact path="/tag/add" name="Create Tag Page" render={props => <CreateTag {...props} />} />
             <Route exact path="/tag/:id/update" name="Update Tag Page" render={props => <UpdateTag {...props} />} />
-            <Redirect from="/" to="/login" />
+            {/* <Redirect from="/" to="/login" /> */}
           </React.Suspense>
         </LayoutOfApp>
       </Switch>

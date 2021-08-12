@@ -14,7 +14,7 @@ function Tenant(props) {
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const [tenant, setTenant] = useState(null);
+  // const [tenant, setTenant] = useState(null);
   const [name, setName] = useState('');
   const [max, setMax] = useState('');
   const [url, setUrl] = useState('');

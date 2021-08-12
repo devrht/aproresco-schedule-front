@@ -1,13 +1,13 @@
 import 'antd/dist/antd.css';
-import { useHistory } from 'react-router-dom'
-import '../../Assets/container/StudentList.css'
-import { PageHeader, Form, Input, Button, Select } from 'antd';
-import 'react-phone-input-2/lib/bootstrap.css'
-import "react-phone-input-2/lib/bootstrap.css";
 import PhoneInput from 'react-phone-input-2';
-import { createSchedule, createTeacher, getTenants, getTenantByName } from '../../services/Teacher';
+import { useHistory } from 'react-router-dom';
+import 'react-phone-input-2/lib/bootstrap.css';
+import "react-phone-input-2/lib/bootstrap.css";
+import '../../Assets/container/StudentList.css';
+import { getCountry, getTags } from '../../services/Student';
 import React, { useEffect, useState, useReducer } from 'react'
-import { getCountry, getSchedule, getTags } from '../../services/Student';
+import { PageHeader, Form, Input, Button, Select } from 'antd';
+import { getSubjects, createTeacher } from '../../services/Teacher';
 
 const formReducer = (state, event) => {
     return {
@@ -44,26 +44,6 @@ function CreateTeacher() {
     const [tagsList, setTagsList] = useState([]);
     const [tags, setTags] = useState([]);
 
-    const [tenantsList, setTenantsList] = useState([]);
-    const [tenants, setTenants] = useState([]);
-
-    const getTenantsList = () => {
-        setLoading(true)
-        //setSortingName("displayName")
-        getTenants(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), listProps.index, listProps.size, "displayName", sortingType).then(data => {
-            if (data) {
-                if (data.content) {
-                    setTenantsList(data.content)
-                }
-            }
-        }).finally(() => setLoading(false))
-    }
-
-    const handleChangeTenants = (value) => {
-        console.log(value)
-        setTenants(value);
-    }
-
     const getEnabledTags = () => {
         setLoading(true)
         getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
@@ -81,7 +61,7 @@ function CreateTeacher() {
 
 
     useEffect(() => {
-        getSubjects();
+        getAllSubjects();
         getCountry().then(data => {
             setCountry(data.countryCode.toString().toLowerCase());
         })
@@ -104,16 +84,8 @@ function CreateTeacher() {
         setSubjects(value);
     }
 
-    const getSubjects = () => {
-        getSchedule(1).then(data => {
-            var obj = {};
-            for (var i = 0, len = data.content.length; i < len; i++)
-                obj[data.content[i]['subject']] = data.content[i];
-
-            data.content = new Array();
-            for (var key in obj)
-                data.content.push(obj[key]);
-            console.log(data.content)
+    const getAllSubjects = () => {
+        getSubjects().then(data => {
             setSubjectsList(data.content)
         });
     }
@@ -136,14 +108,10 @@ function CreateTeacher() {
             // return
         }
 
-        let tgs = []
-        tags.map(res => tgs.push({ "id": res }))
-
-        let tnts = [{ key: JSON.parse(localStorage.getItem('tenant' + JSON.parse(localStorage.getItem("user")).id)) }]
 
         setSubmitting(true);
 
-        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects, phone, tgs.filter(t => t.id != 0), tnts).then(data => {
+        createTeacher(formData.firstName, formData.lastName, formData.iemail, formData.schoolName, formData.schoolBoard, grades, subjects.map(sid => { return { id: sid }}), phone).then(data => {
             history.push(`/teacherprofiles`);
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -166,32 +134,6 @@ function CreateTeacher() {
                     layout="vertical"
                     style={{ width: '80%', marginLeft: '10%' }}
                 >
-                    {/* <div style={{
-                        display: 'flex',
-                        flexDirection: 'row'
-                    }}>
-                        <Form.Item label="My Organizations" required style={{ flex: 1, marginRight: '10px' }} onClick={() => setOpen3(open3 ? false : true)}>
-                            <Select mode="multiple"
-                                allowClear
-                                loading={loading}
-                                open={open3}
-                                onFocus={() => setOpen3(true)}
-                                onBlur={() => setOpen3(false)}
-                                style={{ width: '100%' }}
-                                onSelect={() => setOpen3(false)}
-                                placeholder="Please select tenants"
-                                onChange={handleChangeTenants}>
-                                {
-                                    tenantsList.map(tenant => {
-                                        return (
-                                            <Select.Option value={tenant.key}>{tenant.displayName}</Select.Option>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </div> */}
-
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'
@@ -282,7 +224,7 @@ function CreateTeacher() {
                                         {
                                             subjectsList.map(subject => {
                                                 return (
-                                                    <Select.Option value={subject.subject} key={subject.id}>{subject.subject}</Select.Option>
+                                                    <Select.Option value={subject.id} key={subject.id}>{subject.name}</Select.Option>
                                                 )
                                             })
                                         }
@@ -290,37 +232,6 @@ function CreateTeacher() {
                                 </Form.Item>
                                 : null}
                     </div>
-                    {
-                        !tagsList ?
-                            (<></>)
-                            :
-                            (<div style={{
-                                display: 'flex',
-                                flexDirection: 'row'
-                            }}>
-                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px', marginLeft: '10px' }} onClick={() => setOpen1(open1 ? false : true)}>
-                                    <Select mode="multiple"
-                                        allowClear
-                                        loading={loading}
-                                        open={open1}
-                                        onFocus={() => setOpen1(true)}
-                                        onBlur={() => setOpen1(false)}
-                                        style={{ width: '100%' }}
-                                        onSelect={() => setOpen1(false)}
-                                        placeholder="Please select tags"
-                                        onChange={handleChangeTags}>
-                                        <Select.Option value={0} key={0}>No tag</Select.Option>
-                                        {
-                                            tagsList.map(tag => {
-                                                return (
-                                                    <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </Form.Item>
-                            </div>)
-                    }
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row'

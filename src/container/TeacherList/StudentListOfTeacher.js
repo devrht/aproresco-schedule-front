@@ -13,8 +13,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { assignStudents } from '../../Action-Reducer/Student/action';
 import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
 import { faCrown, faShieldAlt, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
-import { markTeacherAsPresent, markAsSupervisor, markAsAdmin, markAsApproved, updateAvailabilityAssistants } from '../../services/Teacher';
 import { assignStudentToAnotherTeacher, assignMeetingToAnotherTeacher, findTeacherProfileByFirstNameAndLastName } from '../../services/Student';
+import { markTeacherAsPresent, markAsSupervisor, markAsAdmin, markAsApproved, updateAvailabilityAssistants, getSubjectById, removeAvailabilityAssistants } from '../../services/Teacher';
 
 const { Text } = Typography;
 
@@ -23,8 +23,8 @@ function StudentListOfTeacher(props) {
     const dispatch = useDispatch();
     const location = useLocation();
     const [teacher, setTeacher] = useState(location.state.teacher);
-    console.log(teacher)
     const [profile, setProfile] = useState(location.state.profile);
+    const [teacherProfile, setTeacherProfile] = useState(location.state.teacherProfile);
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
     const [confUrl, setConfUrl] = useState();
@@ -33,6 +33,7 @@ function StudentListOfTeacher(props) {
     const [assistants, setAssistants] = useState([]);
     const [students, setStudents] = useState();
     const [studentsTmp, setStudentsTmp] = useState([]);
+    const [subjects, setSubjects] = useState([]);
     const history = useHistory();
     const [active, setActive] = useState(true);
     const [open, setOpen] = useState(false);
@@ -63,15 +64,7 @@ function StudentListOfTeacher(props) {
 
     const getRole = (role) => {
         let result = false;
-        if (teacher.tenants) {
-            teacher.tenants.forEach(t => {
-                if (t.roles) {
-                    if (t.roles.includes(role)) {
-                        result = true;
-                    }
-                }
-            })
-        }
+
         return result;
     }
 
@@ -83,19 +76,25 @@ function StudentListOfTeacher(props) {
         return lastName
     }
 
-    const updateAssistants = (datas, adding) => {
+    const updateAssistants = (data, adding) => {
         let newAssistants = assistants;
         if (adding) {
-            newAssistants = [...newAssistants, ...datas];
+            newAssistants = [...newAssistants, data];
+            updateAvailabilityAssistants(teacher.id, data.id).then(resp => {
+                setAssistants([...newAssistants]);
+                setIsAddingAssistants(false);
+            }).catch(err => {
+                console.log(err)
+            });
         } else {
-            newAssistants = newAssistants.filter(a => !datas.includes(a));
+            newAssistants = newAssistants.filter(a => data.id != a.id);
+            removeAvailabilityAssistants(teacher.id, data.id).then(resp => {
+                setAssistants([...newAssistants]);
+                setIsAddingAssistants(false);
+            }).catch(err => {
+                console.log(err)
+            });
         }
-        updateAvailabilityAssistants(teacher.id, newAssistants.map(a => (a.id))).then(data => {
-            setAssistants([...newAssistants]);
-            setIsAddingAssistants(false);
-        }).catch(err => {
-            console.log(err)
-        })
     }
 
     const changeSearch = (e) => {
@@ -113,7 +112,6 @@ function StudentListOfTeacher(props) {
     };
 
     useEffect(() => {
-        console.log(search)
         searchList()
     }, [search])
 
@@ -153,19 +151,12 @@ function StudentListOfTeacher(props) {
     }
 
     const removeAssistant = (data) => {
-        updateAssistants([data], false);
+        updateAssistants(data, false);
     }
 
     const getApproved = () => {
         let result = false;
-        if (teacher.tenants)
-            teacher.tenants.forEach(t => {
-                if (t.tenant) {
-                    if (t.approveDate)
-                        if (t.approveDate != null)
-                            result = true;
-                }
-            })
+
         return result;
     }
 
@@ -194,9 +185,10 @@ function StudentListOfTeacher(props) {
         setAssistants(teacher.assistants ? teacher.assistants : []);
         let sd = teacher.createDate;
         let date = (new Date(sd)).toLocaleDateString();
-
-        setStartDate(date);
-
+        console.log(teacher)
+        teacherProfile.subjects.map(s => {
+            getSubject(s.id);
+        })
         setPresent(teacher.effectiveStartDate ? false : true);
         //setEffectiveStartDate(teacher.effectiveStartDate);
         setEffectiveStartDate(date);
@@ -308,11 +300,11 @@ function StudentListOfTeacher(props) {
             render: (record) => {
                 return (
                     <div>
-                        {record.internalEmail ? record.internalEmail : record.externalEmail}
+                        {record.email}
                     </div>
                 )
             },
-            key: 'internalEmail',
+            key: 'email',
         }
         ,
         {
@@ -390,11 +382,11 @@ function StudentListOfTeacher(props) {
             render: (record) => {
                 return (
                     <div>
-                        {record.internalEmail ? record.internalEmail : record.externalEmail}
+                        {record.email}
                     </div>
                 )
             },
-            key: 'internalEmail',
+            key: 'email',
         }
         ,
         {
@@ -406,6 +398,20 @@ function StudentListOfTeacher(props) {
                 )
             },
             key: 'phoneNumber',
+        },
+        {
+            title: <div><span>Action </span>
+            </div>,
+            render: (record) => {
+                return (
+                    <Button key='1' type="primary"
+                        onClick={(e) => { e.stopPropagation(); updateAssistants(record, true) }}
+                    >
+                        Add
+                    </Button>
+                )
+            },
+            key: 'action',
         }
 
     ];
@@ -418,7 +424,7 @@ function StudentListOfTeacher(props) {
             if (data) {
                 setStudentList(data.content);
                 data.content.forEach(student => {
-                    let datas = studentsTmp;
+                    let datas = studentsTmp ? studentsTmp : [];
                     let elt = new Object();
                     elt.studentProfile = new Object();
                     elt.studentProfile.firstName = student.studentProfile.firstName;
@@ -427,9 +433,11 @@ function StudentListOfTeacher(props) {
                     // elt.studentProfile.subject = student.subject;
                     elt.studentProfile.id = student.studentProfile.id;
                     elt.studentProfile.onlineStatus = student.studentProfile.onlineStatus;
-                    elt.studentProfile.studentProfile = student.studentProfile
-                    datas.push(elt.studentProfile);
-                    setStudentsTmp(datas);
+                    elt.studentProfile.studentProfile = student.studentProfile;
+                    if (!datas.map(d => d.id).includes(elt.studentProfile.id)) {
+                        datas.push(elt.studentProfile);
+                        setStudentsTmp(datas);
+                    }
                 });
                 setConfUrl(profile ? '' : location.state.teacher.conferenceUrl);
                 setStudents(studentsTmp);
@@ -442,19 +450,23 @@ function StudentListOfTeacher(props) {
     }
 
     const assignStudent = () => {
-        if (active) {
+        console.log(active);
+        if (!active) {
             let studentIdArray = [];
             assignStudentList.map((student) => {
                 studentIdArray.push(student.id)
             })
-            let studentIds = studentIdArray.join(',');
-            assignStudentToAnotherTeacher(params.id, studentIds)
+            studentIdArray.map(studentId => {
+                console.log(studentId);
+                assignStudentToAnotherTeacher(params.id, studentId)
                 .then(res => {
                     setStudentList(null);
-                    dispatch(assignStudents([]));
                     getListView();
-                    //window.location.reload();
                 })
+            })
+
+            dispatch(assignStudents([]));
+            
         } else {
             dispatch(assignStudents(selectedRow))
             //history.push('/teacherlist');
@@ -493,6 +505,16 @@ function StudentListOfTeacher(props) {
             setAdmin(!admin);
         });
     }
+
+    const getSubject = (id) => {
+        getSubjectById(id).then(data => {
+            setSubjects([...subjects, data.name]);
+        });
+    }
+
+    useEffect(() => {
+        console.log(subjects)
+    }, [subjects])
 
     const markTeacherAsSupervisor = () => {
         markAsSupervisor(teacher.teacherProfile.id, !supervisor).then(data => {
@@ -541,9 +563,10 @@ function StudentListOfTeacher(props) {
                             {present ? 'MARK AS PRESENT' : 'MARK AS ABSENT'}
                         </Button>
                         <Button key='3' type="primary"
-                            style={{ display: assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
+                            style={{ display: !assigningStatus ? 'block' : 'none', marginLeft: '20px' }}
                             disabled={(assignStudentList.length > 0 && active) || selectedRow.length > 0 ? false : true}
                             onClick={() => {
+                                console.log("Click !")
                                 assignStudent()
                             }}
                         >
@@ -565,20 +588,20 @@ function StudentListOfTeacher(props) {
                         </Row>
                         <Row gutter={16}>
                             <Col className="gutter-row" span={8}>
-                                <h4 >External Email</h4>
+                                <h4 >Email</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{`${teacher.teacherProfile.externalEmail}`}</h4>
+                                <h4>{`${teacher.teacherProfile.email}`}</h4>
                             </Col>
                         </Row>
-                        <Row gutter={16}>
+                        {/* <Row gutter={16}>
                             <Col className="gutter-row" span={8}>
                                 <h4 >Internal Email</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
                                 <h4>{`${teacher.teacherProfile.internalEmail}`}</h4>
                             </Col>
-                        </Row>
+                        </Row> */}
                         <Row gutter={16}>
                             <Col className="gutter-row" span={8}>
                                 <h4>Conference URL</h4>
@@ -595,7 +618,7 @@ function StudentListOfTeacher(props) {
                                 <h4>Subjects</h4>
                             </Col>
                             <Col className="gutter-row" span={14}>
-                                <h4>{teacher.teacherProfile.subjects ? teacher.teacherProfile.subjects.join(', ') : 'No subjects'}</h4>
+                                <h4>{subjects.join(', ')}</h4>
                             </Col>
                         </Row>
                         <Row gutter={16}>
@@ -732,9 +755,9 @@ function StudentListOfTeacher(props) {
                                 searchList={searchList}
                             />
                             <div>
-                                <Button key='3' size="medium" type="primary" onClick={() => updateAssistants(selectedRowProfile, true)}>
+                                {/* <Button key='3' size="medium" type="primary" onClick={() => updateAssistants(selectedRowProfile, true)}>
                                     Add selected
-                                </Button>
+                                </Button> */}
                                 <Button key='3' size="medium" type="warning" style={{ marginLeft: 10 }} onClick={() => setIsAddingAssistants(false)}>
                                     Cancel
                                 </Button>
@@ -743,7 +766,7 @@ function StudentListOfTeacher(props) {
                         <Table
                             columns={profileColumns}
                             dataSource={teacherList}
-                            rowSelection={rowSelectionProfile}
+                            //rowSelection={rowSelectionProfile}
                             rowKey="id"
                         />
                     </div>

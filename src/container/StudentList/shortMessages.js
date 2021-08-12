@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
-import { useSelector, useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
-import '../../Assets/container/StudentList.css'
-import { getShortMessages, getShortMessagesByDate } from '../../services/Student'
-import SearchFilter from '../../components/StudentList/SearchFilter'
-import { assignStudents } from '../../Action-Reducer/Student/action'
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons"
+import { useHistory } from 'react-router-dom';
+import '../../Assets/container/StudentList.css';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getShortMessages } from '../../services/Student';
+import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
+import SearchFilter from '../../components/StudentList/SearchFilter';
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, DeleteOutlined } from "@ant-design/icons";
 
 
 function ShortMessageList(props) {
@@ -121,7 +120,7 @@ function ShortMessageList(props) {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-            getShortMessagesByDate(params.id, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+                getShortMessages(params.id, "", tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)
@@ -150,7 +149,7 @@ function ShortMessageList(props) {
             })
         }
         else {
-            getShortMessages(params.id, search.firstName.trim(), localStorage.getItem('toStart'), localStorage.getItem('toEnd'), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getShortMessages(params.id, search.firstName.trim(), tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)

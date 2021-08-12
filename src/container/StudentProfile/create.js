@@ -25,47 +25,17 @@ function CreateStudent() {
     const [open, setOpen] = useState(false);
     const [parents, setParents] = useState([]);
     const [parent, setParent] = useState(null);
-    const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [formData, setFormData] = useReducer(formReducer, {});
     const [form] = Form.useForm();
 
-    const [sortingName, setSortingName] = useState("name");
-    const [sortingType, setSortingType] = useState("desc");
-
-    const [listProps, setListProps] = useState({
-        index: 0,
-        size: 10,
-    });
-
-    const [open1, setOpen1] = useState(false);
-    const [tagsList, setTagsList] = useState([]);
-    const [tags, setTags] = useState([]);
-
-    const getEnabledTags = () => {
-        setLoading(true)
-        getTags(listProps.index, listProps.size, sortingName, sortingType).then(data => {
-            if (data) {
-                if (data.content) {
-                    setTagsList(data.content.filter(t => t.enabled == true));
-                }
-            }
-        }).finally(() => setLoading(false))
-    }
-
-    const handleChangeTags = (value) =>{
-        setTags(value);
-    }
-
     useEffect(() => {
         getListView();
-        getEnabledTags();
     }, []);
 
     const getListView = (search = '') => {
         if (search.length < 0) {
-            getParentProfile(localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-                console.log('DATA ==> ', data)
+            getParentProfile(0, 100, 'firstName', 'asc').then(data => {
                 if (data) {
                     if (data.content) {
                         setParents(data.content);
@@ -77,8 +47,7 @@ function CreateStudent() {
                 }
             })
         } else {
-            findParentProfileByEmail(search, localStorage.getItem('toStart'), localStorage.getItem('toEnd'), 0, 100, 'firstName', 'asc').then(data => {
-                console.log('DATA ==> ', data)
+            findParentProfileByEmail(search, 0, 100, 'firstName', 'asc').then(data => {
                 if (data) {
                     if (data.content) {
                         setParents(data.content);
@@ -123,11 +92,8 @@ function CreateStudent() {
 
         setSubmitting(true);
 
-        let tgs=[]
-        tags.map(res => tgs.push({"id": res}))
+        createStudent(formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parents.find(p => p.email === parent).id).then(data => {
 
-        createStudent(formData.firstName, lastName, formData.email, formData.schoolName, formData.schoolBoard, formData.grade, parent, tgs).then(data => {
-            
             history.push(`/studentprofiles`)
         }).catch(err => {
             alert("Error occured when saving data, please retry!")
@@ -230,36 +196,6 @@ function CreateStudent() {
                             <Input type="text" name="schoolBoard" onChange={handleChange} />
                         </Form.Item>
                     </div>
-                    {
-                            !tagsList ? 
-                            (<></>)
-                            :
-                            (<div style={{
-                                display: 'flex',
-                                flexDirection: 'row'
-                            }}>
-                                <Form.Item label="Tags" required style={{ flex: 1, marginRight: '10px'}} onClick={() => setOpen1(open1 ? false : true)}>
-                                    <Select mode="multiple"
-                                        allowClear
-                                        loading={loading}
-                                        open={open1}
-                                        onFocus={() => setOpen1(true)}
-                                        onBlur={() => setOpen1(false)}
-                                        style={{ width: '100%' }}
-                                        onSelect={() => setOpen1(false)}
-                                        placeholder="Please select tags"
-                                        onChange={handleChangeTags}>
-                                        {
-                                            tagsList.map(tag => {
-                                                return (
-                                                    <Select.Option value={tag.id} key={tag.id}>{tag.name}</Select.Option>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </Form.Item>
-                            </div>)
-                        }
                     <Form.Item>
                         <Button disabled={submitting} type="primary" size="large" htmlType="submit">
                             {
