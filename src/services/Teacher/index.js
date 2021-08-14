@@ -41,7 +41,7 @@ export const markAsSupervisor = (id, value) => {
                 return res.data;
             })
     else
-    return axios.delete(`${routes.TEACHER}/${id}/tenant/${tenant}/role/supervisor`)
+        return axios.delete(`${routes.TEACHER}/${id}/tenant/${tenant}/role/supervisor`)
             .then(res => {
                 return res.data;
             })
@@ -126,50 +126,50 @@ export const deleteTenant = (value) => {
         })
 }
 
-export const getTenants = (start, end,page,size,sortName,sortType) => {
+export const getTenants = (start, end, page, size, sortName, sortType) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?startDate=${start}&endDate=${end}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
-    .then(res => {
-        return res.data;
-    })
+        .then(res => {
+            return res.data;
+        })
 }
 
 export const getCourses = (page = 0, size = 1000, sortName = "subject", sortType = "asc") => {
     return axios.get(`${routes.COURSE}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
-    .then(res => {
-        return res.data;
-    })
+        .then(res => {
+            return res.data;
+        })
 }
 
 export const getCoursesByGrade = (grade) => {
-    let page = 0; 
-    let size = 1000; 
+    let page = 0;
+    let size = 1000;
     let sortType = "asc";
-    let sortName = "subject"; 
+    let sortName = "subject";
     return axios.get(`${routes.COURSE}?gradeMin=${grade}&gradeMax=${grade}&page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
-    .then(res => {
-        return res.data;
-    })
+        .then(res => {
+            return res.data;
+        })
 }
 
 export const getSubjects = (page = 0, size = 1000, sortName = "name", sortType = "asc") => {
     return axios.get(`${routes.SUBJECT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
-    .then(res => {
-        return res.data;
-    })
+        .then(res => {
+            return res.data;
+        })
 }
 
 export const getSubjectById = (id) => {
     return axios.get(`${routes.SUBJECT}/${id}`)
-    .then(res => {
-        return res.data;
-    })
+        .then(res => {
+            return res.data;
+        })
 }
 
-export const getTenantByName = (displayName,page,size) => {
+export const getTenantByName = (displayName, page, size) => {
     return axios.get(`${routes.SERVER_ADDRESS}/search/tenant-profiles?displayName=${displayName}&size=${size}&page=${page}`)
-    .then(res => {
-        return res.data;
-    })
+        .then(res => {
+            return res.data;
+        })
 }
 
 export const getTeacherListByDate = (start, end, page, size, sortName = 'firstName', sortType = 'asc') => {
@@ -419,15 +419,23 @@ export const createTeacher = (firstName, lastName, iemail, schoolName, schoolBoa
     }).catch(err => console.log(err));
 }
 
-
-export const createComment = (id, content) => {
+//TODO: replace the commenter id by connected user
+export const createComment = (studentBooking, content) => {
     let data = {
         content,
-        commenter: { id: JSON.parse(localStorage.getItem("user")).id },
-        tenant: { key: JSON.parse(localStorage.getItem("tenant" + JSON.parse(localStorage.getItem("user")).id))}
+        studentBooking,
+        studentParent: studentBooking.parent,
+        studentProfile: studentBooking.studentProfile,
+        commenter: { id: '8a0081ed7b1d0a57017b1e706ed8003b' }
     }
-    return axios.post(`${routes.BOOKING}/${id}/teacher-comment`, data).then(res => {
+    return axios.post(`${routes.COMMENT}`, data).then(res => {
         return res;
+    }).catch(err => console.log(err));
+}
+
+export const getBookingComments = (bookinId) => {
+    return axios.get(`${routes.COMMENT}?bookingId=${bookinId}`).then(res => {
+        return res.data;
     }).catch(err => console.log(err));
 }
 
@@ -440,14 +448,21 @@ export const updateComment = (id, content) => {
     }).catch(err => console.log(err));
 }
 
+//TODO: replace the commenter id by connected user
 export const approveComment = (c) => {
     let data = {
         ...c,
-        approver: { id: JSON.parse(localStorage.getItem("user")).id }
+        approver: { id: '8a0081ed7b1d0a57017b1e706ed8003b' }
     }
-    return axios.post(`${routes.SERVER_ADDRESS}/teacher-comment/${c.id}/approval`, data).then(res => {
-        return res;
-    }).catch(err => console.log(err));
+    if (c.approver) {
+        return axios.delete(`${routes.COMMENT}/${c.id}/approval`).then(res => {
+            return res;
+        }).catch(err => console.log(err));
+    } else {
+        return axios.post(`${routes.COMMENT}/${c.id}/approval/${'8a0081ed7b1d0a57017b1e706ed8003b'}`, data).then(res => {
+            return res;
+        }).catch(err => console.log(err));
+    }
 }
 
 
@@ -462,7 +477,7 @@ export const updateTeacher = (id, firstName, lastName, email, grades, subjects, 
         grades: grades,
         phoneNumber: phone,
         subjects: subjects,
-        tags:tags
+        tags: tags
     }
     return axios.patch(`${routes.TEACHER}/${id}`, data).then(res => {
         return res;
@@ -492,10 +507,10 @@ export const updateBooking = (id, schedule) => {
 
 
 export const createAvailibility = (teacherProfile, schedule) => {
-     let data = {
+    let data = {
         teacherProfile: teacherProfile,
         schedule: schedule
-    } 
+    }
     return axios.post(`${routes.AVAILABILITY}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
@@ -537,17 +552,13 @@ export const updateParent = (id, firstName, lastName, phoneNumber, countryCode, 
     }).catch(err => console.log(err));
 }
 
-export const createMessage = (type, startDate, endDate, message, subject, async, template, name) => {
+export const createMessage = (type, content, recipients) => {
     let data = {
-        // startDate,
-        // endDate,
-        message,
-        subject,
-        async,
-        saveAstemplate: template
+        content,
+        recipients,
+        sender: { id: '8a0081ed7b1d0a57017b1e706ed8003b'}
     }
-    let url = type == 'StudentProfile' ? 'reminder/students' : 'reminder/teachers';
-    return axios.get(`${routes.SERVER_ADDRESS}/${url}?message=${message}&subject=${subject}&firstName=${name}&async=${async}&saveAstemplate=${template}`).then(res => {
+    return axios.post(`${routes.MESSAGE}/${type}`, data).then(res => {
         return res;
     }).catch(err => console.log(err));
 }

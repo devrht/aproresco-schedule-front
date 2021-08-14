@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
-import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
-import '../../Assets/container/StudentList.css'
-import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate, deleteTeacherProfile } from '../../services/Student'
-import { sendTeachersMessage } from '../../services/Teacher'
-import SearchFilter from '../../components/StudentList/SearchFilter'
 import Moment from 'react-moment';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import {MessageOutlined} from '@ant-design/icons'
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import '../../Assets/container/StudentList.css';
+import {MessageOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { sendTeachersMessage } from '../../services/Teacher';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SearchFilter from '../../components/StudentList/SearchFilter';
+import { Table, PageHeader, Button, Spin, Tooltip, Typography } from 'antd';
+import { findTeacherProfileByFirstNameAndLastName, getTeacherProfileByDate, deleteTeacherProfile } from '../../services/Student';
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 

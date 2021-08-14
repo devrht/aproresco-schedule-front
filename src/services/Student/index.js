@@ -131,6 +131,16 @@ export const getTeacherProfileByDate = (start, end, page, size, sortName, sortTy
         })
 }
 
+export const getTeacherProfiles = (page, size, sortName, sortType) => {
+    return axios.get(`${routes.TEACHER}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+        .then(res => {
+            return res.data;
+        })
+        .catch(err => {
+            //alert(err.message);
+        })
+}
+
 export const getStudentDetail = (studentId) => {
     return axios.get(`${routes.BOOKING}/${studentId}`)
         .then(res => {
