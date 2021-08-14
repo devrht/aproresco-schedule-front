@@ -4,8 +4,8 @@ import { CheckOutlined } from '@ant-design/icons';
 import { Row, Col, PageHeader, Button, Card } from 'antd';
 import { useLocation, useHistory } from "react-router-dom";
 import React, { useState, useEffect, useReducer } from 'react';
-import { createComment, updateComment, approveComment, getCourses, getTeacherProfileById, getScheduleById } from '../../services/Teacher';
 import { assignStudentToAnotherTeacher, getBooking, sendMessageToBooking, getStudentDetail, getBookingAvailability } from '../../services/Student';
+import { createComment, updateComment, approveComment, getCourses, getTeacherProfileById, getScheduleById, getBookingComments } from '../../services/Teacher';
 
 const formReducer = (state, event) => {
     return {
@@ -22,13 +22,15 @@ function StudentDetail(props) {
     const [content, setContent] = useState('');
     const [message, setMessage] = useState('');
     const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [comment, setComment] = useState(null);
+    const [comments, setComments] = useState([]);
     const [submitting, setSubmitting] = useState(false);
-    const [availability, setAvailability] = useState(null);
     const [formData, setFormData] = useReducer(formReducer, {});
     const [studentDetail, setStudentDetail] = useState(location.state.student);
 
     useEffect(() => {
+        getComments();
         getAllCourses();
         getAvailability();
     }, []);
@@ -51,9 +53,7 @@ function StudentDetail(props) {
                 setStudentDetail(tmpStudent);
             }
         })
-        
-        console.log(studentDetail);
-    }, [studentDetail]);
+    }, [loading]);
 
     const handleChange = event => {
         setFormData({
@@ -71,18 +71,27 @@ function StudentDetail(props) {
             }
         })
     }
+    const getComments = () => {
+        getBookingComments(studentDetail.id).then(data => {
+            console.log(data)
+            if (data) {
+                if (data.content) {
+                    setComments(data.content);
+                }
+            }
+        })
+    }
 
     const getAvailability = () => {
         getBookingAvailability(studentDetail.id).then(data => {
             if (data.length > 0) {
-                setAvailability(data[0]);
                 let tmp = data[0];
                 tmp.parent = studentDetail.parent;
                 tmp.schedule = studentDetail.schedule;
                 tmp.studentProfile = studentDetail.studentProfile;
                 setStudentDetail(tmp);
             }
-        })
+        }).finally(() => setLoading(false))
     }
 
     const getDetailView = () => {
@@ -92,28 +101,23 @@ function StudentDetail(props) {
         })
     }
 
-    const getStudentBooking = () => {
-        getBooking(studentDetail.id).then(data => {
-            setStudentDetail(data.data)
-        })
-    }
-
     const handleSubmit = () => {
         if (comment == null) {
-            createComment(studentDetail.id, content).then(data => {
+            createComment(studentDetail, content).then(data => {
                 // history.push('/studentlist')
-                getStudentBooking();
+                setContent('');
+                getComments();
             })
         } else {
             updateComment(comment.id, content).then(data => {
                 // history.push('/studentlist')
-                getStudentBooking();
+                getComments();
             })
         }
     }
 
     const handleSubmitSendMessage = () => {
-        if (message == null) {
+        if (message === null) {
             alert("Please, enter a message");
             return
         } else {
@@ -131,7 +135,7 @@ function StudentDetail(props) {
     const handleApproval = (c) => {
         approveComment(c).then(data => {
             // history.push('/studentlist')
-            getStudentBooking();
+            getComments();
         })
     }
 
@@ -348,11 +352,11 @@ function StudentDetail(props) {
                         </Card>
                     </Row>
 
-                    <Row gutter={24} style={{ marginBottom: '3%' }}>
+                    {/* <Row gutter={24} style={{ marginBottom: '3%' }}>
                         <Card title="Send a message" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
                             <Row gutter={16}>
                                 <Form.Item label="Message" required style={{ flex: 1, marginRight: '10px' }}>
-                                    <Input type="text" name="message"  /* onChange={(e) => setMessage(e.target.value)} */ onChange={handleChange} />
+                                    <Input type="text" name="message" onChange={handleChange} />
                                 </Form.Item>
 
                                 <Form.Item>
@@ -364,7 +368,7 @@ function StudentDetail(props) {
                                 </Form.Item>
                             </Row>
                         </Card>
-                    </Row>
+                    </Row> */}
 
                     <Row gutter={24} style={{ marginBottom: '3%' }}>
                         <Card title="Feedback section" hoverable={true} bordered={true} style={{ width: "100%", marginLeft: '2%' }}>
@@ -383,15 +387,15 @@ function StudentDetail(props) {
                                     </Button>
                                 </Form.Item>
                             </Row>
-                            {studentDetail.teacherComments ?
-                                studentDetail.teacherComments.map(c => (
+                            {comments ?
+                                comments.map(c => (
                                     <>
                                         <Row gutter={16} style={{ height: 50 }}>
                                             <Col className="gutter-row" style={{ width: '90%' }} onClick={() => handleComment(c)}>
                                                 <h4>{c.content ? c.content : 'No message found in this feedback'}</h4>
                                             </Col>
-                                            <Col className="gutter-row" style={{ width: '10%' }} onClick={() => handleComment(c)}>
-                                                <CheckOutlined style={{ fontSize: '20px', marginRight: '20px', color: c.approveDate ? 'green' : 'gray' }} onClick={() => handleApproval(c)} />
+                                            <Col className="gutter-row" style={{ width: '10%' }} onClick={() => handleApproval(c)}>
+                                                <CheckOutlined style={{ fontSize: '20px', marginRight: '20px', color: c.approver ? 'green' : 'gray' }} onClick={() => handleApproval(c)} />
                                             </Col>
                                         </Row>
                                     </>

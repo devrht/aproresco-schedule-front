@@ -1,16 +1,15 @@
 import 'antd/dist/antd.css';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../../Assets/container/StudentList.css';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { getShortMessages } from '../../services/Student';
 import { Table, PageHeader, Button, Spin, Tooltip } from 'antd';
 import SearchFilter from '../../components/StudentList/SearchFilter';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, DeleteOutlined } from "@ant-design/icons";
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 
 function ShortMessageList(props) {
-    const dispatch = useDispatch();
     const history = useHistory();
     const { params } = props.match;
     const [studentList, setStudentList] = useState();
@@ -31,12 +30,6 @@ function ShortMessageList(props) {
     })
     const [selectedRow, setSelectedRow] = useState([]);
     const [loading, setLoading] = useState(false);
-    const startDate = useSelector((state) => {
-        return state.StarDate.startDate;
-    })
-    const endDate = useSelector((state) => {
-        return state.EndDate.endDate;
-    })
 
     const rowSelection = {
         selectedRow,
@@ -85,32 +78,31 @@ function ShortMessageList(props) {
         },
         {
             title: <div><span>Message Content </span></div>,
-            dataIndex: 'body',
-            key: 'body',
+            dataIndex: 'content',
+            key: 'content',
         },
         {
             title: <div><span>Sending date </span>
-                {sortingName === "dateCreated" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
-                {sortingName === "dateCreated" && sortingType === "desc" && <VerticalAlignTopOutlined />}
-                {sortingName === "dateCreated" && sortingType === "" && ""}
+                {sortingName === "createDate" && sortingType === "asc" && <VerticalAlignBottomOutlined />}
+                {sortingName === "createDate" && sortingType === "desc" && <VerticalAlignTopOutlined />}
+                {sortingName === "createDate" && sortingType === "" && ""}
             </div>,
             onHeaderCell: (column) => {
                 return {
                     onClick: () => {
-                        setSortingName("dateCreated");
+                        setSortingName("createDate");
                         if (sortingType == "") { setSortingType("asc") }
                         else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("dateCreated"); }
+                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("createDate"); }
                     }
                 };
             },
-            dataIndex: 'dateCreated',
-            key: 'dateCreated',
+            dataIndex: 'createDate',
+            key: 'createDate',
         }
     ];
 
     useEffect(() => {
-        console.log(params.id);
         getListView();
     }, [tableProps.pageIndex]);
     useEffect(() => {
@@ -120,7 +112,7 @@ function ShortMessageList(props) {
     const getListView = () => {
         if (search.firstName === "" && search.lastName === "") {
             //getStudentList(tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
-                getShortMessages(params.id, "", tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
+            getShortMessages(params.id, "", tableProps.pageIndex, tableProps.pageSize, sortingName, sortingType).then(data => {
                 if (data) {
                     if (data.content) {
                         setStudentList(data.content)
@@ -222,12 +214,17 @@ function ShortMessageList(props) {
                         />
                     </div>
 
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginLeft: '20px' }}>
+                        <Button key='3' size="medium" type="primary" onClick={() => history.push("/messages/add/"+params.id)}>
+                            <PlusOutlined />
+                        </Button>
+                    </div>
+
                     <div style={{ display: deletingStatus ? 'flex' : 'none', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Button key='3' size="medium" type="danger">
                             <DeleteOutlined />
                         </Button>
                     </div>
-                    
                 </div>
 
                 {!studentList ? <Spin className="loading-table" /> :
@@ -247,7 +244,6 @@ function ShortMessageList(props) {
                     />}
 
             </PageHeader>
-            {/* </LayoutOfApp> */}
         </React.Fragment>
     )
 }
