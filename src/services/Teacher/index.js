@@ -151,8 +151,8 @@ export const getCoursesByGrade = (grade) => {
         })
 }
 
-export const getSubjects = (page = 0, size = 1000, sortName = "name", sortType = "asc") => {
-    return axios.get(`${routes.SUBJECT}?page=${page}&size=${size}&sort=${sortName},${sortType ? sortType : 'asc'}`)
+export const getSubjects = (page = 0, size = 1000, sortName = "name", sortType = "asc", subject = '') => {
+    return axios.get(`${routes.SUBJECT}?page=${page}&size=${size}&subject=${subject}&sort=${sortName},${sortType ? sortType : 'asc'}`)
         .then(res => {
             return res.data;
         })

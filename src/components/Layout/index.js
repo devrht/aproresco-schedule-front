@@ -13,7 +13,9 @@ import {
   SafetyOutlined,
   CalendarOutlined,
   BookOutlined,
-  TagsOutlined
+  TagsOutlined,
+  FileOutlined,
+  DatabaseOutlined
 } from '@ant-design/icons';
 
 const { Sider, Content } = Layout;
@@ -159,6 +161,12 @@ function LayoutOfApp({ children }, props) {
               </Menu.Item>
               <Menu.Item key="tags" icon={<TagsOutlined />} onClick={() => { history.push('/tagList') }}>
                 Tags
+              </Menu.Item>
+              <Menu.Item key="subjects" icon={<FileOutlined />} onClick={() => { history.push('/subjects') }}>
+                Subjects
+              </Menu.Item>
+              <Menu.Item key="courses" icon={<DatabaseOutlined />} onClick={() => { history.push('/courses') }}>
+                Courses
               </Menu.Item>
             </Menu>
           </Sider> : null
