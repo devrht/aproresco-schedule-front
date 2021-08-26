@@ -65,9 +65,9 @@ export default function SubjectsList() {
                 return {
                     onClick: () => {
                         setSortingName("language");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("language"); }
+                        if (sortingType === "") { setSortingType("asc") }
+                        else if (sortingType === "asc") { setSortingType("desc") }
+                        else if (sortingType === "desc") { setSortingType("asc"); setSortingName("language"); }
                     }
                 };
             },

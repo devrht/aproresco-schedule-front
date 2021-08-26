@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getCourses } from '../../services/Course';
 import { Table, PageHeader, Button, Spin } from 'antd';
 import SearchFilter from '../../components/Tag/SearchFilter';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined, PlusOutlined } from "@ant-design/icons";
 
 export default function SubjectsList() {
 
@@ -13,7 +13,6 @@ export default function SubjectsList() {
 
     const [sortingName, setSortingName] = useState("name");
     const [sortingType, setSortingType] = useState("desc");
-    const [selectedRow, setSelectedRow] = useState([]);
 
     const [tableProps, setTableProps] = useState({
         totalCount: 0,
@@ -39,9 +38,9 @@ export default function SubjectsList() {
                 return {
                     onClick: () => {
                         setSortingName("name");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("name"); }
+                        if (sortingType === "") { setSortingType("asc") }
+                        else if (sortingType === "asc") { setSortingType("desc") }
+                        else if (sortingType === "desc") { setSortingType("asc"); setSortingName("name"); }
                     }
                 };
             },
@@ -65,9 +64,9 @@ export default function SubjectsList() {
                 return {
                     onClick: () => {
                         setSortingName("language");
-                        if (sortingType == "") { setSortingType("asc") }
-                        else if (sortingType == "asc") { setSortingType("desc") }
-                        else if (sortingType == "desc") { setSortingType("asc"); setSortingName("language"); }
+                        if (sortingType === "") { setSortingType("asc") }
+                        else if (sortingType === "asc") { setSortingType("desc") }
+                        else if (sortingType === "desc") { setSortingType("asc"); setSortingName("language"); }
                     }
                 };
             },

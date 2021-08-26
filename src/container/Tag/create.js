@@ -1,6 +1,6 @@
 import React, { useState, useReducer } from 'react'
 
-import { PageHeader, Form, Input, Button, Radio } from 'antd'
+import { PageHeader, Form, Input, Button } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { addTag } from '../../services/Student'
 import 'antd/dist/antd.css';
